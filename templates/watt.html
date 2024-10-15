@@ -261,7 +261,7 @@
         <a href="{{url_for('data_table')}}"><img src="/static/logo.jpeg/" class="logo" alt="LOGO" /></a>
       </ul>
     </div>
-   
+  
 
   <div id="mySidenav" class="sidenav"style="z-index: 10;">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -292,10 +292,11 @@
 <div class="line2">
   <h5>Smart Alerts</h5>
 </div>
+
 <br>
 <!--  -->
 <!-- table -->
-<input type="text" id="Inverterid" onchange="Inverteridsend()">
+<!-- <input type="text" id="Inverterid" onchange="Inverteridsend()">
 <script>
 async function Inverteridsend() {
   const id = document.getElementById('Inverterid').value;
@@ -313,89 +314,114 @@ async function Inverteridsend() {
     console.error('Error:', error);
   }
 }
-</script>
+</script> -->
+<a href="{{url_for('databyid')}}">11111</a>
 
 
- <div class="Inverter1">
-        <h5>Inverter Details</h5>
-        <div class="tablediv">
-            <div class="row">
-                <div class="card-body">
-                  <table id="example2" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Device ID</th>
-                            <th>Timestamp</th>
-                            <th>DC Current</th>
-                            <th>DC KWh</th>
-                            <th>DC Power</th>
-                            <th>DC Units</th>
-                            <th>DC Voltage</th>
-                            <th>Temperature</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in items %}
-                        <tr>
-                            <td>{{ item['Ac_Units'] }}</td>
-                            <td>{{ item['timestamp'] }}</td>
-                            <td>{{ item['Dc_Current'] }}</td>
-                            <td>{{ item['Dc_KWH'] }}</td>
-                            <td>{{ item['Dc_Power'] }}</td>
-                            <td>{{ item['Dc_Units'] }}</td>
-                            <td>{{ item['Dc_Voltage'] }}</td>
-                            <td>{{ item['temperature'] }}</td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                            <td colspan="8">No data available</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                
-                </div>
-            </div>
-        </div>
-    </div>
-<!--  -->
-<div class="graphdiv1 ">
+<div class="Inverter1">
+  <h5>Inverter Details</h5>
+  <div class="tablediv">
+      <div class="row">
+          <div class="card-body">
+              <table id="example2" class="table table-bordered table-striped">
+                  <thead>
+                      <tr>
+                          <th>Device ID</th>
+                          <th>Timestamp</th>
+                          <th>DC Current</th>
+                          <th>DC KWh</th>
+                          <th>DC Power</th>
+                          <th>DC Units</th>
+                          <th>DC Voltage</th>
+                          <th>Temperature</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% if items %}
+                          {% for item in items %}
+                          <tr>
+                              <td>{{ item['Device_id'] }}</td>
+                              <td>{{ item['timestamp'] }}</td>
+                              <td>{{ item['Dc_Current'] }}</td>
+                              <td>{{ item['Dc_KWH'] }}</td>
+                              <td>{{ item['Dc_Power'] }}</td>
+                              <td>{{ item['Dc_Units'] }}</td>
+                              <td>{{ item['Dc_Voltage'] }}</td>
+                              <td>{{ item['temperature'] }}</td>
+                          </tr>
+                          {% endfor %}
+                      {% else %}
+                      <tr>
+                          <td colspan="8">No data available</td>
+                      </tr>
+                      {% endif %}
+                  </tbody>
+              </table>
+              
+             
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Ensure Chart.js is loaded -->
+
+<div class="graphdiv1">
   <div class="chart1">
-    <div>
-      <canvas id="myChart"></canvas>
-    </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <script>
-      const ctx = document.getElementById('myChart');
-    
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
-      });
-    </script>
-     
+    <h5>Voltage vs. Time Graph</h5>
+    <canvas id="voltageChart" width="400" height="200"></canvas>
   </div>
   <div class="chart2">
-    <div>
-      <canvas id="myChart1"></canvas>
-    </div>
-    
+    <canvas id="myChart1"></canvas>
+
+  </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Extracting data from Jinja2 context and making sure it is properly formatted for JavaScript
+const labels = {{ items | map(attribute='timestamp') | list | tojson }}; // X-axis: Timestamps
+const voltageData = {{ items | map(attribute='Dc_Voltage') | list | tojson }}; // Y-axis: DC Voltage
+
+// Check if labels and voltageData have values
+console.log('Labels (Timestamps):', labels);
+console.log('Voltage Data:', voltageData);
+
+const ctx = document.getElementById('voltageChart').getContext('2d');
+
+const voltageChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+      labels: labels, // X-axis (Timestamps)
+      datasets: [{
+          label: 'DC Voltage',
+          data: voltageData, // Y-axis (Voltage Data)
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+      }]
+  },
+  options: {
+      scales: {
+          x: {
+              title: {
+                  display: true,
+                  text: 'Timestamp'
+              }
+          },
+          y: {
+              title: {
+                  display: true,
+                  text: 'DC Voltage'
+              }
+          }
+      }
+  }
+});
+</script>
+
+<!-- next graph -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
@@ -422,7 +448,9 @@ async function Inverteridsend() {
     </script>
      
   </div>
+
 </div>
+
 <!--  -->
 <!-- end -->
 
@@ -440,6 +468,62 @@ async function Inverteridsend() {
     document.getElementById("main").style.marginLeft= "0";
   }
   </script>
-  
+ <script>
+  $(document).ready(function () {
+    var table = $('#example2').DataTable({
+      "pageLength": 10,
+      "drawCallback": function (settings) {
+        $('#example2 thead').css({
+          'background-color': '#0069D9',
+          'color': 'white',
+          'border': '1px solid #F7F6F7',
+        });
+        $('#example2_paginate').css({
+          'text-align': 'center',
+          'cursor': 'pointer'
+        });
+        $('#example2_previous').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '2px 0 0 2px',
+          'display': 'inline-block',
+          'color': '#007BFF',
+          'margin': '0'
+        });
+        $('#example2_next').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '0 2px 2px 0',
+          'display': 'inline-block',
+          'color': '#007BFF',
+          'margin': '0'
+        });
+        $('.paginate_button').not('.previous, .next').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '0',
+          'color': '#999699',
+          'display': 'inline-block',
+          'margin': '0 -0px 0 -0px'
+        });
+
+        // Style active page
+        $('.paginate_button.current').css({
+          'background-color': '#007BFF', // Active page background color
+          'color': 'white', // Active page text color
+          'border': '1px solid #007BFF' // Optional: active page border color
+        });
+      }
+    });
+
+    $('#example2_filter').css({ 'margin-left': '75%' });
+
+    $('#searchInput').on('keyup', function () {
+      table.search($(this).val()).draw();
+    });
+  });
+</script>
+
+</div>
 </body>
 </html>

@@ -63,16 +63,16 @@ def data_table():
         return "An error occurred while fetching data. Please try again later.", 500
 # 
 
-@app.route('/databyid/<id>')
-def databyid(id):
-    print(id)
+@app.route('/databyid')
+def databyid():
+    print()
     table_name = 'Wattmeter' 
     table = dynamodb.Table(table_name)
 
     try:
         # Fetch data from DynamoDB where Device_id = id
         response = table.scan(
-            FilterExpression=Key('Device_id').eq(id)  # Adjusted to your specific device_id
+            FilterExpression=Key('Device_id').eq('1')  # Adjusted to your specific device_id
         )
         items = response['Items']
 
