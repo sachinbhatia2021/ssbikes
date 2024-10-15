@@ -3,6 +3,7 @@ import boto3
 import os
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from dotenv import load_dotenv
+from boto3.dynamodb.conditions import Key
 
 # Load environment variables from .env file
 load_dotenv()
@@ -60,6 +61,34 @@ def data_table():
     except Exception as e:
         print(f"Error fetching data from DynamoDB: {e}")
         return "An error occurred while fetching data. Please try again later.", 500
+# 
+
+@app.route('/databyid')
+def databyid():
+    print()
+    table_name = 'Wattmeter' 
+    table = dynamodb.Table(table_name)
+
+    try:
+        # Fetch data from DynamoDB where Device_id = id
+        response = table.scan(
+            FilterExpression=Key('Device_id').eq('1')  # Adjusted to your specific device_id
+        )
+        items = response['Items']
+
+        # Sort items by timestamp in descending order
+        sorted_items = sorted(items, key=lambda x: x.get('timestamp', 0), reverse=True)
+        
+        # Render the data in your HTML template
+        return render_template('watt.html', items=sorted_items)
+    
+    except (NoCredentialsError, PartialCredentialsError) as e:
+        print(f"Credentials error: {e}")
+        return "Could not access DynamoDB. Please check your AWS credentials.", 500
+    except Exception as e:
+        print(f"Error fetching data from DynamoDB: {e}")
+        return "An error occurred while fetching data. Please try again later.", 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
