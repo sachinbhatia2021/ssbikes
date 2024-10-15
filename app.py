@@ -4,6 +4,7 @@ import os
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from dotenv import load_dotenv
 from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Key
 
 # Load environment variables from .env file
 load_dotenv()

@@ -148,21 +148,40 @@
     
 
     .con_small{
-      padding: 20px;
+      padding: 10px;
+      display: flex;
+      flex-direction: row;
+      margin-top: 30px;
+      justify-content: space-between;
+
     }
 
     .half-width {
+      width: calc(50% - 10px);
       height: 150px;
-        margin: 20px;
+      margin: 20px;
       border: none;
       box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
       transition: transform 0.7s ease;
       overflow: hidden;
+
     }
     .half-width:hover {
       transform: scale(1.03);
       background-color: #f2f4f8;
     }
+
+
+    @media (max-width: 768px) {
+  .con_small {
+    flex-wrap: wrap; /* Allow wrapping of the flex items */
+  }
+
+  .half-width {
+    width: calc(50% - 20px); /* Adjust width for two cards */
+    margin: 10px; /* Adjust margin to fit two cards properly */
+  }
+}
     /*  */
     .line2{
       background-color: #f2f4f8;
@@ -273,22 +292,26 @@
   <h5 style="margin-left: 30px;"><b>Last Synced : </b></h5>
 
     
-  <div class="con_small d-flex justify-content-between  row">
-    <div class="half-width col-lg-2 col-md-3 col-sm-12">
-      -------
+  <div class="con_small">
+    <div class="half-width">
+      <p>Current</p>
     </div>
-    <div class="half-width  col-lg-2 col-md-3 col-sm-12">
-      ------
+    <div class="half-width">
+      <p>Voltage</p>
+      <p>Total</p>
+
     </div>
-    <div class="half-width  col-lg-2 col-md-3 col-sm-12">
-      ------
+    <div class="half-width">
+      <p>KWh</p>
+      <p>Total</p>
     </div>
-    <div class="half-width  col-lg-2 col-md-3 col-sm-12">
-      ------
+    <div class="half-width">
+      <p>Power</p>
+      <p>Total</p>
     </div>
 
   </div> 
-<!--  -->
+<!-- if voltage, temperatures cross threshold value -->
 <div class="line2">
   <h5>Smart Alerts</h5>
 </div>
@@ -315,11 +338,12 @@ async function Inverteridsend() {
   }
 }
 </script> -->
-<a href="{{url_for('databyid')}}">11111</a>
 
 
 <div class="Inverter1">
   <h5>Inverter Details</h5>
+  <a href="{{url_for('databyid')}}">Device</a>
+
   <div class="tablediv">
       <div class="row">
           <div class="card-body">
@@ -377,7 +401,6 @@ async function Inverteridsend() {
   </div>
 
 </div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 // Extracting data from Jinja2 context and making sure it is properly formatted for JavaScript
@@ -422,8 +445,6 @@ const voltageChart = new Chart(ctx, {
 </script>
 
 <!-- next graph -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <script>
       const ctx1 = document.getElementById('myChart1');
     
