@@ -210,8 +210,8 @@
   .Inverter1 {
     height: auto;
     background-color: #f2f4f8;
-    margin: 28px;
-    padding: 20px;
+    margin: 24px;
+    padding: 10px;
     border: none;
     box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.7s ease;
@@ -399,18 +399,157 @@
 
     <div class="graphdiv1">
       <div class="chart1">
-        <h5>Voltage vs. Time Graph</h5>
-        <canvas id="voltageChart" width="400" height="200"></canvas>
+        <h5>DC Voltage vs. Time</h5>
+        <canvas id="myChart1" width="400" height="200"></canvas>
       </div>
       <div class="chart2">
-        <h5>Temperature vs. Time Graph</h5>
-        <canvas id="myChart1" width="400" height="200"></canvas>
+        <h5>Temperature vs. Time </h5>
+        <canvas id="myChart2" width="400" height="200"></canvas>
 
       </div>
 
     </div>
 
+    <!-- script for DCvoltage vs timme -->
+    <script>
+      let chart1 = null;
+      function fetchGraphData() {
+          fetch('/graphdata')  
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error(`HTTP error! Status: ${response.status}`);
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  if (!Array.isArray(data)) {
+                      throw new Error("Data is not an array.");
+                  }
+  
+                  const labels = data.map(item => new Date(item.timestamp));  
+                  const values = data.map(item => item.Dc_Current);  
+  
+  
+                  if (chart1) {
+                      chart1.destroy(); 
+                  }
+  
+                  const ctx1 = document.getElementById('myChart1').getContext('2d');
+                  chart1 = new Chart(ctx1, {
+                      type: 'line',  
+                      data: {
+                          labels: labels,  // Time data for X-axis
+                          datasets: [{
+                              label: 'Dc_Current',
+                              data: values,  // Voltage data for Y-axis
+                              borderColor: '#56ccf0',
+                              backgroundColor: 'rgba(0, 0, 0, 0)',  // Transparent background
+                              borderWidth: 2,
+                              fill: false,  // No fill below the line
+                              tension: 0.3  // Smooth lines
+                          }]
+                      },
+                      options: {
+                          scales: {
+                              x: {
+                                  type: 'time',  // Use time scale for X-axis
+                                  time: {
+                                      unit: 'minute',  // Adjust this depending on your time intervals
+                                      tooltipFormat: 'MMM d, h:mm a'  // Format for tooltip
+                                  },
+                                  grid: {
+                                      display: false
+                                  }
+                              },
+                              y: {
+                                  beginAtZero: true,  // Start Y-axis at 0
+                                  grid: {
+                                      display: false
+                                  }
+                              }
+                          }
+                      }
+                  });
+              })
+              .catch(error => {
+                  console.error('Error fetching graph data:', error);
+              });
+      }
+  
+      fetchGraphData();  // Call the function to fetch and display the graph data
+  </script>
+ <!-- script for DCvoltage vs timme -->
+ <script>
+  let chart2 = null;
+  function fetchGraphData2() {
+      fetch('/graphdatatemperature')  
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.json();
+          })
+          .then(data => {
+              if (!Array.isArray(data)) {
+                  throw new Error("Data is not an array.");
+              }
 
+              const labels = data.map(item => new Date(item.timestamp));  
+              const values = data.map(item => item.Temperature);  
+
+
+              if (chart2) {
+                  chart1.destroy(); 
+              }
+
+              const ctx = document.getElementById('myChart2').getContext('2d');
+              chart1 = new Chart(ctx, {
+                  type: 'line',  
+                  data: {
+                      labels: labels,
+                      datasets: [{
+                          label: 'Temperature',
+                          data: values, 
+                          borderColor: '#56ccf0',
+                          backgroundColor: 'rgba(0, 0, 0, 0)', 
+                          borderWidth: 2,
+                          fill: false,  
+                          tension: 0.3  
+                      }]
+                  },
+                  options: {
+                      scales: {
+                          x: {
+                              type: 'time',  
+                              time: {
+                                  unit: 'minute',  
+                                  tooltipFormat: 'MMM d, h:mm a' 
+                              },
+                              grid: {
+                                  display: false
+                              }
+                          },
+                          y: {
+                              beginAtZero: true,  
+                              grid: {
+                                  display: false
+                              }
+                          }
+                      }
+                  }
+              });
+          })
+          .catch(error => {
+              console.error('Error fetching graph data:', error);
+          });
+  }
+
+  fetchGraphData2(); 
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Include Date Adapter for Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script>
       // 
 
