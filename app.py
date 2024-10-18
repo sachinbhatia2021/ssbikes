@@ -62,7 +62,7 @@ def data_table():
 def databyid():
     try:
         
-        return render_template('watt.html', items=sorted_items)
+        return render_template('watt.html')
     
     except Exception as e:
         print(f"Error: {e}")
