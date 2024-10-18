@@ -317,63 +317,55 @@
 </div>
 
 <br>
-<!--  -->
-<!-- table -->
-<!-- <input type="text" id="Inverterid" onchange="Inverteridsend()">
-<script>
-async function Inverteridsend() {
-  const id = document.getElementById('Inverterid').value;
-  console.log(id);
-  
-  try {
-    const response = await fetch(`/databyid/${id}`);
-    if (response.ok) {
-      const data = await response.text();
-      document.querySelector('.Inverter1').innerHTML = data; // Update the HTML content
-    } else {
-      console.error('Failed to fetch data:', response.status);
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
-</script> -->
+
 
 
 <div class="Inverter1">
   <h5>Inverter Details</h5>
-  <a href="{{url_for('databyid')}}">Device</a>
-
+  <a href="{{url_for('databyid')}}">Device</a><br><br>
+<p></p>
   <div class="tablediv">
       <div class="row">
           <div class="card-body">
               <table id="example2" class="table table-bordered table-striped">
                   <thead>
                       <tr>
-                          <th>Device ID</th>
-                          <th>Timestamp</th>
-                          <th>DC Current</th>
-                          <th>DC KWh</th>
-                          <th>DC Power</th>
-                          <th>DC Units</th>
-                          <th>DC Voltage</th>
-                          <th>Temperature</th>
+                        <th>Device ID</th>
+                        <th>Timestamp</th>
+                        <th>DC Current</th>
+                        <th>DC KWh</th>
+                        <th>DC Power</th>
+                        <th>DC Units</th>
+                        <th>DC Voltage</th>
+                        <th>Temperature</th>
+                         <th>Ac Voltage</th>
+                        <th>Ac Current</th>
+                        <th>Ac Power</th>
+                        <th>Ac KWH</th>
+                        <th>Frequency</th>
                       </tr>
-                  </thead>
-                  <tbody>
-                      {% if items %}
-                          {% for item in items %}
-                          <tr>
-                              <td>{{ item['Device_id'] }}</td>
-                              <td>{{ item['timestamp'] }}</td>
-                              <td>{{ item['Dc_Current'] }}</td>
-                              <td>{{ item['Dc_KWH'] }}</td>
-                              <td>{{ item['Dc_Power'] }}</td>
-                              <td>{{ item['Dc_Units'] }}</td>
-                              <td>{{ item['Dc_Voltage'] }}</td>
-                              <td>{{ item['temperature'] }}</td>
-                          </tr>
-                          {% endfor %}
+                    </thead>
+                    <tbody>
+                      {% if itemss %}
+
+                      {% for item in itemss %}
+                      <tr>
+                        <td>{{ item.get('Device_id', 'N/A') }}</td>
+                        <td>{{ item.get('timestamp', 'N/A') }}</td>
+                        <td>{{ item.get('Dc_Current', 'N/A') }}</td>
+                        <td>{{ item.get('Dc_KWH', 'N/A') }}</td>
+                        <td>{{ item.get('Dc_Power', 'N/A') }}</td>
+                        <td>{{ item.get('Dc_Units', 'N/A') }}</td>
+                        <td>{{ item.get('Dc_Voltage', 'N/A') }}</td>
+                        <td>{{ item.get('Temperature', 'N/A') }}</td>
+                        <td>{{ item.get('Ac_Voltage', 'N/A') }}</td>
+                        <td>{{ item.get('Ac_Current', 'N/A') }}</td>
+                        <td>{{ item.get('Ac_Power', 'N/A') }}</td>
+                        <td>{{ item.get('Ac_KWH', 'N/A') }}</td>
+                        <td>{{ item.get('Ac_Units', 'N/A') }}</td>
+                        
+                      </tr>
+                      {% endfor %}
                       {% else %}
                       <tr>
                           <td colspan="8">No data available</td>
@@ -396,100 +388,111 @@ async function Inverteridsend() {
     <canvas id="voltageChart" width="400" height="200"></canvas>
   </div>
   <div class="chart2">
-    <canvas id="myChart1"></canvas>
+    <h5>Temperature vs. Time Graph</h5>
+    <canvas id="myChart1" width="400" height="200"></canvas>
 
   </div>
 
 </div>
-
 <script>
-// Extracting data from Jinja2 context and making sure it is properly formatted for JavaScript
-const labels = {{ items | map(attribute='timestamp') | list | tojson }}; // X-axis: Timestamps
-const voltageData = {{ items | map(attribute='Dc_Voltage') | list | tojson }}; // Y-axis: DC Voltage
+  // Voltage Data (Ensure items contain the 'Dc_Voltage' field)
+  const voltageData = {{ items | map(attribute='Dc_Voltage') | list | tojson }}; 
+  console.log("hy",voltageData)
+  // Get current time and 24 hours ago time in milliseconds
+  const currentTime = new Date().getTime();
+  const oneDayAgo = currentTime - (24 * 60 * 60 * 1000); // 24 hours in milliseconds
 
-// Check if labels and voltageData have values
-console.log('Labels (Timestamps):', labels);
-console.log('Voltage Data:', voltageData);
+  // Timestamps from the items (Ensure items contain the 'timestamp' field)
+  const labels = {{ items | map(attribute='timestamp') | list | tojson }};
+  const temperatureData = {{ items | map(attribute='Temperature') | list | tojson }}; 
 
-const ctx = document.getElementById('voltageChart').getContext('2d');
-
-const voltageChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-      labels: labels, // X-axis (Timestamps)
-      datasets: [{
-          label: 'DC Voltage',
-          data: voltageData, // Y-axis (Voltage Data)
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-      }]
-  },
-  options: {
-      scales: {
-          x: {
-              title: {
-                  display: true,
-                  text: 'Timestamp'
-              }
-          },
-          y: {
-              title: {
-                  display: true,
-                  text: 'DC Voltage'
-              }
-          }
+  // Filter the data for the last 24 hours
+  const filteredData = labels
+    .map((timestamp, index) => {
+      const date = new Date(timestamp); // Convert timestamp to Date object
+      if (date.getTime() >= oneDayAgo) {
+        return {
+          timestamp: timestamp,       // Keep the timestamp
+          temperature: temperatureData[index] // Corresponding temperature value
+        };
       }
-  }
-});
-</script>
+      return null; // Skip data outside the 24-hour range
+    })
+    .filter(item => item !== null); // Remove null values
 
-<!-- next graph -->
-    <script>
-      const ctx1 = document.getElementById('myChart1');
-    
-      new Chart(ctx1, {
-        type: 'bar',
-        data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
-          }]
+  // Separate the filtered labels and temperature data
+  const filteredLabels = filteredData.map(item => item.timestamp);
+  const filteredTemperatureData = filteredData.map(item => item.temperature);
+
+  // Temperature Chart with filtered data
+  const ctxTemperature = document.getElementById('myChart1').getContext('2d');
+  const temperatureChart = new Chart(ctxTemperature, {
+    type: 'line',
+    data: {
+      labels: filteredLabels, // X-axis (Filtered Timestamps)
+      datasets: [{
+        label: 'Temperature',
+        data: filteredTemperatureData, // Y-axis (Filtered Temperature Data)
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }]
+    },
+    options: {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Timestamp'
+          }
         },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
+        y: {
+          title: {
+            display: true,
+            text: 'Temperature (°C)' // Label for Temperature Y-axis
           }
         }
-      });
-    </script>
-     
-  </div>
+      }
+    }
+  });
 
-</div>
+  // Voltage Chart
+  const ctxVoltage = document.getElementById('voltageChart').getContext('2d');
+  const voltageChart = new Chart(ctxVoltage, {
+    type: 'line',
+    data: {
+      labels: labels, // X-axis (Timestamps)
+      datasets: [{
+        label: 'DC Voltage',
+        data: voltageData, // Y-axis (Voltage Data)
+        fill: false,
+        borderColor: 'rgb(255, 99, 132)',
+        tension: 0.1
+      }]
+    },
+    options: {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Timestamp'
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'DC Voltage (V)' // Label for Voltage Y-axis
+          }
+        }
+      }
+    }
+  });
+</script>
 
-<!--  -->
-<!-- end -->
-
-
-
-<!-- script for side nv -->
 <script>
-  function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-  }
-  
-  function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("main").style.marginLeft= "0";
-  }
-  </script>
- <script>
+// 
+
+// 
   $(document).ready(function () {
     var table = $('#example2').DataTable({
       "pageLength": 10,
@@ -544,7 +547,17 @@ const voltageChart = new Chart(ctx, {
     });
   });
 </script>
-
+<script>
+  function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+    document.getElementById("main").style.marginLeft = "250px";
+  }
+  
+  function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("main").style.marginLeft= "0";
+  }
+  </script>
 </div>
 </body>
 </html>

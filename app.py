@@ -4,7 +4,6 @@ import os
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from dotenv import load_dotenv
 from boto3.dynamodb.conditions import Key
-from boto3.dynamodb.conditions import Key
 
 # Load environment variables from .env file
 load_dotenv()
@@ -44,29 +43,41 @@ def dash():
 def data_table():
     table_name = 'Wattmeter' 
     table = dynamodb.Table(table_name)
-
+    
+    items = []
+    last_evaluated_key = None
+    
     try:
-        # Fetch data from DynamoDB
-        response = table.scan()
-        items = response['Items']
+        while True:
+            # Scan the table, starting from the last evaluated key if exists
+            if last_evaluated_key:
+                response = table.scan(ExclusiveStartKey=last_evaluated_key)
+            else:
+                response = table.scan()
+
+            # Add the current page of items to the total list of items
+            items.extend(response.get('Items', []))
+
+            # Check if there's more data to fetch (pagination)
+            last_evaluated_key = response.get('LastEvaluatedKey')
+            
+            # If no more data, break the loop
+            if not last_evaluated_key:
+                break
 
         # Sort items by timestamp in descending order
         sorted_items = sorted(items, key=lambda x: x.get('timestamp', 0), reverse=True)
 
         # Render the data in your HTML template
         return render_template('table.html', items=sorted_items)
-    
-    except (NoCredentialsError, PartialCredentialsError) as e:
-        print(f"Credentials error: {e}")
-        return "Could not access DynamoDB. Please check your AWS credentials.", 500
+
     except Exception as e:
-        print(f"Error fetching data from DynamoDB: {e}")
-        return "An error occurred while fetching data. Please try again later.", 500
+        return str(e), 500
+
 # 
 
 @app.route('/databyid')
 def databyid():
-    print()
     table_name = 'Wattmeter' 
     table = dynamodb.Table(table_name)
 
@@ -76,12 +87,12 @@ def databyid():
             FilterExpression=Key('Device_id').eq('1')  # Adjusted to your specific device_id
         )
         items = response['Items']
-
         # Sort items by timestamp in descending order
         sorted_items = sorted(items, key=lambda x: x.get('timestamp', 0), reverse=True)
+
         
         # Render the data in your HTML template
-        return render_template('watt.html', items=sorted_items)
+        return render_template('watt.html', itemss=sorted_items)
     
     except (NoCredentialsError, PartialCredentialsError) as e:
         print(f"Credentials error: {e}")
@@ -89,7 +100,6 @@ def databyid():
     except Exception as e:
         print(f"Error fetching data from DynamoDB: {e}")
         return "An error occurred while fetching data. Please try again later.", 500
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
