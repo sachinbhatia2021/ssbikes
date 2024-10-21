@@ -308,8 +308,11 @@
 
 
     <div class="con_small">
-      <div class="half-width">
-        <p>Current</p>
+      <div class="half-width ms-3 p-2">
+       <span>DC Current :- {{Dccurrent}}</span><br>
+       <br>
+       <span>AC Current :- {{Accurrent}}</span>
+
       </div>
       <div class="half-width">
         <p>Voltage</p>
@@ -409,6 +412,22 @@
       </div>
 
     </div>
+<!--  -->
+
+    <!-- Ensure Chart.js is loaded -->
+
+    <div class="graphdiv1">
+      <div class="chart1">
+        <h5>DC Voltage vs. Time</h5>
+        <canvas id="myChart3" width="400" height="200"></canvas>
+      </div>
+      <div class="chart2">
+        <h5>Temperature vs. Time </h5>
+        <canvas id="myChart4" width="400" height="200"></canvas>
+
+      </div>
+
+    </div>
 
     <!-- script for DCvoltage vs timme -->
     <script>
@@ -479,9 +498,10 @@
       fetchGraphData();  // Call the function to fetch and display the graph data
   </script>
  <!-- script for DCvoltage vs timme -->
+ 
  <script>
   let chart2 = null;
-  function fetchGraphData2() {
+  function graphdatatemperature() {
       fetch('/graphdatatemperature')  
           .then(response => {
               if (!response.ok) {
@@ -493,15 +513,15 @@
               if (!Array.isArray(data)) {
                   throw new Error("Data is not an array.");
               }
-
+ 
               const labels = data.map(item => new Date(item.timestamp));  
               const values = data.map(item => item.Temperature);  
-
-
+ 
+ 
               if (chart2) {
                   chart1.destroy(); 
               }
-
+ 
               const ctx = document.getElementById('myChart2').getContext('2d');
               chart1 = new Chart(ctx, {
                   type: 'line',  
@@ -543,10 +563,149 @@
               console.error('Error fetching graph data:', error);
           });
   }
-
-  fetchGraphData2(); 
+ 
+  graphdatatemperature(); 
+ </script>
+<!-- graph 3 -->
 </script>
+<!-- script for DCvoltage vs timme -->
+<script>
+ let chart3 = null;
+ function graph3() {
+     fetch('/graph3')  
+         .then(response => {
+             if (!response.ok) {
+                 throw new Error(`HTTP error! Status: ${response.status}`);
+             }
+             return response.json();
+         })
+         .then(data => {
+             if (!Array.isArray(data)) {
+                 throw new Error("Data is not an array.");
+             }
 
+             const labels = data.map(item => new Date(item.timestamp));  
+             const values = data.map(item => item.Temperature);  
+
+
+             if (chart3) {
+                 chart1.destroy(); 
+             }
+
+             const ctx = document.getElementById('myChart3').getContext('2d');
+             chart1 = new Chart(ctx, {
+                 type: 'line',  
+                 data: {
+                     labels: labels,
+                     datasets: [{
+                         label: 'Temperature',
+                         data: values, 
+                         borderColor: '#56ccf0',
+                         backgroundColor: 'rgba(0, 0, 0, 0)', 
+                         borderWidth: 2,
+                         fill: false,  
+                         tension: 0.3  
+                     }]
+                 },
+                 options: {
+                     scales: {
+                         x: {
+                             type: 'time',  
+                             time: {
+                                 unit: 'minute',  
+                                 tooltipFormat: 'MMM d, h:mm a' 
+                             },
+                             grid: {
+                                 display: false
+                             }
+                         },
+                         y: {
+                             beginAtZero: true,  
+                             grid: {
+                                 display: false
+                             }
+                         }
+                     }
+                 }
+             });
+         })
+         .catch(error => {
+             console.error('Error fetching graph data:', error);
+         });
+ }
+
+ graph3(); 
+</script>
+<!-- graph 4 -->
+</script>
+<!-- script for DCvoltage vs timme -->
+<script>
+ let chart4 = null;
+ function graph4() {
+     fetch('/graph4')  
+         .then(response => {
+             if (!response.ok) {
+                 throw new Error(`HTTP error! Status: ${response.status}`);
+             }
+             return response.json();
+         })
+         .then(data => {
+             if (!Array.isArray(data)) {
+                 throw new Error("Data is not an array.");
+             }
+
+             const labels = data.map(item => new Date(item.timestamp));  
+             const values = data.map(item => item.Temperature);  
+
+
+             if (chart4) {
+                 chart1.destroy(); 
+             }
+
+             const ctx = document.getElementById('myChart4').getContext('2d');
+             chart1 = new Chart(ctx, {
+                 type: 'line',  
+                 data: {
+                     labels: labels,
+                     datasets: [{
+                         label: 'Temperature',
+                         data: values, 
+                         borderColor: '#56ccf0',
+                         backgroundColor: 'rgba(0, 0, 0, 0)', 
+                         borderWidth: 2,
+                         fill: false,  
+                         tension: 0.3  
+                     }]
+                 },
+                 options: {
+                     scales: {
+                         x: {
+                             type: 'time',  
+                             time: {
+                                 unit: 'minute',  
+                                 tooltipFormat: 'MMM d, h:mm a' 
+                             },
+                             grid: {
+                                 display: false
+                             }
+                         },
+                         y: {
+                             beginAtZero: true,  
+                             grid: {
+                                 display: false
+                             }
+                         }
+                     }
+                 }
+             });
+         })
+         .catch(error => {
+             console.error('Error fetching graph data:', error);
+         });
+ }
+
+ graph4(); 
+</script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Include Date Adapter for Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
