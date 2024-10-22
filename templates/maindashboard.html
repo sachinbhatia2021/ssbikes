@@ -183,18 +183,14 @@
   @media (max-width: 768px) {
     .con_small {
       flex-wrap: wrap;
-      /* Allow wrapping of the flex items */
     }
 
     .half-width {
       width: calc(50% - 20px);
-      /* Adjust width for two cards */
       margin: 10px;
-      /* Adjust margin to fit two cards properly */
     }
   }
 
-  /*  */
   .line2 {
     background-color: #f2f4f8;
     height: 80px;
@@ -304,22 +300,17 @@
       <a href="#">Link 3</a>
       <a href="#">Link 4</a>
     </div>
-   
-
-<!--  -->
 
     <div class="Inverter1">
       <h5>Inverter Details</h5>
-    
+
       <div class="tablediv">
         <div class="row">
           <div class="card-body">
             <table id="example2" class="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <th  class="text-center">Device ID</th>
-                
-                 
+                  <th class="text-center">Device ID</th>
                   <th class="text-center">Total Generation</th>
                   <th class="text-center">Total Consumption</th>
                   <th class="text-center">Remaining</th>
@@ -327,7 +318,6 @@
                 </tr>
               </thead>
               <tbody>
-              
 
                 {% for item in alldataprint %}
                 <tr>
@@ -335,28 +325,17 @@
                   <td>{{ item[1] }}</td>
                   <td>{{ item[2] }}</td>
                   <td>{{ item[3] }}</td>
-                  <td > <button  class="btn btn-outline-primary" ><a href="{{ url_for('summary', device=item[0]) }}">Summary</a></button> </td>
-
+                  <td> <button class="btn btn-outline-primary"><a
+                        href="{{ url_for('summary', device=item[0]) }}">Summary</a></button> </td>
                 </tr>
                 {% endfor %}
-               
-              
               </tbody>
             </table>
-
-
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Ensure Chart.js is loaded -->
-
-    
-  
-  
     <script>
-    
       $(document).ready(function () {
         var table = $('#example2').DataTable({
           "pageLength": 10,
@@ -395,11 +374,10 @@
               'margin': '0 -0px 0 -0px'
             });
 
-            // Style active page
             $('.paginate_button.current').css({
-              'background-color': '#007BFF', // Active page background color
-              'color': 'white', // Active page text color
-              'border': '1px solid #007BFF' // Optional: active page border color
+              'background-color': '#007BFF',
+              'color': 'white',
+              'border': '1px solid #007BFF'
             });
           }
         });

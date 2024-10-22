@@ -395,7 +395,7 @@
       <div class="signin-signup">
         <form action="{{ url_for('index')}}" class="sign-in-form" method="POST">
           <h1 class="title">Wattmeter</h1>
-            <h2 class="title">Login</h2>
+          <h2 class="title">Login</h2>
           {% if error %}
           <p style="color: red">{{ error }}</p>
           {% endif %} {% if message %}
@@ -431,7 +431,6 @@
       const togglePassword = document.getElementById('togglePassword');
 
       togglePassword.addEventListener('click', function () {
-        // Toggle the type attribute
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
         password.setAttribute('type', type);
         this.classList.toggle('fa-lock-open');
