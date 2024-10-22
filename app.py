@@ -87,16 +87,22 @@ def summary(device):
     try:
         with get_db_connection() as connection:
             with connection.cursor(buffered=True) as cursor:
+                alldata = """
+                select dc.Device_id, max(dc.Dc_KWH),max(ac.kWh_Consumed),( max(dc.Dc_KWH)-max(ac.kWh_Consumed)) from dc_data dc
+            join ac_data ac on dc.Device_id=ac.Device_id
+                  WHERE dc.Device_id = %s """
+                cursor.execute(alldata,(device,))
+                alldataprint = cursor.fetchone()
                 current = """
-                SELECT Dc_Current,timestamp FROM dc_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
+                SELECT Dc_Current,timestamp,max(Dc_KWH),Dc_Power,Temperature FROM dc_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
                 cursor.execute(current, (device,))  
                 currentdata = cursor.fetchone()
                 Accurrent = """
-                SELECT Current,timestamp FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
+                SELECT Current,timestamp,max(kWh_Consumed),Power,Temperature FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
                 cursor.execute(Accurrent, (device,))  
                 Accurrentdata = cursor.fetchone()
 
-        return render_template('dashboard.html', Dccurrent=currentdata, Accurrent=Accurrentdata)
+        return render_template('dashboard.html', Dccurrent=currentdata, Accurrent=Accurrentdata,alldataprint=alldataprint)
     
     except Exception as e:
         return str(e), 500
@@ -112,8 +118,13 @@ def data_table():
                 select * from dc_data"""
                 cursor.execute(alldata)
                 alldataprint = cursor.fetchall()
+                
+                Acdata = """
+                select * from ac_data"""
+                cursor.execute(Acdata)
+                allAcdataprint = cursor.fetchall()
               
-        return render_template('table.html',alldataprint=alldataprint)
+        return render_template('table.html',alldataprint=alldataprint,Acalldataprint=allAcdataprint)
 
     except Exception as e:
         return str(e), 500

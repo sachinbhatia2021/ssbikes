@@ -325,10 +325,11 @@
                   <td>{{ item[1] }}</td>
                   <td>{{ item[2] }}</td>
                   <td>{{ item[3] }}</td>
-                  <td> <button class="btn btn-outline-primary"><a
-                        href="{{ url_for('summary', device=item[0]) }}">Summary</a></button> </td>
+                  <td> <a class="btn btn-outline-primary"
+                        href="{{ url_for('summary', device=item[0]) }}">Summary</a> </td>
                 </tr>
                 {% endfor %}
+             
               </tbody>
             </table>
           </div>
