@@ -54,9 +54,12 @@ def dash():
         with get_db_connection() as connection:
             with connection.cursor(buffered=True) as cursor:
                 alldata = """
-                select dc.Device_id, max(dc.Dc_KWH),max(ac.kWh_Consumed),( max(dc.Dc_KWH)-max(ac.kWh_Consumed)) from dc_data dc
-            join ac_data ac on dc.Device_id=ac.Device_id
-                  group by dc.Device_id """
+                SELECT dc.Device_id, dc.Dc_KWH, ac.kWh_Consumed, (dc.Dc_KWH - ac.kWh_Consumed) AS Remaining_KWH
+                FROM dc_data dc
+                JOIN ac_data ac ON dc.Device_id = ac.Device_id
+                WHERE dc.timestamp = (SELECT MAX(timestamp) FROM dc_data WHERE Device_id = dc.Device_id)
+                AND ac.timestamp = (SELECT MAX(timestamp) FROM ac_data WHERE Device_id = ac.Device_id)
+                ORDER BY dc.Device_id"""
                 cursor.execute(alldata)
                 alldataprint = cursor.fetchall()
                 
