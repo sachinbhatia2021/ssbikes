@@ -93,12 +93,13 @@ def summary(device):
                   WHERE dc.Device_id = %s """
                 cursor.execute(alldata,(device,))
                 alldataprint = cursor.fetchone()
+
                 current = """
-                SELECT Dc_Current,timestamp,max(Dc_KWH),Dc_Power,Temperature FROM dc_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
+                SELECT Dc_Current,timestamp,Dc_KWH,Dc_Power,Temperature FROM dc_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
                 cursor.execute(current, (device,))  
                 currentdata = cursor.fetchone()
                 Accurrent = """
-                SELECT Current,timestamp,max(kWh_Consumed),Power,Temperature FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
+                SELECT Current,timestamp,kWh_Consumed,Power,Temperature FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
                 cursor.execute(Accurrent, (device,))  
                 Accurrentdata = cursor.fetchone()
 
