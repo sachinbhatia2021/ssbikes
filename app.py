@@ -1,22 +1,35 @@
-from flask import render_template, Flask, redirect, request, url_for
-import boto3
-import os
-from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+from flask import render_template, Flask, redirect, request, url_for ,jsonify
 from dotenv import load_dotenv
-from boto3.dynamodb.conditions import Key
+import mysql.connector.pooling
+from mysql.connector import Error
+import os
 
 # Load environment variables from .env file
 load_dotenv()
 
+Host = os.getenv("Host")
+user = os.getenv("User")
+db_password = os.getenv("db_password")
+db_name = os.getenv("db_name")
+
 app = Flask(__name__)
 
-# Initialize the DynamoDB client using environment variables
-dynamodb = boto3.resource(
-    'dynamodb',
-    aws_access_key_id=os.getenv('aws_access_key_id'),
-    aws_secret_access_key=os.getenv('aws_secret'),
-    region_name=os.getenv('region_name')
-)
+# Database connection pool for AWS database
+dbconfig = {
+    "host": Host,
+    "user": user,
+    "password": db_password,
+    "database": db_name
+}
+
+# connection Pool
+mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool",
+                                                        pool_size=8,
+                                                        **dbconfig)
+
+def get_db_connection():
+    return mydb_pool.get_connection()
+
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -37,57 +50,169 @@ def index():
 
 @app.route('/dashboard')
 def dash():
-    return render_template('watt.html')
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(buffered=True) as cursor:
+                alldata = """
+                select dc.Device_id, max(dc.Dc_KWH),max(ac.kWh_Consumed),( max(dc.Dc_KWH)-max(ac.kWh_Consumed)) from dc_data dc
+            join ac_data ac on dc.Device_id=ac.Device_id
+                  group by dc.Device_id """
+                cursor.execute(alldata)
+                alldataprint = cursor.fetchall()
+                
+        return render_template('maindashboard.html', alldataprint=alldataprint)
+    
+    except Exception as e:
+        return str(e), 500
+
+@app.route('/databyid')
+def databyid():
+    try:
+        
+        with get_db_connection() as connection:
+            with connection.cursor(dictionary=True) as cursor:
+                alldata = """
+                select * from dc_data"""
+                cursor.execute(alldata)
+                alldataprint = cursor.fetchall()
+              
+        return render_template('.html',items=alldataprint)
+    
+    except Exception as e:
+        print(f"Error: {e}")
+        return "An error occurred while fetching data. Please try again later.", 500
+
+@app.route('/summary/<device>')
+def summary(device):
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(buffered=True) as cursor:
+                current = """
+                SELECT Dc_Current,timestamp FROM dc_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
+                cursor.execute(current, (device,))  
+                currentdata = cursor.fetchone()
+                Accurrent = """
+                SELECT Current,timestamp FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
+                cursor.execute(Accurrent, (device,))  
+                Accurrentdata = cursor.fetchone()
+
+        return render_template('dashboard.html', Dccurrent=currentdata, Accurrent=Accurrentdata)
+    
+    except Exception as e:
+        return str(e), 500
+ 
 
 @app.route('/data')
-def data_table():
-    table_name = 'Wattmeter' 
-    table = dynamodb.Table(table_name)
-
+def data_table():    
     try:
-        # Fetch data from DynamoDB
-        response = table.scan()
-        items = response['Items']
-
-        # Sort items by timestamp in descending order
-        sorted_items = sorted(items, key=lambda x: x.get('timestamp', 0), reverse=True)
-
-        # Render the data in your HTML template
-        return render_template('table.html', items=sorted_items)
-    
-    except (NoCredentialsError, PartialCredentialsError) as e:
-        print(f"Credentials error: {e}")
-        return "Could not access DynamoDB. Please check your AWS credentials.", 500
-    except Exception as e:
-        print(f"Error fetching data from DynamoDB: {e}")
-        return "An error occurred while fetching data. Please try again later.", 500
-# 
-
-@app.route('/databyid/<id>')
-def databyid(id):
-    print(id)
-    table_name = 'Wattmeter' 
-    table = dynamodb.Table(table_name)
-
-    try:
-        # Fetch data from DynamoDB where Device_id = id
-        response = table.scan(
-            FilterExpression=Key('Device_id').eq(id)  # Adjusted to your specific device_id
-        )
-        items = response['Items']
-
-        # Sort items by timestamp in descending order
-        sorted_items = sorted(items, key=lambda x: x.get('timestamp', 0), reverse=True)
         
-        # Render the data in your HTML template
-        return render_template('watt.html', items=sorted_items)
-    
-    except (NoCredentialsError, PartialCredentialsError) as e:
-        print(f"Credentials error: {e}")
-        return "Could not access DynamoDB. Please check your AWS credentials.", 500
+        with get_db_connection() as connection:
+            with connection.cursor(dictionary=True) as cursor:
+                alldata = """
+                select * from dc_data"""
+                cursor.execute(alldata)
+                alldataprint = cursor.fetchall()
+              
+        return render_template('table.html',alldataprint=alldataprint)
+
     except Exception as e:
-        print(f"Error fetching data from DynamoDB: {e}")
-        return "An error occurred while fetching data. Please try again later.", 500
+        return str(e), 500
+
+# @app.route('/databyid')
+# def databyid():
+#     try:
+        
+#         with get_db_connection() as connection:
+#             with connection.cursor(dictionary=True) as cursor:
+#                 # query for Robot table
+#                 alldata = """
+#                 select * from dc_data"""
+#                 cursor.execute(alldata)
+#                 alldataprint = cursor.fetchall()
+              
+#         # Render the data in your HTML template
+#         return render_template('watt.html',items=alldataprint)
+    
+#     except Exception as e:
+#         print(f"Error: {e}")
+#         return "An error occurred while fetching data. Please try again later.", 500
+
+
+@app.route('/graphdata')
+def graphdata():
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(dictionary=True) as cursor:
+                # Query to fetch only timestamp and Dc_Voltage for the graph
+                query = """
+                    SELECT timestamp, Dc_Current FROM dc_data
+                """
+                cursor.execute(query)
+                graph_data = cursor.fetchall()
+                # Convert data to the right format (if necessary)
+                for item in graph_data:
+                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')  # Format the timestamp
+        return jsonify(graph_data)
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while fetching graph data."}), 500
+
+@app.route('/graphdatatemperature')
+def graphdatatemperature():
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(dictionary=True) as cursor:
+                # Query to fetch only timestamp and Dc_Voltage for the graph
+                query = """
+                    SELECT timestamp, Temperature FROM dc_data
+                """
+                cursor.execute(query)
+                graph_data = cursor.fetchall()
+                # Convert data to the right format (if necessary)
+                for item in graph_data:
+                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')  # Format the timestamp
+        return jsonify(graph_data)
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while fetching graph data."}), 500
+# graph 3
+@app.route('/graph3')
+def graph3():
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(dictionary=True) as cursor:
+                # Query to fetch only timestamp and Dc_Voltage for the graph
+                query = """
+                    SELECT timestamp, Temperature FROM dc_data
+                """
+                cursor.execute(query)
+                graph_data = cursor.fetchall()
+                # Convert data to the right format (if necessary)
+                for item in graph_data:
+                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')  # Format the timestamp
+        return jsonify(graph_data)
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while fetching graph data."}), 500
+
+@app.route('/graph4')
+def graph4():
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(dictionary=True) as cursor:
+                # Query to fetch only timestamp and Dc_Voltage for the graph
+                query = """
+                    SELECT timestamp, Temperature FROM dc_data
+                """
+                cursor.execute(query)
+                graph_data = cursor.fetchall()
+                # Convert data to the right format (if necessary)
+                for item in graph_data:
+                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')  # Format the timestamp
+        return jsonify(graph_data)
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while fetching graph data."}), 500
 
 
 if __name__ == '__main__':

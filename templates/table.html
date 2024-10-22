@@ -180,10 +180,16 @@
                   <th>DC Units</th>
                   <th>DC Voltage</th>
                   <th>Temperature</th>
+                 
+                  <th>Ac Voltage</th>
+                  <th>Ac Current</th>
+                  <th>Ac Power</th>
+                  <th>Ac KWH</th>
+                  <th>Frequency</th>
                 </tr>
               </thead>
               <tbody>
-                {% for item in items %}
+                {% for item in alldataprint %}
                 <tr>
                     <td>{{ item['Device_id'] }}</td>
                     <td>{{ item['timestamp'] }}</td>
@@ -192,7 +198,13 @@
                     <td>{{ item['Dc_Power'] }}</td>
                     <td>{{ item['Dc_Units'] }}</td>
                     <td>{{ item['Dc_Voltage'] }}</td>
-                    <td>{{ item['temperature'] }}</td>
+                    <td>{{ item['Temperature'] }}</td>
+                   
+                    <td>{{ item['Ac_Voltage'] }}</td>
+                    <td>{{ item['Ac_Current'] }}</td>
+                    <td>{{ item['Ac_Power'] }}</td>
+                    <td>{{ item['Ac_KWH'] }}</td>
+                    <td>{{ item['Ac_Units'] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -204,6 +216,9 @@
     
   </div>
 
+<!--  -->
+
+</div>
   <div id="mySidenav" class="sidenav"style="z-index: 1001;">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="#">Link 1</a>
@@ -278,7 +293,6 @@
       });
     });
 </script>
-
 
 </body>
 </html>
