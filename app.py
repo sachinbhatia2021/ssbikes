@@ -48,47 +48,20 @@ def index():
 
     return render_template('index.html', error="")
 
-
 @app.route('/dashboard')
 def dash():
     try:
-        # Establishing database connection and fetching data
         with get_db_connection() as connection:
             with connection.cursor(buffered=True) as cursor:
-                # Query for the maximum Dc_Current
-                current = """
-                SELECT MAX(Dc_Current) FROM data"""
-                cursor.execute(current)
-                currentdata = cursor.fetchone()[0]
-                        # Query for the maximum Dc_Current
-                Accurrent = """
-                SELECT MAX(Ac_Current) FROM data"""
-                cursor.execute(Accurrent)
-                Accurrentdata = cursor.fetchone()[0]
-        # Render the watt.html template with the fetched currentdata
-        return render_template('watt.html', Dccurrent=currentdata,Accurrent=Accurrentdata)
-    
-    except Exception as e:
-        # Handle any exception and return the error as a response
-        return str(e), 500
-
-  
-
-@app.route('/data')
-def data_table():    
-    try:
-        
-        with get_db_connection() as connection:
-            with connection.cursor(dictionary=True) as cursor:
-                # query for Robot table
                 alldata = """
-                select * from data"""
+                select dc.Device_id, max(dc.Dc_KWH),max(ac.kWh_Consumed),( max(dc.Dc_KWH)-max(ac.kWh_Consumed)) from dc_data dc
+            join ac_data ac on dc.Device_id=ac.Device_id
+                  group by dc.Device_id """
                 cursor.execute(alldata)
                 alldataprint = cursor.fetchall()
-              
-        # Render the data in your HTML template
-        return render_template('table.html',alldataprint=alldataprint)
-
+                
+        return render_template('maindashboard.html', alldataprint=alldataprint)
+    
     except Exception as e:
         return str(e), 500
 
@@ -98,18 +71,71 @@ def databyid():
         
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
-                # query for Robot table
                 alldata = """
-                select * from data"""
+                select * from dc_data"""
                 cursor.execute(alldata)
                 alldataprint = cursor.fetchall()
               
-        # Render the data in your HTML template
-        return render_template('watt.html',items=alldataprint)
+        return render_template('.html',items=alldataprint)
     
     except Exception as e:
         print(f"Error: {e}")
         return "An error occurred while fetching data. Please try again later.", 500
+
+@app.route('/summary/<device>')
+def summary(device):
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(buffered=True) as cursor:
+                current = """
+                SELECT Dc_Current,timestamp FROM dc_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
+                cursor.execute(current, (device,))  
+                currentdata = cursor.fetchone()
+                Accurrent = """
+                SELECT Current,timestamp FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
+                cursor.execute(Accurrent, (device,))  
+                Accurrentdata = cursor.fetchone()
+
+        return render_template('dashboard.html', Dccurrent=currentdata, Accurrent=Accurrentdata)
+    
+    except Exception as e:
+        return str(e), 500
+ 
+
+@app.route('/data')
+def data_table():    
+    try:
+        
+        with get_db_connection() as connection:
+            with connection.cursor(dictionary=True) as cursor:
+                alldata = """
+                select * from dc_data"""
+                cursor.execute(alldata)
+                alldataprint = cursor.fetchall()
+              
+        return render_template('table.html',alldataprint=alldataprint)
+
+    except Exception as e:
+        return str(e), 500
+
+# @app.route('/databyid')
+# def databyid():
+#     try:
+        
+#         with get_db_connection() as connection:
+#             with connection.cursor(dictionary=True) as cursor:
+#                 # query for Robot table
+#                 alldata = """
+#                 select * from dc_data"""
+#                 cursor.execute(alldata)
+#                 alldataprint = cursor.fetchall()
+              
+#         # Render the data in your HTML template
+#         return render_template('watt.html',items=alldataprint)
+    
+#     except Exception as e:
+#         print(f"Error: {e}")
+#         return "An error occurred while fetching data. Please try again later.", 500
 
 
 @app.route('/graphdata')
@@ -119,7 +145,7 @@ def graphdata():
             with connection.cursor(dictionary=True) as cursor:
                 # Query to fetch only timestamp and Dc_Voltage for the graph
                 query = """
-                    SELECT timestamp, Dc_Current FROM data
+                    SELECT timestamp, Dc_Current FROM dc_data
                 """
                 cursor.execute(query)
                 graph_data = cursor.fetchall()
@@ -138,7 +164,7 @@ def graphdatatemperature():
             with connection.cursor(dictionary=True) as cursor:
                 # Query to fetch only timestamp and Dc_Voltage for the graph
                 query = """
-                    SELECT timestamp, Temperature FROM data
+                    SELECT timestamp, Temperature FROM dc_data
                 """
                 cursor.execute(query)
                 graph_data = cursor.fetchall()
@@ -157,7 +183,7 @@ def graph3():
             with connection.cursor(dictionary=True) as cursor:
                 # Query to fetch only timestamp and Dc_Voltage for the graph
                 query = """
-                    SELECT timestamp, Temperature FROM data
+                    SELECT timestamp, Temperature FROM dc_data
                 """
                 cursor.execute(query)
                 graph_data = cursor.fetchall()
@@ -176,7 +202,7 @@ def graph4():
             with connection.cursor(dictionary=True) as cursor:
                 # Query to fetch only timestamp and Dc_Voltage for the graph
                 query = """
-                    SELECT timestamp, Temperature FROM data
+                    SELECT timestamp, Temperature FROM dc_data
                 """
                 cursor.execute(query)
                 graph_data = cursor.fetchall()
