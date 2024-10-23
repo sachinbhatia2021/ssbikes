@@ -343,9 +343,9 @@
     <div id="mySidenav" class="sidenav" style="z-index: 10;">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-      <a href="#">Link 2</a>
-      <a href="#">Link 3</a>
-      <a href="#">Link 4</a>
+      <a href="{{ url_for('dash')}}">Home</a>
+      <a href="{{ url_for('data_table')}}">Table</a>
+      <a href="#">Log Out</a>
     </div>
 
     <div class="battery-container">
@@ -355,47 +355,67 @@
     </div>
 
     <div class="con_small">
-      <div class="half-width ms-3 p-2">
-        <span><b>DC Current :</b> {{Dccurrent[0]}} V</span> <br> {{Dccurrent[1]}}<br>
+      <div class="half-width " >
+         {{Dccurrent[1]}}
         <br>
-
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center mt-2">{{Dccurrent[0]}}  <span class=" ms-2 mt-4" style="font-size:18px">A</span> </span> <br>
+        <div  class="text-center" style="margin-bottom: 15px;"><b>DC Current</b></div>
       </div>
+
       <div class="half-width">
-        <p><b>Total Units Generated :</b> {{Dccurrent[2]}} Units
+        <br>
         
-
+          <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Dccurrent[2]}}  <span class="mt-4 ms-2" style="font-size:15px"> Units</span> </span> <br>
+          <div  class="text-center" style="margin-bottom: 15px;"><b>Total Units Generation </b></div>
       </div>
+      <div class="half-width">        
+          <br>
+            <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Dccurrent[3]}}  <span class="mt-4 ms-2" style="font-size:15px">W</span> </span> <br>
+            <div  class="text-center" style="margin-bottom: 15px;"><b>Input Power</b></div>
+        </div>
       <div class="half-width">
-        <p><b>Power : </b>{{Dccurrent[3]}} W</p>
+        
+        <br>
+            <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Dccurrent[4]}}  <span class=" ms-1" style="font-size:18px">°C</span> </span> <br>
+            <div  class="text-center" style="margin-bottom: 15px;"><b>Temperature</b></div>
+        </div>
         
       </div>
+    
+
+  
+<!-- next card -->
+<div class="con_small">
+      <div class="half-width " >
+        {{Accurrent[1]}}
+        <br>
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center mt-2">{{Accurrent[0]}}  <span class=" ms-2 mt-4" style="font-size:18px">V</span> </span> <br>
+        <div  class="text-center" style="margin-bottom: 15px;"><b>AC Current </b></div>
+      </div>
+
       <div class="half-width">
-        <p><b>Temperature : </b>{{Dccurrent[4]}} °C</p>
+        <br>
+         <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Accurrent[2]}} <span class="mt-4 ms-2" style="font-size:15px"> Units</span> </span> <br>
+          <div  class="text-center" style="margin-bottom: 15px;"><b>Total Units Consumed  </b></div>
+      </div>
+
+      <div class="half-width">        
+          <br>
+            <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Accurrent[3]}}  <span class="mt-4 ms-2" style="font-size:15px">W</span> </span> <br>
+            <div  class="text-center" style="margin-bottom: 15px;"><b>Output Power</b></div>
+        </div>
+
+      <div class="half-width">
+                <br>
+            <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Accurrent[4]}}  <span class=" ms-1" style="font-size:18px">°C</span> </span> <br>
+            <div  class="text-center" style="margin-bottom: 15px;"><b>Temperature</b></div>
+        </div>
         
       </div>
 
-    </div>
-
-    <div class="con_small">
-      <div class="half-width  ms-3 p-2">
-        <span><b>AC Current :</b> {{Accurrent[0]}} V </span> <br> {{Accurrent[1]}}
-
-      </div>
-      <div class="half-width">
-        <p><b>Total Units Consumed :</b>  {{Accurrent[2]}} Units</p>
-
-      </div>
-      <div class="half-width">
-
-        <p><b>Power : </b>{{Accurrent[3]}} W</p>
-      </div>
-      <div class="half-width">
-        <p><b>Temperature : </b> {{Accurrent[4]}} °C</p>
-      </div>
-
-    </div>
-
-
+    
+<!--  -->
+     
     <div class="graphdiv1">
       <div class="chart1">
         <h5>DC Voltage vs. Time</h5>
@@ -412,6 +432,7 @@
     </div>
 
     <br>
+  </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script>
