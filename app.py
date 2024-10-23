@@ -92,22 +92,53 @@ def summary(device):
     try:
         with get_db_connection() as connection:
             with connection.cursor(buffered=True) as cursor:
+                # Fetch the latest Dc_KWH value for the device
                 current = """
-                SELECT Dc_Current, timestamp, Dc_KWH, Dc_Power, Temperature FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
+                SELECT Dc_Current, timestamp, Dc_KWH, Dc_Power, Temperature 
+                FROM dc_data 
+                WHERE Device_id = %s 
+                ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(current, (device,))  
                 currentdata = cursor.fetchone()
-                
+
+                # Fetch the Dc_KWH value for yesterday at 11:59 PM
+                yest_kwh_query = """
+                SELECT Dc_KWH 
+                FROM dc_data 
+                WHERE Device_id = %s 
+                AND timestamp <= CURDATE() - INTERVAL 1 DAY + INTERVAL '23:59:00' HOUR_SECOND
+                ORDER BY timestamp DESC LIMIT 1"""
+                cursor.execute(yest_kwh_query, (device,))
+                yest_kwh = cursor.fetchone()
+
+                # Fetch the latest AC data
                 Accurrent = """
-                SELECT Current, timestamp, kWh_Consumed, Power, Temperature FROM ac_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
-                cursor.execute(Accurrent, (device,))  
+                SELECT Current, timestamp, kWh_Consumed, Power, Temperature 
+                FROM ac_data 
+                WHERE Device_id = %s 
+                ORDER BY timestamp DESC LIMIT 1"""
+                cursor.execute(Accurrent, (device,))
                 Accurrentdata = cursor.fetchone()
 
+        # Truncate data if available
         if currentdata:
-            currentdata = tuple(truncate(val, 3) for val in currentdata)
+            currentdata = tuple(truncate(val, 3) if val is not None else val for val in currentdata)
+        
         if Accurrentdata:
-            Accurrentdata = tuple(truncate(val, 3) for val in Accurrentdata)
+            Accurrentdata = tuple(truncate(val, 3) if val is not None else val for val in Accurrentdata)
+        
+        # If both current KWH and yesterday's KWH are available, calculate the difference
+        if currentdata and yest_kwh:
+            kwh_difference = truncate(currentdata[2] - yest_kwh[0], 3)  # Assuming Dc_KWH is the 3rd element
 
-        return render_template('summary.html', Dccurrent=currentdata, Accurrent=Accurrentdata)
+        else:
+            kwh_difference = None
+
+        return render_template('summary.html', Dccurrent=currentdata, Accurrent=Accurrentdata, kwh_diff=kwh_difference)
+    
+    except Exception as e:
+        return str(e), 500
+
     
     except Exception as e:
         return str(e), 500
