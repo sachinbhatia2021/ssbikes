@@ -255,10 +255,10 @@
 </div>
   <div id="mySidenav" class="sidenav"style="z-index: 1001;">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="#">Link 1</a>
-    <a href="#">Link 2</a>
-    <a href="#">Link 3</a>
-    <a href="#">Link 4</a>
+   
+    <a href="{{ url_for('dash')}}">Home</a>
+    <a href="{{ url_for('data_table')}}"><u>Table</u></a>
+    <a href="{{url_for('logout')}}">Log Out</a>
   </div>
   
 <script>

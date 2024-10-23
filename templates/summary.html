@@ -9,6 +9,7 @@
     <link rel="icon" type="image/x-icon" href="/static/logo.jpeg">
     <title>Inverter Analytics</title>
   <style>
+    
     .battery-container {
       position: relative;
       width: 200px;
@@ -88,23 +89,25 @@
       z-index: 1;
       top: 0;
       left: 0;
-      background-color: #f5f7fa;
       overflow-x: hidden;
       transition: 0.5s;
       padding-top: 60px;
+      background-color: #171c23;
+      color: white;
+
     }
 
     .sidenav a {
       padding: 8px 8px 8px 32px;
       text-decoration: none;
       font-size: 20px;
-      color: #818181;
+      color: #f4eeee;
       display: block;
       transition: 0.3s;
     }
 
     .sidenav a:hover {
-      color: #0e0707;
+      color: #928e8e;
     }
 
     .sidenav .closebtn {
@@ -143,6 +146,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
+
     }
 
     li {
@@ -345,7 +350,7 @@
 
       <a href="{{ url_for('dash')}}">Home</a>
       <a href="{{ url_for('data_table')}}">Table</a>
-      <a href="#">Log Out</a>
+      <a href="{{url_for('logout')}}">Log Out</a>
     </div>
 
     <div class="battery-container">

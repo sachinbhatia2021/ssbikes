@@ -88,7 +88,7 @@
     width: 100%;
     float: left;
     background-color: #f5f7fa;
-    /* box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1); */
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
     position: fixed;
     top: 0;
     z-index: 10;
@@ -296,9 +296,10 @@
     <div id="mySidenav" class="sidenav" style="z-index: 10;">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-      <a href="#">Link 2</a>
-      <a href="#">Link 3</a>
-      <a href="#">Link 4</a>
+   
+      <a href="{{ url_for('dash')}}"><u>Home</u></a>
+      <a href="{{ url_for('data_table')}}">Table</a>
+      <a href="{{url_for('logout')}}">Log Out</a>
     </div>
 
     <div class="Inverter1">

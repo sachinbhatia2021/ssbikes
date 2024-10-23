@@ -1,9 +1,8 @@
-from flask import render_template, Flask, redirect, request, url_for ,jsonify
+from flask import render_template, Flask, redirect, request, url_for, jsonify,session,make_response
 from dotenv import load_dotenv
 import mysql.connector.pooling
 from mysql.connector import Error
 import os
-
 # Load environment variables from .env file
 load_dotenv()
 
@@ -26,6 +25,8 @@ dbconfig = {
 mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool",
                                                         pool_size=8,
                                                         **dbconfig)
+
+app.secret_key='neeraj'
 
 def get_db_connection():
     return mydb_pool.get_connection()
@@ -90,7 +91,7 @@ def summary(device):
                 cursor.execute(Accurrent, (device,))  
                 Accurrentdata = cursor.fetchone()
 
-        return render_template('dashboard.html', Dccurrent=currentdata, Accurrent=Accurrentdata,alldataprint=alldataprint)
+        return render_template('summary.html', Dccurrent=currentdata, Accurrent=Accurrentdata,alldataprint=alldataprint)
     
     except Exception as e:
         return str(e), 500
@@ -193,7 +194,17 @@ def graph4():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
-
+@app.route('/logout')
+def logout():
+    session.clear()
+    response = make_response(redirect(url_for('index')))
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    return response
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
