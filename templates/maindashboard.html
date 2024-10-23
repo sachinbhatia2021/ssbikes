@@ -295,6 +295,37 @@
         document.getElementById("main").style.marginLeft = "0";
       }
     </script>
+
+    <!-- script for logout -->
+  <script>
+    document.getElementById('logout-btn').addEventListener('click', function (event) {
+      event.preventDefault();
+      window.location.href = "{{ url_for('logout') }}";
+    });
+  </script>
+
+  <!-- script for session out automatically -->
+  <script>
+    var timeout;
+    var logoutTime = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+    function resetTimer() {
+      clearTimeout(timeout);
+      timeout = setTimeout(logout, logoutTime);
+    }
+
+    function logout() {
+      window.location.href = "{{ url_for('logout') }}";
+    }
+
+    document.onload = resetTimer;
+    document.onmousemove = resetTimer;
+    document.onkeypress = resetTimer;
+
+    // Initial call to start the timer
+    resetTimer();
+  </script>
+
   </div>
 </body>
 
