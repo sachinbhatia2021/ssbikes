@@ -3,9 +3,9 @@ from dotenv import load_dotenv
 import mysql.connector.pooling
 from mysql.connector import Error
 import os
-# Load environment variables from .env file
 load_dotenv()
 
+# load the values
 Host = os.getenv("Host")
 user = os.getenv("User")
 db_password = os.getenv("db_password")
@@ -25,13 +25,21 @@ dbconfig = {
 mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool",
                                                         pool_size=8,
                                                         **dbconfig)
-
+# secret key for session
 app.secret_key='neeraj'
 
+# database connection
 def get_db_connection():
     return mydb_pool.get_connection()
 
+# to truncate the values 
+def truncate(value, decimal_places):
+    if isinstance(value, float):
+        factor = 10 ** decimal_places
+        return int(value * factor) / factor
+    return value
 
+# login / index page
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
@@ -46,9 +54,9 @@ def index():
         except Exception as e:
             print(f"Error during login process: {e}")
             return "An error occurred during login. Please try again later.", 500
-
     return render_template('index.html', error="")
 
+# frontpage / homepage
 @app.route('/dashboard')
 def dash():
     try:
@@ -63,44 +71,51 @@ def dash():
                 ORDER BY dc.Device_id"""
                 cursor.execute(alldata)
                 alldataprint = cursor.fetchall()
-                
-        return render_template('maindashboard.html', alldataprint=alldataprint)
-    
+
+        truncated_data = []
+        for row in alldataprint:
+            truncated_row = (
+                row[0],  
+                truncate(row[1], 5), 
+                truncate(row[2], 5),  
+                truncate(row[3], 5)   
+            )
+            truncated_data.append(truncated_row)
+
+        return render_template('maindashboard.html', alldataprint=truncated_data)
     except Exception as e:
         return str(e), 500
 
-
+# Summary page
 @app.route('/summary/<device>')
 def summary(device):
     try:
         with get_db_connection() as connection:
             with connection.cursor(buffered=True) as cursor:
-                alldata = """
-                select dc.Device_id, max(dc.Dc_KWH),max(ac.kWh_Consumed),( max(dc.Dc_KWH)-max(ac.kWh_Consumed)) from dc_data dc
-            join ac_data ac on dc.Device_id=ac.Device_id
-                  WHERE dc.Device_id = %s """
-                cursor.execute(alldata,(device,))
-                alldataprint = cursor.fetchone()
-
                 current = """
-                SELECT Dc_Current,timestamp,Dc_KWH,Dc_Power,Temperature FROM dc_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
+                SELECT Dc_Current, timestamp, Dc_KWH, Dc_Power, Temperature FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(current, (device,))  
                 currentdata = cursor.fetchone()
+                
                 Accurrent = """
-                SELECT Current,timestamp,kWh_Consumed,Power,Temperature FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 1"""
+                SELECT Current, timestamp, kWh_Consumed, Power, Temperature FROM ac_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(Accurrent, (device,))  
                 Accurrentdata = cursor.fetchone()
 
-        return render_template('summary.html', Dccurrent=currentdata, Accurrent=Accurrentdata,alldataprint=alldataprint)
+        if currentdata:
+            currentdata = tuple(truncate(val, 3) for val in currentdata)
+        if Accurrentdata:
+            Accurrentdata = tuple(truncate(val, 3) for val in Accurrentdata)
+
+        return render_template('summary.html', Dccurrent=currentdata, Accurrent=Accurrentdata)
     
     except Exception as e:
         return str(e), 500
  
-
+# Table data
 @app.route('/data')
 def data_table():    
     try:
-        
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
                 alldata = """
@@ -118,82 +133,43 @@ def data_table():
     except Exception as e:
         return str(e), 500
 
-
+# Graph 1: DC_voltage vs time
 @app.route('/graphdata')
 def graphdata():
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
-                # Query to fetch only timestamp and Dc_Voltage for the graph
                 query = """
                     SELECT timestamp, Dc_Current FROM dc_data
                 """
                 cursor.execute(query)
                 graph_data = cursor.fetchall()
-                # Convert data to the right format (if necessary)
                 for item in graph_data:
-                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')  # Format the timestamp
+                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S') 
         return jsonify(graph_data)
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
 
+# Graph 2: Temperature vs time
 @app.route('/graphdatatemperature')
 def graphdatatemperature():
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
-                # Query to fetch only timestamp and Dc_Voltage for the graph
                 query = """
                     SELECT timestamp, Temperature FROM dc_data
                 """
                 cursor.execute(query)
                 graph_data = cursor.fetchall()
-                # Convert data to the right format (if necessary)
                 for item in graph_data:
-                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')  # Format the timestamp
-        return jsonify(graph_data)
-    except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({"error": "An error occurred while fetching graph data."}), 500
-# graph 3
-@app.route('/graph3')
-def graph3():
-    try:
-        with get_db_connection() as connection:
-            with connection.cursor(dictionary=True) as cursor:
-                # Query to fetch only timestamp and Dc_Voltage for the graph
-                query = """
-                    SELECT timestamp, Temperature FROM dc_data
-                """
-                cursor.execute(query)
-                graph_data = cursor.fetchall()
-                # Convert data to the right format (if necessary)
-                for item in graph_data:
-                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')  # Format the timestamp
+                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
         return jsonify(graph_data)
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
 
-@app.route('/graph4')
-def graph4():
-    try:
-        with get_db_connection() as connection:
-            with connection.cursor(dictionary=True) as cursor:
-                # Query to fetch only timestamp and Dc_Voltage for the graph
-                query = """
-                    SELECT timestamp, Temperature FROM dc_data
-                """
-                cursor.execute(query)
-                graph_data = cursor.fetchall()
-                # Convert data to the right format (if necessary)
-                for item in graph_data:
-                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')  # Format the timestamp
-        return jsonify(graph_data)
-    except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({"error": "An error occurred while fetching graph data."}), 500
+# Logout Page
 @app.route('/logout')
 def logout():
     session.clear()
