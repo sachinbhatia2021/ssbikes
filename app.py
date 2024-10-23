@@ -68,22 +68,6 @@ def dash():
     except Exception as e:
         return str(e), 500
 
-@app.route('/databyid')
-def databyid():
-    try:
-        
-        with get_db_connection() as connection:
-            with connection.cursor(dictionary=True) as cursor:
-                alldata = """
-                select * from dc_data"""
-                cursor.execute(alldata)
-                alldataprint = cursor.fetchall()
-              
-        return render_template('.html',items=alldataprint)
-    
-    except Exception as e:
-        print(f"Error: {e}")
-        return "An error occurred while fetching data. Please try again later.", 500
 
 @app.route('/summary/<device>')
 def summary(device):
@@ -132,25 +116,6 @@ def data_table():
 
     except Exception as e:
         return str(e), 500
-
-# @app.route('/databyid')
-# def databyid():
-#     try:
-        
-#         with get_db_connection() as connection:
-#             with connection.cursor(dictionary=True) as cursor:
-#                 # query for Robot table
-#                 alldata = """
-#                 select * from dc_data"""
-#                 cursor.execute(alldata)
-#                 alldataprint = cursor.fetchall()
-              
-#         # Render the data in your HTML template
-#         return render_template('watt.html',items=alldataprint)
-    
-#     except Exception as e:
-#         print(f"Error: {e}")
-#         return "An error occurred while fetching data. Please try again later.", 500
 
 
 @app.route('/graphdata')
