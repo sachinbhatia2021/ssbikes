@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -398,9 +397,23 @@
       </div>
     </div>
 
-    <div class="graphdiv1">
+</script>
+<div class="graphdiv1">
+  <div class="chart1">
+    <h5>Live DC Current, Dc Voltage & Power vs. Time</h5>
+    <canvas id="live1" width="400" height="200"></canvas>
+  </div>
+
+  <div class="chart1">
+    <h5>Live AC Current, Ac Voltage & Power vs. Time </h5>
+    <canvas id="live2" width="400" height="200"></canvas>
+  </div>
+</div>
+
+    <!-- graph -->
+    <!-- <div class="graphdiv1">
       <div class="chart1">
-        <h5>DC Voltage vs. Time</h5>
+        <h5>DC Current vs. Time</h5>
         <canvas id="myChart1" width="400" height="200"></canvas>
       </div>
 
@@ -408,7 +421,7 @@
         <h5>DC Temperature vs. Time </h5>
         <canvas id="myChart2" width="400" height="200"></canvas>
       </div>
-    </div>
+    </div> -->
 
     <div class="line2">
       <h5>Smart Alerts</h5>
@@ -584,8 +597,218 @@
     }
     graphdatatemperature(); 
   </script>
+<!--live  -->
+<!--live  -->
+<script>
+  let chart4 = null;
+  function livegraphDc() {
+    fetch('/livegraphdc')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (!Array.isArray(data)) {
+          throw new Error("Data is not an array.");
+        }
 
-  <!-- script for logout -->
+        const now = new Date();
+        const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
+
+        // Filter data to include only the last 24 hours
+        const filteredData = data.filter(item => new Date(item.timestamp) >= last24Hours);
+
+        // Prepare labels (timestamps) and data for voltage, current, and power
+        const labels = filteredData.map(item => new Date(item.timestamp));
+        const voltageValues = filteredData.map(item => item.Dc_Voltage);
+        const currentValues = filteredData.map(item => item.Dc_Current);
+        const powerValues = filteredData.map(item => item.Dc_Voltage * item.Dc_Current); // Power = Voltage * Current
+
+        // If a chart instance exists, destroy it before creating a new one
+        if (chart4) {
+          chart4.destroy();
+        }
+
+        const ctx = document.getElementById('live1').getContext('2d');
+        chart4 = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels, // Timestamps as labels
+            datasets: [
+              {
+                label: 'DC Voltage (V)', // First dataset for Voltage
+                data: voltageValues,
+                borderColor: '#56ccf0', // Color for Voltage line
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.3
+              },
+              {
+                label: 'DC Current (A)', // Second dataset for Current
+                data: currentValues,
+                borderColor: '#f05c56', // Color for Current line
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.3
+              },
+              {
+                label: 'Power (W)', // Third dataset for Power
+                data: powerValues,
+                borderColor: '#f0d756', // Color for Power line
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.3
+              }
+            ]
+          },
+          options: {
+            scales: {
+              x: {
+                type: 'time',
+                time: {
+                  unit: 'minute',
+                  tooltipFormat: 'MMM d, h:mm a'
+                },
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                beginAtZero: true,
+                grid: {
+                  display: false
+                },
+                title: {
+                  display: true,
+                  text: 'Values (Voltage in V, Current in A, Power in W)'
+                }
+              }
+            }
+          }
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching graph data:', error);
+      });
+  }
+
+  livegraphDc();
+
+  // Alternatively, use setInterval to keep calling it every second
+  // setInterval(() => {
+  //   livegraphDc();
+  // }, 1000);
+</script>
+
+<!--live Ac -->
+<script>
+  let chart5 = null;
+  function livegraphAc() {
+    fetch('/livegraphac')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (!Array.isArray(data)) {
+          throw new Error("Data is not an array.");
+        }
+
+        // Prepare labels (timestamps) and data for voltage, current, and power
+        const labels = data.map(item => new Date(item.timestamp));
+        const voltageValues = data.map(item => item.Voltage);
+        const currentValues = data.map(item => item.Current);
+        const powerValues = data.map(item => item.Voltage * item.Current); // Calculate power (Voltage * Current)
+
+        // If a chart instance exists, destroy it before creating a new one
+        if (chart5) {
+          chart5.destroy();
+        }
+
+        const ctx = document.getElementById('live2').getContext('2d');
+        chart5 = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels, // Timestamps as labels
+            datasets: [
+              {
+                label: 'AC Voltage (V)', // First dataset for Voltage
+                data: voltageValues,
+                borderColor: '#56ccf0', // Color for Voltage line
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.3
+              },
+              {
+                label: 'AC Current (A)', // Second dataset for Current
+                data: currentValues,
+                borderColor: '#f05c56', // Color for Current line
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.3
+              },
+              {
+                label: 'Power (W)', // Third dataset for Power
+                data: powerValues,
+                borderColor: '#00b894', // Color for Power line
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                borderWidth: 2,
+                fill: false,
+                tension: 0.3
+              }
+            ]
+          },
+          options: {
+            scales: {
+              x: {
+                type: 'time',
+                time: {
+                  unit: 'hour', // Set the time unit to hour for 24-hour data
+                  tooltipFormat: 'MMM d, h:mm a'
+                },
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                beginAtZero: true,
+                grid: {
+                  display: false
+                },
+                title: {
+                  display: true,
+                  text: 'Values (Voltage in V, Current in A, Power in W)'
+                }
+              }
+            }
+          }
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching graph data:', error);
+      });
+  }
+
+  livegraphAc(); 
+
+  // Optionally, you can keep refreshing the graph data every second
+  // setInterval(() => {
+  //    livegraphAc(); 
+  // }, 1000);
+
+</script>
+
+
+<!-- script for logout -->
   <script>
     document.getElementById('logout-btn').addEventListener('click', function (event) {
       event.preventDefault();
