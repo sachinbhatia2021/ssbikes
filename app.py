@@ -23,7 +23,7 @@ dbconfig = {
 
 # connection Pool
 mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool",
-                                                        pool_size=8,
+                                                        pool_size=5,
                                                         **dbconfig)
 # secret key for session
 app.secret_key='neeraj'
@@ -59,32 +59,38 @@ def index():
 # frontpage / homepage
 @app.route('/dashboard')
 def dash():
+    connection = None
     try:
-        with get_db_connection() as connection:
-            with connection.cursor(buffered=True) as cursor:
-                alldata = """
-                SELECT dc.Device_id, dc.Dc_KWH, ac.kWh_Consumed, (dc.Dc_KWH - ac.kWh_Consumed) AS Remaining_KWH
-                FROM dc_data dc
-                JOIN ac_data ac ON dc.Device_id = ac.Device_id
-                WHERE dc.timestamp = (SELECT MAX(timestamp) FROM dc_data WHERE Device_id = dc.Device_id)
-                AND ac.timestamp = (SELECT MAX(timestamp) FROM ac_data WHERE Device_id = ac.Device_id)
-                ORDER BY dc.Device_id"""
-                cursor.execute(alldata)
-                alldataprint = cursor.fetchall()
-
-        truncated_data = []
-        for row in alldataprint:
-            truncated_row = (
-                row[0],  
-                truncate(row[1], 5), 
-                truncate(row[2], 5),  
-                truncate(row[3], 5)   
-            )
-            truncated_data.append(truncated_row)
-
-        return render_template('maindashboard.html', alldataprint=truncated_data)
+        connection = get_db_connection()  
+        with connection.cursor(buffered=True) as cursor:
+            alldata = """
+            SELECT dc.Device_id, dc.Dc_KWH, ac.kWh_Consumed, (dc.Dc_KWH - ac.kWh_Consumed) AS Remaining_KWH
+            FROM dc_data dc
+            JOIN ac_data ac ON dc.Device_id = ac.Device_id
+            WHERE dc.timestamp = (SELECT MAX(timestamp) FROM dc_data WHERE Device_id = dc.Device_id)
+            AND ac.timestamp = (SELECT MAX(timestamp) FROM ac_data WHERE Device_id = ac.Device_id)
+            ORDER BY dc.Device_id"""
+            cursor.execute(alldata)
+            alldataprint = cursor.fetchall()
+            
+            # truncated_data = []
+            # for row in alldataprint:
+            #     truncated_row = (
+            #         row[0],  
+            #         truncate(row[1], 5), 
+            #         truncate(row[2], 5),  
+            #         truncate(row[3], 5)   
+            #     )
+            #     truncated_data.append(truncated_row)
+        return render_template('maindashboard.html', alldataprint=alldataprint)
+    
     except Exception as e:
         return str(e), 500
+
+    finally:
+        if connection:
+            connection.close() 
+
 
 # Summary page
 @app.route('/summary/<device>')
@@ -92,79 +98,132 @@ def summary(device):
     try:
         with get_db_connection() as connection:
             with connection.cursor(buffered=True) as cursor:
-                current = """
-                SELECT Dc_Current, timestamp, Dc_KWH, Dc_Power, Temperature FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
-                cursor.execute(current, (device,))  
+                # Fetch DC data
+                current_query = """
+                SELECT Dc_Current, timestamp, Dc_KWH, Dc_Power, Temperature, Dc_Voltage, (Dc_Voltage * Dc_Current) AS cal_power
+                FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
+                cursor.execute(current_query, (device,))
                 currentdata = cursor.fetchone()
                 
-                Accurrent = """
-                SELECT Current, timestamp, kWh_Consumed, Power, Temperature FROM ac_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
-                cursor.execute(Accurrent, (device,))  
+                # Fetch AC data
+                Accurrent_query = """
+                SELECT Current, timestamp, kWh_Consumed, Power, Temperature, Voltage, (Voltage * Current) AS cal_power
+                FROM ac_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
+                cursor.execute(Accurrent_query, (device,))
                 Accurrentdata = cursor.fetchone()
 
-        if currentdata:
-            currentdata = tuple(truncate(val, 3) for val in currentdata)
-        if Accurrentdata:
-            Accurrentdata = tuple(truncate(val, 3) for val in Accurrentdata)
+                # Device type determination
+                device2 = int(device)
+                if 1000 <= device2 < 2000:
+                    device_type = "12V Lead"
+                elif 2000 <= device2 < 3000:
+                    device_type = "24V Lead"
+                elif 3000 <= device2 < 4000:
+                    device_type = "12V Lithium"
+                else:
+                    device_type = "24V Lithium"
 
-        return render_template('summary.html', Dccurrent=currentdata, Accurrent=Accurrentdata)
-    
+        # Optional: Truncate data if necessary
+        # if currentdata:
+        #     currentdata = tuple(truncate(val, 3) for val in currentdata)
+        # if Accurrentdata:
+        #     Accurrentdata = tuple(truncate(val, 3) for val in Accurrentdata)
+
+        return render_template('summary.html', Dccurrent=currentdata, Accurrent=Accurrentdata, device_type=device_type)
+
     except Exception as e:
         return str(e), 500
- 
+
 # Table data
 @app.route('/data')
 def data_table():    
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
-                alldata = """
-                select * from dc_data"""
+                # Fetch DC data
+                alldata = "SELECT * FROM dc_data"
                 cursor.execute(alldata)
                 alldataprint = cursor.fetchall()
                 
-                Acdata = """
-                select * from ac_data"""
+                # Fetch AC data
+                Acdata = "SELECT * FROM ac_data"
                 cursor.execute(Acdata)
                 allAcdataprint = cursor.fetchall()
-              
-        return render_template('table.html',alldataprint=alldataprint,Acalldataprint=allAcdataprint)
+
+        return render_template('table.html', alldataprint=alldataprint, Acalldataprint=allAcdataprint)
 
     except Exception as e:
-        return str(e), 500
+        return "An error occurred while retrieving the data. Please try again later.", 500
 
 # Graph 1: DC_voltage vs time
-@app.route('/graphdata')
-def graphdata():
+# @app.route('/graphdata')
+# def graphdata():
+#     try:
+#         with get_db_connection() as connection:
+#             with connection.cursor(dictionary=True) as cursor:
+#                 query = """
+#                     SELECT timestamp, Dc_Current FROM dc_data
+#                 """
+#                 cursor.execute(query)
+#                 graph_data = cursor.fetchall()
+#                 for item in graph_data:
+#                     item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S') 
+#         return jsonify(graph_data)
+#     except Exception as e:
+#         print(f"Error: {e}")
+#         return jsonify({"error": "An error occurred while fetching graph data."}), 500
+
+# Graph 2: Temperature vs time
+# @app.route('/graphdatatemperature')
+# def graphdatatemperature():
+#     try:
+#         with get_db_connection() as connection:
+#             with connection.cursor(dictionary=True) as cursor:
+#                 query = """
+#                     SELECT timestamp, Temperature FROM dc_data
+#                 """
+#                 cursor.execute(query)
+#                 graph_data = cursor.fetchall()
+#                 for item in graph_data:
+#                     item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
+#         return jsonify(graph_data)
+#     except Exception as e:
+#         print(f"Error: {e}")
+#         return jsonify({"error": "An error occurred while fetching graph data."}), 500
+
+#DC DATA GRAPH
+@app.route('/livegraphdc')
+def livegraphdc():
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
                 query = """
-                    SELECT timestamp, Dc_Current FROM dc_data
+                    SELECT timestamp, Dc_Current, Dc_Voltage FROM dc_data
                 """
                 cursor.execute(query)
-                graph_data = cursor.fetchall()
-                for item in graph_data:
-                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S') 
-        return jsonify(graph_data)
+                livedc_graph_data = cursor.fetchall()
+                for item in livedc_graph_data:
+                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
+        return jsonify(livedc_graph_data)
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
 
-# Graph 2: Temperature vs time
-@app.route('/graphdatatemperature')
-def graphdatatemperature():
+#AC DATA GRAPH
+@app.route('/livegraphac')
+def livegraphac():
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
                 query = """
-                    SELECT timestamp, Temperature FROM dc_data
+                    SELECT timestamp,Current,Voltage FROM ac_data
                 """
                 cursor.execute(query)
-                graph_data = cursor.fetchall()
-                for item in graph_data:
+                liveac_graph_data = cursor.fetchall()
+               
+                for item in liveac_graph_data:
                     item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
-        return jsonify(graph_data)
+        return jsonify(liveac_graph_data)
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
