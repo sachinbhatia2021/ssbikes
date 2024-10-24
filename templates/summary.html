@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="refresh" content="105">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -65,38 +66,38 @@
     }
 
     .sidenav {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: #f5f7fa;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-  }
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #f5f7fa;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+    }
 
-  .sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 20px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-  }
+    .sidenav a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 20px;
+      color: #818181;
+      display: block;
+      transition: 0.3s;
+    }
 
-  .sidenav a:hover {
-    color: #0e0707;
-  }
+    .sidenav a:hover {
+      color: #0e0707;
+    }
 
-  .sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-  }
+    .sidenav .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
 
     #main {
       transition: margin-left .5s;
@@ -334,7 +335,7 @@
       <div class="battery-inner"></div>
       <h5 class="battery-text" id="batteryPercentage">70%</h5>
     </div>
-
+    <h3 style="display: flex; justify-content: center;"><u><b>DC Data</b></u></h3>
     <div class="con_small">
       <div class="half-width ">
         {{Dccurrent[1]}}
@@ -346,16 +347,16 @@
 
       <div class="half-width">
         <br>
-        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Dccurrent[2]}}
-          <span class="mt-4 ms-2" style="font-size:15px"> Units</span> </span> <br>
-        <div class="text-center" style="margin-bottom: 15px;"><b>Total Units Generation </b></div>
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Dccurrent[5]}}
+          <span class="mt-4 ms-2" style="font-size:15px">V</span> </span> <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>DC Voltage</b></div>
       </div>
 
       <div class="half-width">
         <br>
-        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Dccurrent[3]}}
-          <span class="mt-4 ms-2" style="font-size:15px">W</span> </span> <br>
-        <div class="text-center" style="margin-bottom: 15px;"><b>Input Power</b></div>
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Dccurrent[2]}}
+          <span class="mt-4 ms-2" style="font-size:15px"> Units</span> </span> <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>Total Units Generation </b></div>
       </div>
 
       <div class="half-width">
@@ -365,7 +366,46 @@
         <div class="text-center" style="margin-bottom: 15px;"><b>Temperature</b></div>
       </div>
     </div>
+    <div class="con_small">
+      <div class="half-width">
+        <br>
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Dccurrent[3]}}
+          <span class="mt-4 ms-2" style="font-size:15px">W</span> </span> <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>Input Power</b></div>
+      </div>
 
+      <div class="half-width">
+        <br>
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Dccurrent[6]}}
+          <span class=" ms-1" style="font-size:18px">W</span> </span> <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>Cal. Power</b></div>
+      </div>
+
+      <div class="half-width">
+        <br>
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Dccurrent[3] -
+          Dccurrent[6]}}
+          <span class=" ms-1" style="font-size:18px">W</span> </span> <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>Error Power</b></div>
+      </div>
+
+      <div class="half-width">
+        <br>
+        <span style="font-size: 40px; display: flex; justify-content: center;" class="text-center">
+            {% if Dccurrent[6] != 0 %}
+                {{ ((Dccurrent[3] - Dccurrent[6]) / Dccurrent[6]) * 100 }}
+            {% else %}
+                0
+            {% endif %}
+            <span class="ms-1" style="font-size: 18px">%</span>
+        </span>
+        <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>Error Percentage</b></div>
+    </div>
+    
+    </div>
+    <hr>
+    <h3 style="display: flex; justify-content: center;"><u><b>AC Data</b></u></h3>
     <div class="con_small">
       <div class="half-width ">
         {{Accurrent[1]}}
@@ -377,18 +417,17 @@
 
       <div class="half-width">
         <br>
-        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Accurrent[2]}}
-          <span class="mt-4 ms-2" style="font-size:15px"> Units</span> </span> <br>
-        <div class="text-center" style="margin-bottom: 15px;"><b>Total Units Consumed </b></div>
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Accurrent[5]}}
+          <span class="mt-4 ms-2" style="font-size:15px">V</span> </span> <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>AC Voltage</b></div>
       </div>
 
       <div class="half-width">
         <br>
-        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Accurrent[3]}}
-          <span class="mt-4 ms-2" style="font-size:15px">W</span> </span> <br>
-        <div class="text-center" style="margin-bottom: 15px;"><b>Output Power</b></div>
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Accurrent[2]}}
+          <span class="mt-4 ms-2" style="font-size:15px"> Units</span> </span> <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>Total Units Consumed </b></div>
       </div>
-
       <div class="half-width">
         <br>
         <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Accurrent[4]}}
@@ -396,417 +435,452 @@
         <div class="text-center" style="margin-bottom: 15px;"><b>Temperature</b></div>
       </div>
     </div>
-
-</script>
-<div class="graphdiv1">
-  <div class="chart1">
-    <h5>Live DC Current, Dc Voltage & Power vs. Time</h5>
-    <canvas id="live1" width="400" height="200"></canvas>
-  </div>
-
-  <div class="chart1">
-    <h5>Live AC Current, Ac Voltage & Power vs. Time </h5>
-    <canvas id="live2" width="400" height="200"></canvas>
-  </div>
-</div>
-
-    <!-- graph -->
-    <!-- <div class="graphdiv1">
-      <div class="chart1">
-        <h5>DC Current vs. Time</h5>
-        <canvas id="myChart1" width="400" height="200"></canvas>
+    <div class="con_small">
+      <div class="half-width">
+        <br>
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Accurrent[3]}}
+          <span class="mt-4 ms-2" style="font-size:15px">W</span> </span> <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>Output Power</b></div>
+      </div>
+      <div class="half-width">
+        <br>
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Accurrent[6]}}
+          <span class=" ms-1" style="font-size:18px">W</span> </span> <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>Cal. Power</b></div>
       </div>
 
-      <div class="chart2">
-        <h5>DC Temperature vs. Time </h5>
-        <canvas id="myChart2" width="400" height="200"></canvas>
+      <div class="half-width">
+        <br>
+        <span style=" font-size: 40px;display: flex; justify-content: center;" class="text-center">{{Accurrent[3] -
+          Accurrent[6]}}
+          <span class=" ms-1" style="font-size:18px">W</span> </span> <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>Error</b></div>
       </div>
-    </div> -->
 
-    <div class="line2">
-      <h5>Smart Alerts</h5>
+      <div class="half-width">
+        <br>
+        <span style="font-size: 40px; display: flex; justify-content: center;" class="text-center">
+            {% if Accurrent[6] != 0 %}
+                {{ ((Accurrent[3] - Accurrent[6]) / Accurrent[6]) * 100 }}
+            {% else %}
+                0
+            {% endif %}
+            <span class="ms-1" style="font-size: 18px">%</span>
+        </span>
+        <br>
+        <div class="text-center" style="margin-bottom: 15px;"><b>Error Percentage</b></div>
     </div>
-    <br>
-  </div>
+    
+    </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-
-  <script>
-    let batteryLevel = 90;
-
-    document.getElementById('batteryOverlay').style.setProperty('--battery-level', batteryLevel);
-    document.getElementById('batteryPercentage').innerText = batteryLevel + '%';
-
-    const batteryOverlay = document.getElementById('batteryOverlay');
-    if (batteryLevel > 50) {
-      batteryOverlay.style.background = `conic-gradient(green 0deg, green calc(3.6deg * ${batteryLevel}), #222 calc(3.6deg * ${batteryLevel}), #222 360deg)`;
-    } else if (batteryLevel > 20) {
-      batteryOverlay.style.background = `conic-gradient(yellow 0deg, yellow calc(3.6deg * ${batteryLevel}), #222 calc(3.6deg * ${batteryLevel}), #222 360deg)`;
-    } else {
-      batteryOverlay.style.background = `conic-gradient(red 0deg, red calc(3.6deg * ${batteryLevel}), #222 calc(3.6deg * ${batteryLevel}), #222 360deg)`;
-    }
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
-  <script>
-    function openNav() {
-      document.getElementById("mySidenav").style.width = "250px";
-      document.getElementById("main").style.marginLeft = "250px";
-    }
-
-    function closeNav() {
-      document.getElementById("mySidenav").style.width = "0";
-      document.getElementById("main").style.marginLeft = "0";
-    }
-  </script>
-
-  <script>
-    let chart1 = null;
-    function fetchGraphData() {
-      fetch('/graphdata')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (!Array.isArray(data)) {
-            throw new Error("Data is not an array.");
-          }
-
-          const labels = data.map(item => new Date(item.timestamp));
-          const values = data.map(item => item.Dc_Current);
-
-
-          if (chart1) {
-            chart1.destroy();
-          }
-
-          const ctx1 = document.getElementById('myChart1').getContext('2d');
-          chart1 = new Chart(ctx1, {
-            type: 'line',
-            data: {
-              labels: labels,
-              datasets: [{
-                label: 'Dc_Current',
-                data: values,
-                borderColor: '#56ccf0',
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                borderWidth: 2,
-                fill: false,
-                tension: 0.3
-              }]
-            },
-            options: {
-              scales: {
-                x: {
-                  type: 'time',
-                  time: {
-                    unit: 'minute',
-                    tooltipFormat: 'MMM d, h:mm a'
+    <div class="graphdiv1">
+      <div class="chart1">
+        <h5>Live DC Current, Dc Voltage & Power vs. Time</h5>
+        <canvas id="live1" width="400" height="200"></canvas>
+      </div>
+    
+      <div class="chart1">
+        <h5>Live AC Current, Ac Voltage & Power vs. Time </h5>
+        <canvas id="live2" width="400" height="200"></canvas>
+      </div>
+    </div>
+    
+        <!-- graph -->
+        <!-- <div class="graphdiv1">
+          <div class="chart1">
+            <h5>DC Current vs. Time</h5>
+            <canvas id="myChart1" width="400" height="200"></canvas>
+          </div>
+    
+          <div class="chart2">
+            <h5>DC Temperature vs. Time </h5>
+            <canvas id="myChart2" width="400" height="200"></canvas>
+          </div>
+        </div> -->
+    
+        <div class="line2">
+          <h5>Smart Alerts</h5>
+        </div>
+        <br>
+      </div>
+    
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    
+      <script>
+        let batteryLevel = 90;
+    
+        document.getElementById('batteryOverlay').style.setProperty('--battery-level', batteryLevel);
+        document.getElementById('batteryPercentage').innerText = batteryLevel + '%';
+    
+        const batteryOverlay = document.getElementById('batteryOverlay');
+        if (batteryLevel > 50) {
+          batteryOverlay.style.background = `conic-gradient(green 0deg, green calc(3.6deg * ${batteryLevel}), #222 calc(3.6deg * ${batteryLevel}), #222 360deg)`;
+        } else if (batteryLevel > 20) {
+          batteryOverlay.style.background = `conic-gradient(yellow 0deg, yellow calc(3.6deg * ${batteryLevel}), #222 calc(3.6deg * ${batteryLevel}), #222 360deg)`;
+        } else {
+          batteryOverlay.style.background = `conic-gradient(red 0deg, red calc(3.6deg * ${batteryLevel}), #222 calc(3.6deg * ${batteryLevel}), #222 360deg)`;
+        }
+      </script>
+    
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+      <script>
+        function openNav() {
+          document.getElementById("mySidenav").style.width = "250px";
+          document.getElementById("main").style.marginLeft = "250px";
+        }
+    
+        function closeNav() {
+          document.getElementById("mySidenav").style.width = "0";
+          document.getElementById("main").style.marginLeft = "0";
+        }
+      </script>
+    
+      <script>
+        let chart1 = null;
+        function fetchGraphData() {
+          fetch('/graphdata')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then(data => {
+              if (!Array.isArray(data)) {
+                throw new Error("Data is not an array.");
+              }
+    
+              const labels = data.map(item => new Date(item.timestamp));
+              const values = data.map(item => item.Dc_Current);
+    
+    
+              if (chart1) {
+                chart1.destroy();
+              }
+    
+              const ctx1 = document.getElementById('myChart1').getContext('2d');
+              chart1 = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                  labels: labels,
+                  datasets: [{
+                    label: 'Dc_Current',
+                    data: values,
+                    borderColor: '#56ccf0',
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3
+                  }]
+                },
+                options: {
+                  scales: {
+                    x: {
+                      type: 'time',
+                      time: {
+                        unit: 'minute',
+                        tooltipFormat: 'MMM d, h:mm a'
+                      },
+                      grid: {
+                        display: false
+                      }
+                    },
+                    y: {
+                      beginAtZero: true,
+                      grid: {
+                        display: false
+                      }
+                    }
+                  }
+                }
+              });
+            })
+            .catch(error => {
+              console.error('Error fetching graph data:', error);
+            });
+        }
+    
+        fetchGraphData();  
+      </script>
+    
+      <script>
+        let chart2 = null;
+        function graphdatatemperature() {
+          fetch('/graphdatatemperature')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then(data => {
+              if (!Array.isArray(data)) {
+                throw new Error("Data is not an array.");
+              }
+    
+              const labels = data.map(item => new Date(item.timestamp));
+              const values = data.map(item => item.Temperature);
+    
+    
+              if (chart2) {
+                chart2.destroy();
+              }
+    
+              const ctx = document.getElementById('myChart2').getContext('2d');
+              chart2 = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: labels,
+                  datasets: [{
+                    label: 'Temperature',
+                    data: values,
+                    borderColor: '#56ccf0',
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3
+                  }]
+                },
+                options: {
+                  scales: {
+                    x: {
+                      type: 'time',
+                      time: {
+                        unit: 'minute',
+                        tooltipFormat: 'MMM d, h:mm a'
+                      },
+                      grid: {
+                        display: false
+                      }
+                    },
+                    y: {
+                      beginAtZero: true,
+                      grid: {
+                        display: false
+                      }
+                    }
+                  }
+                }
+              });
+            })
+            .catch(error => {
+              console.error('Error fetching graph data:', error);
+            });
+        }
+        graphdatatemperature(); 
+      </script>
+    <!--live  -->
+    <!--live  -->
+    <script>
+      let chart4 = null;
+      function livegraphDc() {
+        fetch('/livegraphdc')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (!Array.isArray(data)) {
+              throw new Error("Data is not an array.");
+            }
+    
+            const now = new Date();
+            const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
+    
+            // Filter data to include only the last 24 hours
+            const filteredData = data.filter(item => new Date(item.timestamp) >= last24Hours);
+    
+            // Prepare labels (timestamps) and data for voltage, current, and power
+            const labels = filteredData.map(item => new Date(item.timestamp));
+            const voltageValues = filteredData.map(item => item.Dc_Voltage);
+            const currentValues = filteredData.map(item => item.Dc_Current);
+            const powerValues = filteredData.map(item => item.Dc_Voltage * item.Dc_Current); // Power = Voltage * Current
+    
+            // If a chart instance exists, destroy it before creating a new one
+            if (chart4) {
+              chart4.destroy();
+            }
+    
+            const ctx = document.getElementById('live1').getContext('2d');
+            chart4 = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: labels, // Timestamps as labels
+                datasets: [
+                  {
+                    label: 'DC Voltage (V)', // First dataset for Voltage
+                    data: voltageValues,
+                    borderColor: '#56ccf0', // Color for Voltage line
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3
                   },
-                  grid: {
-                    display: false
-                  }
-                },
-                y: {
-                  beginAtZero: true,
-                  grid: {
-                    display: false
-                  }
-                }
-              }
-            }
-          });
-        })
-        .catch(error => {
-          console.error('Error fetching graph data:', error);
-        });
-    }
-
-    fetchGraphData();  
-  </script>
-
-  <script>
-    let chart2 = null;
-    function graphdatatemperature() {
-      fetch('/graphdatatemperature')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (!Array.isArray(data)) {
-            throw new Error("Data is not an array.");
-          }
-
-          const labels = data.map(item => new Date(item.timestamp));
-          const values = data.map(item => item.Temperature);
-
-
-          if (chart2) {
-            chart2.destroy();
-          }
-
-          const ctx = document.getElementById('myChart2').getContext('2d');
-          chart2 = new Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: labels,
-              datasets: [{
-                label: 'Temperature',
-                data: values,
-                borderColor: '#56ccf0',
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                borderWidth: 2,
-                fill: false,
-                tension: 0.3
-              }]
-            },
-            options: {
-              scales: {
-                x: {
-                  type: 'time',
-                  time: {
-                    unit: 'minute',
-                    tooltipFormat: 'MMM d, h:mm a'
+                  {
+                    label: 'DC Current (A)', // Second dataset for Current
+                    data: currentValues,
+                    borderColor: '#f05c56', // Color for Current line
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3
                   },
-                  grid: {
-                    display: false
+                  {
+                    label: 'Power (W)', // Third dataset for Power
+                    data: powerValues,
+                    borderColor: '#f0d756', // Color for Power line
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3
                   }
-                },
-                y: {
-                  beginAtZero: true,
-                  grid: {
-                    display: false
+                ]
+              },
+              options: {
+                scales: {
+                  x: {
+                    type: 'time',
+                    time: {
+                      unit: 'minute',
+                      tooltipFormat: 'MMM d, h:mm a'
+                    },
+                    grid: {
+                      display: false
+                    }
+                  },
+                  y: {
+                    beginAtZero: true,
+                    grid: {
+                      display: false
+                    },
+                    title: {
+                      display: true,
+                      text: 'Values (Voltage in V, Current in A, Power in W)'
+                    }
                   }
                 }
               }
-            }
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching graph data:', error);
           });
-        })
-        .catch(error => {
-          console.error('Error fetching graph data:', error);
-        });
-    }
-    graphdatatemperature(); 
-  </script>
-<!--live  -->
-<!--live  -->
-<script>
-  let chart4 = null;
-  function livegraphDc() {
-    fetch('/livegraphdc')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (!Array.isArray(data)) {
-          throw new Error("Data is not an array.");
-        }
-
-        const now = new Date();
-        const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago
-
-        // Filter data to include only the last 24 hours
-        const filteredData = data.filter(item => new Date(item.timestamp) >= last24Hours);
-
-        // Prepare labels (timestamps) and data for voltage, current, and power
-        const labels = filteredData.map(item => new Date(item.timestamp));
-        const voltageValues = filteredData.map(item => item.Dc_Voltage);
-        const currentValues = filteredData.map(item => item.Dc_Current);
-        const powerValues = filteredData.map(item => item.Dc_Voltage * item.Dc_Current); // Power = Voltage * Current
-
-        // If a chart instance exists, destroy it before creating a new one
-        if (chart4) {
-          chart4.destroy();
-        }
-
-        const ctx = document.getElementById('live1').getContext('2d');
-        chart4 = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: labels, // Timestamps as labels
-            datasets: [
-              {
-                label: 'DC Voltage (V)', // First dataset for Voltage
-                data: voltageValues,
-                borderColor: '#56ccf0', // Color for Voltage line
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                borderWidth: 2,
-                fill: false,
-                tension: 0.3
-              },
-              {
-                label: 'DC Current (A)', // Second dataset for Current
-                data: currentValues,
-                borderColor: '#f05c56', // Color for Current line
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                borderWidth: 2,
-                fill: false,
-                tension: 0.3
-              },
-              {
-                label: 'Power (W)', // Third dataset for Power
-                data: powerValues,
-                borderColor: '#f0d756', // Color for Power line
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                borderWidth: 2,
-                fill: false,
-                tension: 0.3
-              }
-            ]
-          },
-          options: {
-            scales: {
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'minute',
-                  tooltipFormat: 'MMM d, h:mm a'
-                },
-                grid: {
-                  display: false
-                }
-              },
-              y: {
-                beginAtZero: true,
-                grid: {
-                  display: false
-                },
-                title: {
-                  display: true,
-                  text: 'Values (Voltage in V, Current in A, Power in W)'
-                }
-              }
+      }
+    
+      livegraphDc();
+    
+      // Alternatively, use setInterval to keep calling it every second
+      // setInterval(() => {
+      //   livegraphDc();
+      // }, 1000);
+    </script>
+    
+    <!--live Ac -->
+    <script>
+      let chart5 = null;
+      function livegraphAc() {
+        fetch('/livegraphac')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
             }
-          }
-        });
-      })
-      .catch(error => {
-        console.error('Error fetching graph data:', error);
-      });
-  }
-
-  livegraphDc();
-
-  // Alternatively, use setInterval to keep calling it every second
-  // setInterval(() => {
-  //   livegraphDc();
-  // }, 1000);
-</script>
-
-<!--live Ac -->
-<script>
-  let chart5 = null;
-  function livegraphAc() {
-    fetch('/livegraphac')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (!Array.isArray(data)) {
-          throw new Error("Data is not an array.");
-        }
-
-        // Prepare labels (timestamps) and data for voltage, current, and power
-        const labels = data.map(item => new Date(item.timestamp));
-        const voltageValues = data.map(item => item.Voltage);
-        const currentValues = data.map(item => item.Current);
-        const powerValues = data.map(item => item.Voltage * item.Current); // Calculate power (Voltage * Current)
-
-        // If a chart instance exists, destroy it before creating a new one
-        if (chart5) {
-          chart5.destroy();
-        }
-
-        const ctx = document.getElementById('live2').getContext('2d');
-        chart5 = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: labels, // Timestamps as labels
-            datasets: [
-              {
-                label: 'AC Voltage (V)', // First dataset for Voltage
-                data: voltageValues,
-                borderColor: '#56ccf0', // Color for Voltage line
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                borderWidth: 2,
-                fill: false,
-                tension: 0.3
-              },
-              {
-                label: 'AC Current (A)', // Second dataset for Current
-                data: currentValues,
-                borderColor: '#f05c56', // Color for Current line
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                borderWidth: 2,
-                fill: false,
-                tension: 0.3
-              },
-              {
-                label: 'Power (W)', // Third dataset for Power
-                data: powerValues,
-                borderColor: '#00b894', // Color for Power line
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                borderWidth: 2,
-                fill: false,
-                tension: 0.3
-              }
-            ]
-          },
-          options: {
-            scales: {
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'hour', // Set the time unit to hour for 24-hour data
-                  tooltipFormat: 'MMM d, h:mm a'
-                },
-                grid: {
-                  display: false
-                }
-              },
-              y: {
-                beginAtZero: true,
-                grid: {
-                  display: false
-                },
-                title: {
-                  display: true,
-                  text: 'Values (Voltage in V, Current in A, Power in W)'
-                }
-              }
+            return response.json();
+          })
+          .then(data => {
+            if (!Array.isArray(data)) {
+              throw new Error("Data is not an array.");
             }
-          }
-        });
-      })
-      .catch(error => {
-        console.error('Error fetching graph data:', error);
-      });
-  }
-
-  livegraphAc(); 
-
-  // Optionally, you can keep refreshing the graph data every second
-  // setInterval(() => {
-  //    livegraphAc(); 
-  // }, 1000);
-
-</script>
-
+    
+            // Prepare labels (timestamps) and data for voltage, current, and power
+            const labels = data.map(item => new Date(item.timestamp));
+            const voltageValues = data.map(item => item.Voltage);
+            const currentValues = data.map(item => item.Current);
+            const powerValues = data.map(item => item.Voltage * item.Current); // Calculate power (Voltage * Current)
+    
+            // If a chart instance exists, destroy it before creating a new one
+            if (chart5) {
+              chart5.destroy();
+            }
+    
+            const ctx = document.getElementById('live2').getContext('2d');
+            chart5 = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: labels, // Timestamps as labels
+                datasets: [
+                  {
+                    label: 'AC Voltage (V)', // First dataset for Voltage
+                    data: voltageValues,
+                    borderColor: '#56ccf0', // Color for Voltage line
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3
+                  },
+                  {
+                    label: 'AC Current (A)', // Second dataset for Current
+                    data: currentValues,
+                    borderColor: '#f05c56', // Color for Current line
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3
+                  },
+                  {
+                    label: 'Power (W)', // Third dataset for Power
+                    data: powerValues,
+                    borderColor: '#00b894', // Color for Power line
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3
+                  }
+                ]
+              },
+              options: {
+                scales: {
+                  x: {
+                    type: 'time',
+                    time: {
+                      unit: 'hour', // Set the time unit to hour for 24-hour data
+                      tooltipFormat: 'MMM d, h:mm a'
+                    },
+                    grid: {
+                      display: false
+                    }
+                  },
+                  y: {
+                    beginAtZero: true,
+                    grid: {
+                      display: false
+                    },
+                    title: {
+                      display: true,
+                      text: 'Values (Voltage in V, Current in A, Power in W)'
+                    }
+                  }
+                }
+              }
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching graph data:', error);
+          });
+      }
+    
+      livegraphAc(); 
+    
+      // Optionally, you can keep refreshing the graph data every second
+      // setInterval(() => {
+      //    livegraphAc(); 
+      // }, 1000);
+    
+    </script>
 
 <!-- script for logout -->
   <script>
