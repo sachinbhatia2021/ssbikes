@@ -261,6 +261,11 @@ svg { display: block }
     min-height: 171px;
     height: calc(100% - 160px);
 }
+.battery-container{
+  display: flex;
+  position: relative;
+  top:150px;
+}
 .battery-text {
     width: 16%;
     -webkit-background-clip: text;
@@ -283,12 +288,13 @@ svg { display: block }
     font-size: 30px;
     color: white;
     font-family: Ebrima;
-    top: calc(36% - 153px);
-    left: calc(50% - 39.5px);
+    top: calc(40% - 150px);
+    left: calc(50% - 90px);
 }
+
 .pointer { cursor: pointer }
 .battery {
-    border: 5px solid #00fa57;
+    border: 5px solid #444;
     height: 160px;
     border-radius: 1px;
     width: 200px;
@@ -300,13 +306,27 @@ svg { display: block }
     transition: background-position .5s ease;
 }
 .battery::after {
-    background-color: #00fa57;
+    background-color: #000000;
     content: '';
     display: block;
     height: 10px;
     position: absolute;
     right: 20px;
-    top: -15px;
+    top: -16px;
+    width: 30px;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 1px;
+    border-top-right-radius: 1px;
+}
+.battery1::after {
+    background-color: #ff0000;
+    content: '';
+    display: block;
+    height: 10px;
+    position: absolute;
+    left: 20px;
+    top: -16px;
     width: 30px;
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
@@ -319,13 +339,13 @@ svg { display: block }
 }
 .battery-bubbles {
     width: 69px;
-    left: calc(50% - 35px);
+    right: calc(50% - 35px);
     height: 149px;
 }
 .bottom-bubbles {
-    width: 49px;
+    width: 120px;
     left: calc(50% - 30px);
-    height: 150px;
+    height: 70px;
 }
 .bubbles span {
     position: relative;
@@ -350,7 +370,7 @@ svg { display: block }
 }
 .liquid {
     position: absolute;
-    width: 70px;
+    width: 190px;
     height: 5px;
     overflow: hidden;
     -webkit-backface-visibility: hidden;
@@ -412,7 +432,9 @@ _:-ms-lang(x), _:-webkit-full-screen, .individual-bubble { top: inherit !importa
     </div>
 
     <!--  -->
+    <div class="battery-container">
     <div class="battery onscreen">
+      <div class="battery1"></div>
       <div class="bubbles battery-bubbles">
         <span>&nbsp;</span>
       </div>
@@ -422,7 +444,7 @@ _:-ms-lang(x), _:-webkit-full-screen, .individual-bubble { top: inherit !importa
           c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9
           c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z" />
         </svg>
-      </div><!-- .liquid -->
+      </div>
     </div>
     <div class="battery-text onscreen">
       <span class="percentage"></span><small class="units"></small>
@@ -433,7 +455,8 @@ _:-ms-lang(x), _:-webkit-full-screen, .individual-bubble { top: inherit !importa
     <div class="bubbles bottom-bubbles">
       <span>&nbsp;</span>
     </div>
-  
+  </div>
+  <br><br>
     <script>
       function changeStylesheetRule(s, selector, property, value){
       // Make these strings lowercase
