@@ -100,14 +100,13 @@ def summary(device):
             with connection.cursor(buffered=True) as cursor:
                 # Fetch DC data
                 current_query = """
-                SELECT Dc_Current, timestamp, Dc_KWH, Dc_Power, Temperature, Dc_Voltage, (Dc_Voltage * Dc_Current) AS cal_power
-                FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
+                SELECT Dc_Current, timestamp, Dc_KWH, Dc_Power, Temperature, Dc_Voltage, (Dc_Voltage * Dc_Current) AS cal_power,Device_id FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(current_query, (device,))
                 currentdata = cursor.fetchone()
                 
                 # Fetch AC data
                 Accurrent_query = """
-                SELECT Current, timestamp, kWh_Consumed, Power, Temperature, Voltage, (Voltage * Current) AS cal_power
+                SELECT Current, timestamp, kWh_Consumed, Power, Temperature, Voltage, (Voltage * Current) AS cal_power,Device_id
                 FROM ac_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(Accurrent_query, (device,))
                 Accurrentdata = cursor.fetchone()
@@ -129,7 +128,7 @@ def summary(device):
         # if Accurrentdata:
         #     Accurrentdata = tuple(truncate(val, 3) for val in Accurrentdata)
 
-        return render_template('summary.html', Dccurrent=currentdata, Accurrent=Accurrentdata, device_type=device_type)
+        return render_template('summary.html',Dccurrent=currentdata, Accurrent=Accurrentdata, device_type=device_type)
 
     except Exception as e:
         return str(e), 500
@@ -192,69 +191,39 @@ def data_table():
 #         return jsonify({"error": "An error occurred while fetching graph data."}), 500
 
 #DC DATA GRAPH
-@app.route('/livegraphdc')
-def livegraphdc():
+@app.route('/livegraphdc/<string:id>')
+def livegraphdc(id):
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
                 query = """
-                    SELECT timestamp, Dc_Current, Dc_Voltage FROM dc_data
+                    SELECT timestamp, Dc_Current, Dc_Voltage FROM dc_data WHERE Device_id = %s
                 """
-                cursor.execute(query)
+                # Pass the dynamic id to the query
+                cursor.execute(query, (id,))
                 livedc_graph_data = cursor.fetchall()
+                
+                # Format timestamps to readable format
                 for item in livedc_graph_data:
                     item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
+
         return jsonify(livedc_graph_data)
+
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
+
 
 #AC DATA GRAPH
-@app.route('/livegraphac')
-def livegraphac():
+@app.route('/livegraphac/<string:id>')
+def livegraphac(id):
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
                 query = """
-                    SELECT timestamp,Current,Voltage FROM ac_data
+                    SELECT timestamp,Current,Voltage FROM ac_data WHERE Device_id = %s
                 """
-                cursor.execute(query)
-                liveac_graph_data = cursor.fetchall()
-               
-                for item in liveac_graph_data:
-                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
-        return jsonify(liveac_graph_data)
-    except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({"error": "An error occurred while fetching graph data."}), 500
-#live dc
-@app.route('/livegraphdc')
-def livegraphdc():
-    try:
-        with get_db_connection() as connection:
-            with connection.cursor(dictionary=True) as cursor:
-                query = """
-                    SELECT timestamp, Dc_Current, Dc_Voltage FROM dc_data
-                """
-                cursor.execute(query)
-                livedc_graph_data = cursor.fetchall()
-                for item in livedc_graph_data:
-                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
-        return jsonify(livedc_graph_data)
-    except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({"error": "An error occurred while fetching graph data."}), 500
-
-#live Ac
-@app.route('/livegraphac')
-def livegraphac():
-    try:
-        with get_db_connection() as connection:
-            with connection.cursor(dictionary=True) as cursor:
-                query = """
-                    SELECT timestamp,Current,Voltage FROM ac_data
-                """
-                cursor.execute(query)
+                cursor.execute(query, (id,))
                 liveac_graph_data = cursor.fetchall()
                
                 for item in liveac_graph_data:

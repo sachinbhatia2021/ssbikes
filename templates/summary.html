@@ -672,12 +672,12 @@
         }
         graphdatatemperature(); 
       </script>
-    <!--live  -->
-    <!--live  -->
+    <!--live dc -->
     <script>
+      const id='{{Dccurrent[7]}}'
       let chart4 = null;
       function livegraphDc() {
-        fetch('/livegraphdc')
+        fetch(`/livegraphdc/${id}`)
           .then(response => {
             if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);
@@ -782,9 +782,10 @@
     
     <!--live Ac -->
     <script>
+       const id1='{{Dccurrent[7]}}'
       let chart5 = null;
       function livegraphAc() {
-        fetch('/livegraphac')
+        fetch(`/livegraphac/${id1}`)
           .then(response => {
             if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);
