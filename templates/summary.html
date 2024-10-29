@@ -350,7 +350,7 @@ svg { display: block }
 }
 .liquid {
     position: absolute;
-    width: 70px;
+    width: 190px;
     height: 5px;
     overflow: hidden;
     -webkit-backface-visibility: hidden;
@@ -856,10 +856,6 @@ function livegraphDc() {
 
 livegraphDc();
 
-    // Alternatively, use setInterval to keep calling it every second
-    // setInterval(() => {
-    //   livegraphDc();
-    // }, 1000);
   </script>
 
   <!--live Ac -->
@@ -953,15 +949,8 @@ livegraphDc();
           console.error('Error fetching graph data:', error);
         });
     }
-
     livegraphAc();
-
-    // Optionally, you can keep refreshing the graph data every second
-    // setInterval(() => {
-    //    livegraphAc();
-    // }, 1000);
-
-  </script>
+</script>
 
   <!-- script for logout -->
   <script>
