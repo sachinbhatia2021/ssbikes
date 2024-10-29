@@ -213,23 +213,19 @@ def summary(device):
 
                 # Determine Device Type and Battery Voltage Range
                 device2 = int(device)
-                if 1000 <= device2 < 2000:
-                  
+                if 2000 <= device2 < 3000:#12V LEAD
                     battery_percentage = ((currentdata[4]-10.5)/(12.7-10.5))*100
-                elif 2000 <= device2 < 3000:
-                 
-                    battery_percentage = ((currentdata[4]-21)/(25.5-21))*100
-                elif 3000 <= device2 < 4000:
-                 
-                    battery_percentage = ((currentdata[4]-10.5)/(12.6-10.5))*100
-                else:
-                  
-                    battery_percentage = math.trunc(((currentdata[4]-21)/(25.2-22.8))*100)
+                elif 1000 <= device2 < 2000:#24V LEAD
+                    battery_percentage = ((currentdata[4]-22)/(27-22))*100
+                elif 3000 <= device2 < 4000:#12V Lithium
+                    battery_percentage = ((currentdata[4]-10.5)/(14.6-10.5))*100
+                else:#24V Lithium
+                    battery_percentage = math.trunc(((currentdata[4]-19.8)/(26-19.8))*100)
                 battery_percentage = max(0, min(100, battery_percentage))
                
                 return render_template(
                     'summary.html',
-                    battery_chargefull=battery_percentage,
+                    battery_chargefull=int(battery_percentage),
                     Dccurrent=currentdata,
                     Accurrent=Accurrentdata,
                     dc_kwh=dc_kwh,
@@ -275,7 +271,7 @@ def livegraphdc(id):
                     SELECT timestamp, Dc_Current, Dc_Voltage 
                     FROM dc_data 
                     WHERE Device_id = %s 
-                    AND DATE(timestamp)=CURDATE()"""
+                    AND timestamp >= NOW() - INTERVAL 4 HOUR"""
                 cursor.execute(query, (id,))
                 livedc_graph_data = cursor.fetchall()
                 
@@ -296,10 +292,11 @@ def livegraphac(id):
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
                 query = """
-SELECT timestamp, Current,Voltage 
+SELECT timestamp, Current, Voltage 
 FROM ac_data 
 WHERE Device_id = %s 
-AND DATE(timestamp)=CURDATE() """
+AND timestamp >= NOW() - INTERVAL 4 HOUR
+ """
                 cursor.execute(query, (id,))
                 liveac_graph_data = cursor.fetchall()
                
