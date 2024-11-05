@@ -157,6 +157,27 @@
     position: absolute;
     left: 0;
   }
+  .footer {
+  display: flex;
+  margin-left: -16px;
+  position: absolute; 
+  width: 100%;
+  background-color: #edeff5;
+  padding: 10px;
+  /* bottom: 0; */
+  justify-content: space-between; 
+}
+
+
+    .footer a {
+      color: #2452db;
+    }
+
+    .footer .version {
+      position: absolute;
+      display: flex;
+      right: 10px;
+    }
 </style>
 
 <body>
@@ -167,7 +188,39 @@
       <ul>
         <a href="{{url_for('dash')}}"><img src="/static/logo.jpeg/" class="logo" alt="LOGO" /></a>
       </ul>
+    </div><div class="row1">
+      <section class="col-lg-12 connectedSortable">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title"><i class='bx bxs-data'></i> Panel Data</h4>
+          </div>
+          <div class="row">
+            <div class="card-body">
+              <table id="example21" class="table table-bordered table-striped" style="margin-top: 80px;">
+                <thead>
+                  <tr>
+                    <th>Device ID</th>
+                    <th>Timestamp</th>
+                    <th>Current</th>
+                    <th>Voltage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in alldataprint %}
+                  <tr>
+                    <td>{{ item['Device_id'] }}</td>
+                    <td>{{ item['timestamp'] }}</td>
+                    <td>{{ item['panel_current'] }}</td>
+                    <td>{{ item['panel_voltage'] }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </section>
     </div>
+    <br><br>
     <div class="row1">
       <section class="col-lg-12 connectedSortable">
         <div class="card">
@@ -182,10 +235,10 @@
                     <th>Device ID</th>
                     <th>Timestamp</th>
                     <th>DC Current</th>
-                    <th>DC KWh</th>
-                    <th>DC Power</th>
-                    <th>DC Units</th>
                     <th>DC Voltage</th>
+                    <th>DC Power</th>
+                    <th>DC KWh</th>
+                    <!-- <th>DC Units</th> -->
                     <th>Temperature</th>
 
                   </tr>
@@ -196,12 +249,11 @@
                     <td>{{ item['Device_id'] }}</td>
                     <td>{{ item['timestamp'] }}</td>
                     <td>{{ item['Dc_Current'] }}</td>
-                    <td>{{ item['Dc_KWH'] }}</td>
-                    <td>{{ item['Dc_Power'] }}</td>
-                    <td>{{ item['Dc_Units'] }}</td>
                     <td>{{ item['Dc_Voltage'] }}</td>
+                    <td>{{ item['Dc_Power'] }}</td>
+                    <td>{{ item['Dc_KWH'] }}</td>
+                    <!-- <td>{{ item['Dc_Units'] }}</td> -->
                     <td>{{ item['Temperature'] }}</td>
-
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -251,7 +303,14 @@
           </div>
       </section>
     </div>
-  </div>
+
+    <br>
+     <!-- Footer -->
+     <div class="footer">
+      <p>Copyright © 2024 <a href="https://www.skilancersolar.com/" target="_blank" class="linnk">Skilancer Solar</a> .
+        All rights reserved.</p>
+      <p class="version">Version 1.0.1</p>
+    </div>
   </div>
 
   <div id="mySidenav" class="sidenav" style="z-index: 1001;">
@@ -271,6 +330,63 @@
       document.getElementById("mySidenav").style.width = "0";
       document.getElementById("main").style.marginLeft = "0";
     }
+  </script>
+  <script>
+    $(document).ready(function () {
+      var table = $('#example21').DataTable({
+        "pageLength": 10,
+        "order": [
+          [1, "desc"]
+        ],
+        "drawCallback": function (settings) {
+          $('#example21 thead').css({
+            'background-color': '#0069D9',
+            'color': 'white',
+            'border': '1px solid #F7F6F7',
+          });
+          $('#example21_paginate').css({
+            'text-align': 'center',
+            'cursor': 'pointer'
+          });
+          $('#example21_previous').css({
+            'padding': '4px 8px',
+            'border': '1px solid #e3e3e3',
+            'border-radius': '2px 0 0 2px',
+            'display': 'inline-block',
+            'color': '#007BFF',
+            'margin': '0'
+          });
+          $('#example21_next').css({
+            'padding': '4px 8px',
+            'border': '1px solid #e3e3e3',
+            'border-radius': '0 2px 2px 0',
+            'display': 'inline-block',
+            'color': '#007BFF',
+            'margin': '0'
+          });
+          $('.paginate_button').not('.previous, .next').css({
+            'padding': '4px 8px',
+            'border': '1px solid #e3e3e3',
+            'border-radius': '0',
+            'color': '#999699',
+            'display': 'inline-block',
+            'margin': '0 -0px 0 -0px'
+          });
+
+          $('.paginate_button.current').css({
+            'background-color': '#007BFF',
+            'color': 'white',
+            'border': '1px solid #007BFF'
+          });
+        }
+      });
+
+      $('#example21_filter').css({ 'margin-left': '75%' });
+
+      $('#searchInput').on('keyup', function () {
+        table.search($(this).val()).draw();
+      });
+    });
   </script>
 
   <script>

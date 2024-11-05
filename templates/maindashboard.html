@@ -173,6 +173,28 @@
       overflow: hidden;
     }
   }
+
+  .footer {
+  display: flex;
+  margin-left: -16px;
+  position: absolute; 
+  width: 100%;
+  background-color: #edeff5;
+  padding: 10px;
+  bottom: 0;
+  justify-content: space-between; 
+}
+
+
+    .footer a {
+      color: #2452db;
+    }
+
+    .footer .version {
+      position: absolute;
+      display: flex;
+      right: 10px;
+    }
 </style>
 
 <body>
@@ -184,7 +206,6 @@
         <a href="{{url_for('dash')}}"><img src="/static/logo.jpeg/" class="logo" alt="LOGO" /></a>
       </ul>
     </div>
-
 
     <div id="mySidenav" class="sidenav" style="z-index: 10;">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -212,11 +233,11 @@
               <tbody>
 
                 {% for item in alldataprint %}
-                <tr>
+                <tr class="text-center">
                   <td>{{ item[0] }}</td>
-                  <td>{{ item[1] }}</td>
-                  <td>{{ item[2] }}</td>
-                  <td>{{ item[3] }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                   <td> <a class="btn btn-outline-primary" href="{{ url_for('summary', device=item[0]) }}">Summary</a>
                   </td>
                 </tr>
@@ -229,6 +250,14 @@
       </div>
     </div>
 
+    <!-- Footer -->
+    <div class="footer">
+      <p>Copyright © 2024 <a href="https://www.skilancersolar.com/" target="_blank" class="linnk">Skilancer Solar</a> .
+        All rights reserved.</p>
+      <p class="version">Version 1.0.1</p>
+    </div>
+  </div>
+    <!-- script for table -->
     <script>
       $(document).ready(function () {
         var table = $('#example2').DataTable({
@@ -284,6 +313,7 @@
       });
     </script>
 
+    <!-- script for sidenav -->
     <script>
       function openNav() {
         document.getElementById("mySidenav").style.width = "250px";
@@ -322,11 +352,8 @@
     document.onmousemove = resetTimer;
     document.onkeypress = resetTimer;
 
-    // Initial call to start the timer
     resetTimer();
   </script>
 
-  </div>
 </body>
-
 </html>

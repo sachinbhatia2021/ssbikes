@@ -34,20 +34,6 @@ app.secret_key='neeraj'
 def get_db_connection():
     return mydb_pool.get_connection()
 
-# to truncate the values 
-def truncate(value, decimal_places):
-    if isinstance(value, float):
-        factor = 10 ** decimal_places
-        return int(value * factor) / factor
-    return value
-
-def truncate_values(data, decimal_places):
-    if isinstance(data, (tuple, list)):
-        return tuple(truncate(val, decimal_places) for val in data if isinstance(val, (int, float)))
-    elif isinstance(data, (int, float)):
-        return truncate(data, decimal_places)
-    return data 
-
 # login / index page
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -73,24 +59,13 @@ def dash():
         connection = get_db_connection()  
         with connection.cursor(buffered=True) as cursor:
             alldata = """
-            SELECT dc.Device_id, dc.Dc_KWH, ac.kWh_Consumed, (dc.Dc_KWH - ac.kWh_Consumed) AS Remaining_KWH
+            SELECT distinct(dc.Device_id)
             FROM dc_data dc
-            LEFT JOIN ac_data ac ON dc.Device_id = ac.Device_id
-            WHERE dc.timestamp = (SELECT MAX(timestamp) FROM dc_data WHERE Device_id = dc.Device_id)
-            AND ac.timestamp = (SELECT MAX(timestamp) FROM ac_data WHERE Device_id = ac.Device_id)
+            JOIN ac_data ac ON dc.Device_id = ac.Device_id
             ORDER BY dc.Device_id"""
             cursor.execute(alldata)
             alldataprint = cursor.fetchall()
             
-            # truncated_data = []
-            # for row in alldataprint:
-            #     truncated_row = (
-            #         row[0],  
-            #         truncate(row[1], 5), 
-            #         truncate(row[2], 5),  
-            #         truncate(row[3], 5)   
-            #     )
-            #     truncated_data.append(truncated_row)
         return render_template('maindashboard.html', alldataprint=alldataprint)
     
     except Exception as e:
@@ -108,7 +83,10 @@ def summary(device):
             with connection.cursor(buffered=True) as cursor:
                 # Fetch DC data
                 current_query = """
-                SELECT TRUNCATE(Dc_Current, 5) AS Current, timestamp,Dc_Power, Temperature, TRUNCATE(Dc_Voltage, 5) AS Voltage, TRUNCATE((Dc_Voltage * Dc_Current),5) AS cal_power,Device_id,TRUNCATE(TRUNCATE(Dc_Power,5)-TRUNCATE((Dc_Voltage * Dc_Current),5),5) as error FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
+                SELECT TRUNCATE(Dc_Current, 5) AS Current, timestamp,Dc_Power, Temperature, 
+                TRUNCATE(Dc_Voltage, 5) AS Voltage, TRUNCATE((Dc_Voltage * Dc_Current),5) AS cal_power,Device_id,
+                TRUNCATE(TRUNCATE(Dc_Power,5)-TRUNCATE((Dc_Voltage * Dc_Current),5),5) as error,panel_voltage,panel_current 
+                FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(current_query, (device,))
                 currentdata = cursor.fetchone()
                 
@@ -125,7 +103,6 @@ def summary(device):
                 """
                 cursor.execute(dc_total_kwh_query, (device,))
                 dc_kwh = cursor.fetchone()
-
                 today_date = date.today()
                 
                 #DC KWH 24-hours
@@ -141,27 +118,23 @@ def summary(device):
                 """
                 cursor.execute(dc_total_kwh_query, (device,today_date))
                 dc_total_kwh = cursor.fetchone()
-
                 dc_total_kwh_value = dc_total_kwh[0] if dc_total_kwh and dc_total_kwh[0] is not None else 0
 
                 #DC Units
                 dc_total_unit_query = """
-               SELECT 
-                    CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                FROM (
-                    SELECT 
-                        DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
-                        AVG(Dc_KWH) AS avg_kWh
-                    FROM dc_data 
-                    WHERE Device_id = %s 
-                    GROUP BY hour
+                SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
+                AVG(Dc_KWH) AS avg_kWh FROM dc_data WHERE Device_id = %s GROUP BY hour
                 ) AS hourly """
                 cursor.execute(dc_total_unit_query, (device,))
                 dc_total_unit = cursor.fetchone()
 
                 # Fetch AC data
                 Accurrent_query = """
-                SELECT TRUNCATE(Current, 5) AS Current, timestamp,Power, Temperature, TRUNCATE(Voltage, 5) AS Voltage, TRUNCATE((Voltage * Current),5) AS cal_power,Device_id,TRUNCATE(TRUNCATE(Power,5)-TRUNCATE((Voltage * Current),5),5) as error FROM ac_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
+                SELECT TRUNCATE(Current, 5) AS Current, timestamp,Power, Temperature, TRUNCATE(Voltage, 5) AS Voltage, 
+                TRUNCATE((Voltage * Current),5) AS cal_power,Device_id,
+                TRUNCATE(TRUNCATE(Power,5)-TRUNCATE((Voltage * Current),5),5) as error FROM ac_data 
+                WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(Accurrent_query, (device,))
                 Accurrentdata = cursor.fetchone()
                 
@@ -171,8 +144,7 @@ def summary(device):
                 CAST(AVG(kWh_Consumed) AS DECIMAL(10, 5)) AS avg_kWh,
                 DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS start_time,
                 DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS end_time
-                FROM ac_data 
-                WHERE Device_id = %s
+                FROM ac_data WHERE Device_id = %s
                 AND timestamp >= DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') 
                 AND timestamp < DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00')
                 """
@@ -183,43 +155,34 @@ def summary(device):
                 
                 #AC KWH 24-hours
                 total_kwh_query = """
-                SELECT 
-                CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
-                FROM (
-                    SELECT 
-                        DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
-                        AVG(kWh_Consumed) AS avg_kWh
-                    FROM ac_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
+                SELECT CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
+                FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
+                AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
                 ) AS hourly
                 """
                 cursor.execute(total_kwh_query, (device,today_date))
                 total_kwh = cursor.fetchone()
 
                 total_kwh_value = total_kwh[0] if total_kwh and total_kwh[0] is not None else 0
-        # AC Units Calculation
+                
+                # AC Units Calculation
                 total_unit_query = """
-                SELECT 
-                    CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                FROM (
-                    SELECT 
-                        DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
-                        AVG(kWh_Consumed) AS avg_kWh
-                    FROM ac_data 
-                    WHERE Device_id = %s 
-                    GROUP BY hour
-                ) AS hourly """
+                SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
+                AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s 
+                GROUP BY hour) AS hourly """
                 cursor.execute(total_unit_query, (device,))
                 total_unit = cursor.fetchone()
 
                 # Determine Device Type and Battery Voltage Range
                 device2 = int(device)
-                if 2000 <= device2 < 3000:#12V LEAD
+                if 2000 <= device2 < 3000: #12V LEAD
                     battery_percentage = ((currentdata[4]-10.5)/(12.7-10.5))*100
-                elif 1000 <= device2 < 2000:#24V LEAD
+                elif 1000 <= device2 < 2000: #24V LEAD
                     battery_percentage = ((currentdata[4]-22)/(27-22))*100
-                elif 3000 <= device2 < 4000:#12V Lithium
+                elif 3000 <= device2 < 4000: #12V Lithium
                     battery_percentage = ((currentdata[4]-10.5)/(14.6-10.5))*100
-                else:#24V Lithium
+                else: #24V Lithium
                     battery_percentage = math.trunc(((currentdata[4]-19.8)/(26-19.8))*100)
                 battery_percentage = max(0, min(100, battery_percentage))
                
@@ -233,10 +196,8 @@ def summary(device):
                     dc_total_unit=dc_total_unit,
                     total_kwh_value=total_kwh_value,
                     ac_total_kwh=ac_total_kwh,
-                    total_unit=total_unit
-                )
-
-                
+                    total_unit=total_unit,today_date=today_date
+                )    
     except Exception as e:
                  return str(e), 500
 
@@ -247,12 +208,12 @@ def data_table():
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
                 # Fetch DC data
-                alldata = "SELECT * FROM dc_data"
+                alldata = "SELECT * FROM dc_data order by timestamp desc LIMIT 700"
                 cursor.execute(alldata)
                 alldataprint = cursor.fetchall()
                 
                 # Fetch AC data
-                Acdata = "SELECT * FROM ac_data"
+                Acdata = "SELECT * FROM ac_data order by timestamp desc LIMIT 700"
                 cursor.execute(Acdata)
                 allAcdataprint = cursor.fetchall()
 
@@ -264,18 +225,28 @@ def data_table():
 #DC DATA GRAPH
 @app.route('/livegraphdc/<string:id>')
 def livegraphdc(id):
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
                 query = """
                     SELECT timestamp, Dc_Current, Dc_Voltage 
-                    FROM dc_data 
-                    WHERE Device_id = %s 
-                    AND timestamp >= NOW() - INTERVAL 4 HOUR"""
-                cursor.execute(query, (id,))
+                    FROM dc_data WHERE Device_id = %s 
+                """
+                params = [id]
+
+                if start_date and end_date:
+                    query += " AND timestamp BETWEEN %s AND %s"
+                    params.append(start_date)
+                    params.append(end_date)
+                else:
+                    query += " AND timestamp >= NOW() - INTERVAL 4 HOUR" 
+
+                cursor.execute(query, params)
                 livedc_graph_data = cursor.fetchall()
-                
-                # Format the timestamp for each record
+
                 for item in livedc_graph_data:
                     item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
 
@@ -288,25 +259,36 @@ def livegraphdc(id):
 #AC DATA GRAPH
 @app.route('/livegraphac/<string:id>')
 def livegraphac(id):
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
                 query = """
-SELECT timestamp, Current, Voltage 
-FROM ac_data 
-WHERE Device_id = %s 
-AND timestamp >= NOW() - INTERVAL 4 HOUR
- """
-                cursor.execute(query, (id,))
+                SELECT timestamp, Current, Voltage 
+                FROM ac_data WHERE Device_id = %s 
+                """
+                params = [id]
+
+                if start_date and end_date:
+                    query += " AND timestamp BETWEEN %s AND %s"
+                    params.append(start_date)
+                    params.append(end_date)
+                else:
+                    query += " AND timestamp >= NOW() - INTERVAL 4 HOUR"  
+
+                cursor.execute(query, params)
                 liveac_graph_data = cursor.fetchall()
-               
+                
                 for item in liveac_graph_data:
                     item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
         return jsonify(liveac_graph_data)
+
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
-    
+
 # Logout Page
 @app.route('/logout')
 def logout():
