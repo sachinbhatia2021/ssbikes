@@ -288,7 +288,23 @@ def livegraphac(id):
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
+    
+# model E
+@app.route('/modeledata')
+def modeledata():    
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(buffered=True) as cursor:
+                # Fetch DC data
+                alldata = "SELECT * FROM model_e"
+                cursor.execute(alldata)
+                alldataprint = cursor.fetchall()
+               
+        return render_template('modele.html', alldataprint=alldataprint)
 
+    except Exception as e:
+        return "An error occurred while retrieving the data. Please try again later.", 500
+    
 # Logout Page
 @app.route('/logout')
 def logout():

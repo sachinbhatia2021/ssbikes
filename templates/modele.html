@@ -188,44 +188,12 @@
       <ul>
         <a href="{{url_for('dash')}}"><img src="/static/logo.jpeg/" class="logo" alt="LOGO" /></a>
       </ul>
-    </div><div class="row1">
-      <section class="col-lg-12 connectedSortable">
-        <div class="card">
-          <div class="card-header">
-            <h4 class="card-title"><i class='bx bxs-data'></i> Panel Data</h4>
-          </div>
-          <div class="row">
-            <div class="card-body">
-              <table id="example21" class="table table-bordered table-striped" style="margin-top: 80px;">
-                <thead>
-                  <tr>
-                    <th>Device ID</th>
-                    <th>Timestamp</th>
-                    <th>Current</th>
-                    <th>Voltage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for item in alldataprint %}
-                  <tr>
-                    <td>{{ item['Device_id'] }}</td>
-                    <td>{{ item['timestamp'] }}</td>
-                    <td>{{ item['panel_current'] }}</td>
-                    <td>{{ item['panel_voltage'] }}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-      </section>
     </div>
-    <br><br>
     <div class="row1">
       <section class="col-lg-12 connectedSortable">
         <div class="card">
           <div class="card-header">
-            <h4 class="card-title"><i class='bx bxs-data'></i> DC Data</h4>
+            <h4 class="card-title"><i class='bx bxs-data'></i>Model S</h4>
           </div>
           <div class="row">
             <div class="card-body">
@@ -234,26 +202,101 @@
                   <tr>
                     <th>Device ID</th>
                     <th>Timestamp</th>
-                    <th>DC Current</th>
-                    <th>DC Voltage</th>
-                    <th>DC Power</th>
-                    <th>DC KWh</th>
-                    <!-- <th>DC Units</th> -->
-                    <th>Temperature</th>
+                    <th>Current</th>
+                    <th>start_time</th>
+                    <th> drive_speed</th>
+                    <th>drive_dir</th>
+                   <th>brush_speed</th>
+                   <th>brush_dir</th>
+                    <th>homeswaped</th>
+                    <th>connection_type</th>
+                    <th>local_ip</th>
+                    <th> new_connection_flag</th>
+                    <th>ssid_rolled</th>
+                   <th>drive_min_pwm</th>
+                   <th>bush_min_pwm </th>
+                    <th>max_client_run</th>
+                    <th>minimium_run_voltage</th>
+                    <th>sun_voltage</th>
+                    <th> total_runs</th>
+                    <th>runtime_today</th>
+                   <th>runtime_total</th>
+                   <th>today_runs</th>
+                   <th> microswitch1</th>
+                    <th>microswitch2</th>
+                    <th>loop_time</th>
+                    <th>V_Pannel</th>
+                    <th> V_Battery</th>
+                    <th>battery_level</th>
+                   <th>error_code</th>
+                   <th>temperature</th>
+                    <th>humidity</th>
+                    <th>state</th>
+                    <th>rain</th>
+                    <th> Ir1</th>
+                    <th>Ir2</th>
+                   <th>rain_value</th>
+                   <th>connection_status</th>
+                    <th> connection_health</th>
+                    <th>internal_temperature</th>
+                   <th>packet_generation_reason</th>
+                   <th>packet_number</th>
+                   <th>ir1_raw</th>
+                   <th>ir2_raw</th>
+                    <th> microswitch1_raw</th>
+                    <th>microswitch2_raw</th>             
 
                   </tr>
                 </thead>
                 <tbody>
                   {% for item in alldataprint %}
                   <tr>
-                    <td>{{ item['Device_id'] }}</td>
-                    <td>{{ item['timestamp'] }}</td>
-                    <td>{{ item['Dc_Current'] }}</td>
-                    <td>{{ item['Dc_Voltage'] }}</td>
-                    <td>{{ item['Dc_Power'] }}</td>
-                    <td>{{ item['Dc_KWH'] }}</td>
-                    <!-- <td>{{ item['Dc_Units'] }}</td> -->
-                    <td>{{ item['Temperature'] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }} </td>
+                    <td>{{ item[4] }} </td>
+                    <td>{{ item[5] }}</td>
+                    <td>{{ item[6] }}</td>
+                    <td>{{ item[7] }}</td>
+                    <td>{{ item[8] }}</td>
+                    <td>{{ item[9] }} </td>
+                    <td>{{ item[10] }} </td>
+                    <td>{{ item[11] }}</td>
+                    <td>{{ item[12] }}</td>
+                    <td>{{ item[13] }}</td>
+                    <td>{{ item[14] }}</td>
+                    <td>{{ item[15] }} </td>
+                    <td>{{ item[16] }} </td>
+                    <td>{{ item[17] }}</td>
+                    <td>{{ item[18] }}</td>
+                    <td>{{ item[19] }}</td>
+                    <td>{{ item[20] }}</td>
+                    <td>{{ item[21] }} </td>
+                    <td>{{ item[22] }} </td>
+                    <td>{{ item[23] }}</td>
+                    <td>{{ item[24] }}</td>
+                    <td>{{ item[25] }}</td>
+                    <td>{{ item[26] }}</td>
+                    <td>{{ item[27] }} </td>
+                    <td>{{ item[28] }} </td>
+                    <td>{{ item[29] }}</td>
+                    <td>{{ item[30] }}</td>
+                    <td>{{ item[31] }}</td>
+                    <td>{{ item[32] }}</td>
+                    <td>{{ item[33] }} </td>
+                    <td>{{ item[34] }} </td>
+                    <td>{{ item[35] }}</td>
+                    <td>{{ item[36] }}</td>
+                    <td>{{ item[37] }} </td>
+                    <td>{{ item[38] }} </td>
+                    <td>{{ item[39] }}</td>
+                    <td>{{ item[40] }}</td>
+                    <td>{{ item[41] }}</td>
+                    <td>{{ item[42] }}</td>
+                    <td>{{ item[43] }} </td>
+                    <td>{{ item[44] }} </td>
+                    <td>{{ item[45] }} </td>
+                 
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -263,46 +306,7 @@
       </section>
     </div>
     <br><br>
-    <div class="row1">
-      <section class="col-lg-12 connectedSortable">
-        <div class="card">
-          <div class="card-header">
-            <h4 class="card-title"><i class='bx bxs-data'></i> AC Data</h4>
-          </div>
-          <div class="row">
-            <div class="card-body">
-              <table id="example3" class="table table-bordered table-striped" style="margin-top: 80px;">
-                <thead>
-                  <tr>
-                    <th>Device ID</th>
-                    <th>Timestamp</th>
-                    <th>Temperature</th>
-                    <th>Ac Voltage</th>
-                    <th>Ac Current</th>
-                    <th>Ac Power</th>
-                    <th>Ac KWH</th>
-                    <th>Frequency</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for item in Acalldataprint %}
-                  <tr>
-                    <td>{{ item['Device_id'] }}</td>
-                    <td>{{ item['timestamp'] }}</td>
-                    <td>{{ item['Temperature'] }}</td>
-                    <td>{{ item['Voltage'] }}</td>
-                    <td>{{ item['Current'] }}</td>
-                    <td>{{ item['Power'] }}</td>
-                    <td>{{ item['kWh_Consumed'] }}</td>
-                    <td>{{ item['Frequency'] }}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-      </section>
-    </div>
+   
 
     <br>
      <!-- Footer -->
@@ -316,8 +320,10 @@
   <div id="mySidenav" class="sidenav" style="z-index: 1001;">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="{{ url_for('dash')}}">Home</a>
-    <a href="{{ url_for('data_table')}}"><u>Table</u></a>
-    <a href="{{ url_for('modeledata')}}">Model E</a>
+    <a href="{{ url_for('data_table')}}">Table</a>
+    <a href="{{ url_for('modeledata')}}"><u>
+      Model E
+    </u></a>
     <a href="#" id="logout-btn">Log Out</a>
   </div>
 
