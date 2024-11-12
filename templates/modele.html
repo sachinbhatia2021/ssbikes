@@ -220,21 +220,30 @@
                     <th>Drive Speed</th>
                     <th>Brush Speed</th>
                     <th> Home swap</th>
-                    <th>Start Hour</th>        
+                    <th>Start Hour</th>
+                    <th>Start Minute</th>
+                    <th>Current Hour</th>
+                    <th>Current Minute</th>
+                    <th>Current Seconds</th>        
                   </tr>
                 </thead>
                 <tbody>
-                  {% for item in alldataprint %}
+                  {% for item in alldataprint  %}
                   <tr>
                     <td>{{ item[1] }}</td>
                     <td>{{ item[2] }}</td>
                     <td>{{ item[3] }} </td>
                     <td>{{ item[4] }} </td>
                     <td>{{ item[5] }}</td>
-                    <td>{{ item[6] }}</td>                 
+<td>{{ item[6] }}</td>
+                    <td>{{ item[7] }}</td>
+                    <td>{{ item[8] }}</td>  
+                    <td>{{ item[9] }}</td>  
+                    <td>{{ item[10] }}</td>                   
                   </tr>
                   {% endfor %}
                 </tbody>
+
               </table>
             </div>
           </div>
