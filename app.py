@@ -289,37 +289,7 @@ def livegraphac(id):
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
     
-# model S
-@app.route('/modelsdata')
-def modelsdata():    
-    try:
-        with get_db_connection() as connection:
-            with connection.cursor(buffered=True) as cursor:
-                # Fetch DC data
-                alldata = "SELECT *,FROM_UNIXTIME(device_timestamp + 5 * 3600 + 30 * 60) AS human_readable_timestamp FROM model_s Order by timestamp desc limit 700"
-                cursor.execute(alldata)
-                alldataprint = cursor.fetchall()
-        return render_template('models.html', alldataprint=alldataprint)
 
-    except Exception as e:
-        return "An error occurred while retrieving the data. Please try again later.", 500
-    
-# model E
-@app.route('/modeledata')
-def modeledata():    
-    try:
-        with get_db_connection() as connection:
-            with connection.cursor(buffered=True) as cursor:
-                # Fetch DC data
-                alldata = "SELECT * FROM model_e Order by timestamp desc limit 700"
-                cursor.execute(alldata)
-                alldataprint = cursor.fetchall()
-               
-        return render_template('modele.html', alldataprint=alldataprint)
-
-    except Exception as e:
-        return "An error occurred while retrieving the data. Please try again later.", 500
-        
 # Logout Page
 @app.route('/logout')
 def logout():
