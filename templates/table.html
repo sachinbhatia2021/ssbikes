@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="150">
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -28,139 +29,203 @@
 </head>
 <style>
   body {
-  font-family: "Lato", sans-serif;
-  margin-top: 70px;
-}
-.active-page {
-    background-color: #007BFF; /* Blue background */
-    color: white; /* White text color */
-    border: 1px solid #007BFF; /* Optional: make border blue as well */
-}
+    font-family: "Lato", sans-serif;
+    margin-top: 70px;
+  }
 
+  .active-page {
+    background-color: #007BFF;
+    color: white;
+    border: 1px solid #007BFF;
+  }
 
-.sidenav {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #f5f7fa;
-  overflow-x: hidden;
-  transition: 0.5s;
-  padding-top: 60px;
-}
+  .sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #f5f7fa;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+  }
 
-.sidenav a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 20px;
-  color: #818181;
-  display: block;
-  transition: 0.3s;
-}
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+  }
 
-.sidenav a:hover {
-  color: #0e0707;
-}
+  .sidenav a:hover {
+    color: #0e0707;
+  }
 
-.sidenav .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
-}
+  .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
 
-#main {
-  transition: margin-left .5s;
-  padding: 16px;
-}
+  #main {
+    transition: margin-left .5s;
+    padding: 16px;
+  }
 
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
-    .nav {
-      height: 60px;
-      width: 100%;
-      float: left;
-      background-color: #f5f7fa;
-      box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
-      position: fixed;
-      top: 0;
-      z-index: 10;
-      display: flex;
-      flex-direction: row;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+  @media screen and (max-height: 450px) {
+    .sidenav {
+      padding-top: 15px;
     }
 
-    li {
-      display: inline-flex;
-      float: right-reverse;
+    .sidenav a {
+      font-size: 18px;
+    }
+  }
+
+  .nav {
+    height: 60px;
+    width: 100%;
+    float: left;
+    background-color: #f5f7fa;
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  li {
+    display: inline-flex;
+    float: right-reverse;
+  }
+
+  .logo {
+    height: auto;
+    width: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .nav a {
+    display: flex;
+    align-items: center;
+    color: blue;
+    text-decoration: none;
+  }
+
+  .nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav ul li {
+    display: inline-block;
+    margin-left: 10px;
+    padding-right: 15px;
+  }
+
+  li a.ex2:hover,
+  a.ex2:active {
+    height: 60px;
+    width: 100%;
+  }
+
+  li a:hover:not(.active) {
+    background-color: #5bcefc;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  .nav .name a {
+    margin-left: 45px;
+    font-size: 20px;
+    top: 15px;
+    color: #043585;
+    float: left;
+    position: absolute;
+    left: 0;
+  }
+  .footer {
+  display: flex;
+  margin-left: -16px;
+  position: absolute; 
+  width: 100%;
+  background-color: #edeff5;
+  padding: 10px;
+  /* bottom: 0; */
+  justify-content: space-between; 
+}
+
+
+    .footer a {
+      color: #2452db;
     }
 
-    .logo {
-      height: auto;
-      width: 50px;
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-
-    .nav a {
-      display: flex;
-      align-items: center;
-      color: blue;
-      text-decoration: none;
-    }
-
-    .nav ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .nav ul li {
-      display: inline-block;
-      margin-left: 10px;
-      padding-right: 15px;
-    }
-
-    li a.ex2:hover,
-    a.ex2:active {
-      height: 60px;
-      width: 100%;
-    }
-
-    li a:hover:not(.active) {
-      background-color: #5bcefc;
-      color: white;
-      padding: 5px;
-      border-radius: 5px;
-    }
-
-    .nav .name a {
-      margin-left: 45px;
-      font-size: 20px;
-      top: 15px;
-      color: #043585;
-      float: left;
+    .footer .version {
       position: absolute;
-      left: 0;
+      display: flex;
+      right: 10px;
     }
+    .x{
+    overflow-x: auto;
+    margin-right: 26px;
+    margin-left: 15px;
+}
 </style>
+
 <body>
   <div id="main">
-  <div class="nav" style="width: 100%; margin-left: -20px;">
-    <span style="cursor:pointer; margin: 15px" onclick="openNav()">&#9776;</span>
-      <div class="name"><a href="">Inverter Analytics</a></div> 
+    <div class="nav" style="width: 100%; margin-left: -20px;">
+      <span style="cursor:pointer; margin: 15px" onclick="openNav()">&#9776;</span>
+      <div class="name"><a href="{{ url_for('dash')}}">Inverter Analytics</a></div>
       <ul>
-        <a href="{{url_for('dash')}}"><img src="/static/logo.jpeg/" class="logo" alt="LOGO" /></a>
-        <!-- <li><a href="#" id="logout-btn">Log Out</a></li> -->
+        <a href="{{url_for('dash')}}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
       </ul>
+    </div><div class="row1">
+      <section class="col-lg-12 connectedSortable">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title"><i class='bx bxs-data'></i> Panel Data</h4>
+          </div>
+          <div class="row">
+            <div class="card-body x">
+              <table id="example21" class="table table-bordered table-striped" style="margin-top: 80px;">
+                <thead>
+                  <tr>
+                    <th>Device ID</th>
+                    <th>Timestamp</th>
+                    <th>Current</th>
+                    <th>Voltage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in alldataprint %}
+                  <tr>
+                    <td>{{ item['Device_id'] }}</td>
+                    <td>{{ item['timestamp'] }}</td>
+                    <td>{{ item['panel_current'] }}</td>
+                    <td>{{ item['panel_voltage'] }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </section>
     </div>
+    <br><br>
     <div class="row1">
       <section class="col-lg-12 connectedSortable">
         <div class="card">
@@ -168,80 +233,174 @@
             <h4 class="card-title"><i class='bx bxs-data'></i> DC Data</h4>
           </div>
           <div class="row">
-            <div class="card-body">
-              <table id="example2" class="table table-bordered table-striped"  style="margin-top: 80px;">
+            <div class="card-body x">
+              <table id="example2" class="table table-bordered table-striped" style="margin-top: 80px;">
                 <thead>
-                <tr>
-                  <th>Device ID</th>
-                  <th>Timestamp</th>
-                  <th>DC Current</th>
-                  <th>DC KWh</th>
-                  <th>DC Power</th>
-                  <th>DC Units</th>
-                  <th>DC Voltage</th>
-                  <th>Temperature</th>
-                 
-                  <th>Ac Voltage</th>
-                  <th>Ac Current</th>
-                  <th>Ac Power</th>
-                  <th>Ac KWH</th>
-                  <th>Frequency</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in alldataprint %}
-                <tr>
+                  <tr>
+                    <th>Device ID</th>
+                    <th>Timestamp</th>
+                    <th>DC Current</th>
+                    <th>DC Voltage</th>
+                    <th>DC Power</th>
+                    <th>DC KWh</th>
+                    <!-- <th>DC Units</th> -->
+                    <th>Temperature</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in alldataprint %}
+                  <tr>
                     <td>{{ item['Device_id'] }}</td>
                     <td>{{ item['timestamp'] }}</td>
                     <td>{{ item['Dc_Current'] }}</td>
-                    <td>{{ item['Dc_KWH'] }}</td>
-                    <td>{{ item['Dc_Power'] }}</td>
-                    <td>{{ item['Dc_Units'] }}</td>
                     <td>{{ item['Dc_Voltage'] }}</td>
+                    <td>{{ item['Dc_Power'] }}</td>
+                    <td>{{ item['Dc_KWH'] }}</td>
+                    <!-- <td>{{ item['Dc_Units'] }}</td> -->
                     <td>{{ item['Temperature'] }}</td>
-                   
-                    <td>{{ item['Ac_Voltage'] }}</td>
-                    <td>{{ item['Ac_Current'] }}</td>
-                    <td>{{ item['Ac_Power'] }}</td>
-                    <td>{{ item['Ac_KWH'] }}</td>
-                    <td>{{ item['Ac_Units'] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+                  </tr>
+                  {% endfor %}
+                </tbody>
               </table>
             </div>
           </div>
       </section>
     </div>
-    
+    <br><br>
+    <div class="row1">
+      <section class="col-lg-12 connectedSortable">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title"><i class='bx bxs-data'></i> AC Data</h4>
+          </div>
+          <div class="row">
+            <div class="card-body x">
+              <table id="example3" class="table table-bordered table-striped" style="margin-top: 80px;">
+                <thead>
+                  <tr>
+                    <th>Device ID</th>
+                    <th>Timestamp</th>
+                    <th>Temperature</th>
+                    <th>Ac Voltage</th>
+                    <th>Ac Current</th>
+                    <th>Ac Power</th>
+                    <th>Ac KWH</th>
+                    <th>Frequency</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in Acalldataprint %}
+                  <tr>
+                    <td>{{ item['Device_id'] }}</td>
+                    <td>{{ item['timestamp'] }}</td>
+                    <td>{{ item['Temperature'] }}</td>
+                    <td>{{ item['Voltage'] }}</td>
+                    <td>{{ item['Current'] }}</td>
+                    <td>{{ item['Power'] }}</td>
+                    <td>{{ item['kWh_Consumed'] }}</td>
+                    <td>{{ item['Frequency'] }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </section>
+    </div>
+
+    <br>
+     <!-- Footer -->
+     <div class="footer">
+      <p>Copyright © 2024 <a href="https://www.skilancersolar.com/" target="_blank" class="linnk">Skilancer Solar</a> .
+        All rights reserved.</p>
+      <p class="version">Version 1.0.1</p>
+    </div>
   </div>
 
-<!--  -->
-
-</div>
-  <div id="mySidenav" class="sidenav"style="z-index: 1001;">
+  <div id="mySidenav" class="sidenav" style="z-index: 1001;">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="#">Link 1</a>
-    <a href="#">Link 2</a>
-    <a href="#">Link 3</a>
-    <a href="#">Link 4</a>
+    <a href="{{ url_for('dash')}}">Home</a>
+    <a href="{{ url_for('data_table')}}"><u>Table</u></a>
+    <a href="#" id="logout-btn">Log Out</a>
   </div>
-  
-<script>
-  function openNav() {
-    document.getElementById("mySidenav").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-  }
-  
-  function closeNav() {
-    document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("main").style.marginLeft= "0";
-  }
+
+  <script>
+    function openNav() {
+      document.getElementById("mySidenav").style.width = "250px";
+      document.getElementById("main").style.marginLeft = "250px";
+    }
+
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+      document.getElementById("main").style.marginLeft = "0";
+    }
   </script>
+  <script>
+    $(document).ready(function () {
+      var table = $('#example21').DataTable({
+        "pageLength": 10,
+        "order": [
+          [1, "desc"]
+        ],
+        "drawCallback": function (settings) {
+          $('#example21 thead').css({
+            'background-color': '#0069D9',
+            'color': 'white',
+            'border': '1px solid #F7F6F7',
+          });
+          $('#example21_paginate').css({
+            'text-align': 'center',
+            'cursor': 'pointer'
+          });
+          $('#example21_previous').css({
+            'padding': '4px 8px',
+            'border': '1px solid #e3e3e3',
+            'border-radius': '2px 0 0 2px',
+            'display': 'inline-block',
+            'color': '#007BFF',
+            'margin': '0'
+          });
+          $('#example21_next').css({
+            'padding': '4px 8px',
+            'border': '1px solid #e3e3e3',
+            'border-radius': '0 2px 2px 0',
+            'display': 'inline-block',
+            'color': '#007BFF',
+            'margin': '0'
+          });
+          $('.paginate_button').not('.previous, .next').css({
+            'padding': '4px 8px',
+            'border': '1px solid #e3e3e3',
+            'border-radius': '0',
+            'color': '#999699',
+            'display': 'inline-block',
+            'margin': '0 -0px 0 -0px'
+          });
+
+          $('.paginate_button.current').css({
+            'background-color': '#007BFF',
+            'color': 'white',
+            'border': '1px solid #007BFF'
+          });
+        }
+      });
+
+      $('#example21_filter').css({ 'margin-left': '75%' });
+
+      $('#searchInput').on('keyup', function () {
+        table.search($(this).val()).draw();
+      });
+    });
+  </script>
+
   <script>
     $(document).ready(function () {
       var table = $('#example2').DataTable({
         "pageLength": 10,
+        "order": [
+          [1, "desc"]
+        ],
         "drawCallback": function (settings) {
           $('#example2 thead').css({
             'background-color': '#0069D9',
@@ -277,11 +436,10 @@
             'margin': '0 -0px 0 -0px'
           });
 
-          // Style active page
           $('.paginate_button.current').css({
-            'background-color': '#007BFF', // Active page background color
-            'color': 'white', // Active page text color
-            'border': '1px solid #007BFF' // Optional: active page border color
+            'background-color': '#007BFF',
+            'color': 'white',
+            'border': '1px solid #007BFF'
           });
         }
       });
@@ -292,7 +450,96 @@
         table.search($(this).val()).draw();
       });
     });
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      var table = $('#example3').DataTable({
+        "pageLength": 10,
+        "order": [
+          [1, "desc"]
+        ],
+        "drawCallback": function (settings) {
+          $('#example3 thead').css({
+            'background-color': '#0069D9',
+            'color': 'white',
+            'border': '1px solid #F7F6F7',
+          });
+          $('#example3_paginate').css({
+            'text-align': 'center',
+            'cursor': 'pointer'
+          });
+          $('#example3_previous').css({
+            'padding': '4px 8px',
+            'border': '1px solid #e3e3e3',
+            'border-radius': '2px 0 0 2px',
+            'display': 'inline-block',
+            'color': '#007BFF',
+            'margin': '0'
+          });
+          $('#example3_next').css({
+            'padding': '4px 8px',
+            'border': '1px solid #e3e3e3',
+            'border-radius': '0 2px 2px 0',
+            'display': 'inline-block',
+            'color': '#007BFF',
+            'margin': '0'
+          });
+          $('.paginate_button').not('.previous, .next').css({
+            'padding': '4px 8px',
+            'border': '1px solid #e3e3e3',
+            'border-radius': '0',
+            'color': '#999699',
+            'display': 'inline-block',
+            'margin': '0 -0px 0 -0px'
+          });
+
+          $('.paginate_button.current').css({
+            'background-color': '#007BFF',
+            'color': 'white',
+            'border': '1px solid #007BFF'
+          });
+        }
+      });
+
+      $('#example3_filter').css({ 'margin-left': '75%' });
+
+      $('#searchInput').on('keyup', function () {
+        table.search($(this).val()).draw();
+      });
+    });
+  </script>
+
+<!-- script for logout -->
+<script>
+  document.getElementById('logout-btn').addEventListener('click', function (event) {
+    event.preventDefault();
+    window.location.href = "{{ url_for('logout') }}";
+  });
+</script>
+
+<!-- script for session out automatically -->
+<script>
+  var timeout;
+  var logoutTime = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+  function resetTimer() {
+    clearTimeout(timeout);
+    timeout = setTimeout(logout, logoutTime);
+  }
+
+  function logout() {
+    window.location.href = "{{ url_for('logout') }}";
+  }
+
+  document.onload = resetTimer;
+  document.onmousemove = resetTimer;
+  document.onkeypress = resetTimer;
+
+  // Initial call to start the timer
+  resetTimer();
 </script>
 
 </body>
+
 </html>

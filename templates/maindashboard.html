@@ -7,7 +7,6 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <meta http-equiv="X-UA-Compatible" content="IE edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -19,7 +18,6 @@
     rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
@@ -88,7 +86,7 @@
     width: 100%;
     float: left;
     background-color: #f5f7fa;
-    /* box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1); */
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
     position: fixed;
     top: 0;
     z-index: 10;
@@ -153,94 +151,11 @@
     left: 0;
   }
 
-
-  .con_small {
-    padding: 10px;
-    display: flex;
-    flex-direction: row;
-    margin-top: 30px;
-    justify-content: space-between;
-
-  }
-
-  .half-width {
-    width: calc(50% - 10px);
-    height: 150px;
-    margin: 20px;
-    border: none;
-    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.7s ease;
-    overflow: hidden;
-
-  }
-
-  .half-width:hover {
-    transform: scale(1.03);
-    background-color: #f2f4f8;
-  }
-
-
-  @media (max-width: 768px) {
-    .con_small {
-      flex-wrap: wrap;
-      /* Allow wrapping of the flex items */
-    }
-
-    .half-width {
-      width: calc(50% - 20px);
-      /* Adjust width for two cards */
-      margin: 10px;
-      /* Adjust margin to fit two cards properly */
-    }
-  }
-
-  /*  */
-  .line2 {
-    background-color: #f2f4f8;
-    height: 80px;
-    margin: 28px;
-    padding: 20px;
-    border: none;
-    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.7s ease;
-    overflow: hidden;
-
-  }
-
   .Inverter1 {
     height: auto;
     background-color: #f2f4f8;
     margin: 24px;
     padding: 10px;
-    border: none;
-    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.7s ease;
-    overflow: hidden;
-  }
-
-  .graphdiv1 {
-    display: flex;
-
-  }
-
-  .chart1 {
-    height: auto;
-    background-color: #f2f4f8;
-    margin: 28px;
-    padding: 20px;
-    width: 50%;
-    border: none;
-    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.7s ease;
-    overflow: hidden;
-  }
-
-  .chart2 {
-    height: auto;
-    background-color: #f2f4f8;
-    margin: 28px;
-    padding: 20px;
-    width: 50%;
     border: none;
     box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.7s ease;
@@ -257,69 +172,58 @@
       transition: transform 0.7s ease;
       overflow: hidden;
     }
-
-    .graphdiv1 {
-      display: block
-    }
-
-    .chart1 {
-      height: auto;
-      background-color: #f2f4f8;
-
-      width: 95%;
-      border: none;
-      box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-      transition: transform 0.7s ease;
-      overflow: hidden;
-    }
-
-    .chart2 {
-      height: auto;
-      background-color: #f2f4f8;
-
-      width: 95%;
-      border: none;
-      box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-      transition: transform 0.7s ease;
-      overflow: hidden;
-    }
   }
+
+  .footer {
+  display: flex;
+  margin-left: -16px;
+  position: absolute; 
+  width: 100%;
+  background-color: #edeff5;
+  padding: 10px;
+  bottom: 0;
+  justify-content: space-between; 
+}
+
+
+    .footer a {
+      color: #2452db;
+    }
+
+    .footer .version {
+      position: absolute;
+      display: flex;
+      right: 10px;
+    }
 </style>
 
 <body>
   <div id="main">
     <div class="nav" style="width: 100%; margin-left: -20px;">
       <span style="cursor:pointer; margin: 15px" onclick="openNav()">&#9776;</span>
-      <div class="name"><a href="">Inverter Analytics</a></div>
+      <div class="name"><a href="{{ url_for('dash')}}">Inverter Analytics</a></div>
       <ul>
-        <a href="{{url_for('data_table')}}"><img src="/static/logo.jpeg/" class="logo" alt="LOGO" /></a>
+        <a href="{{url_for('dash')}}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
       </ul>
     </div>
 
-
     <div id="mySidenav" class="sidenav" style="z-index: 10;">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-
-      <a href="#">Link 2</a>
-      <a href="#">Link 3</a>
-      <a href="#">Link 4</a>
+      <a href="{{ url_for('dash')}}"><u>Home</u></a>
+      <a href="{{ url_for('data_table')}}">Table</a>
+      <a href="#" id="logout-btn">Log Out</a>
     </div>
-   
-
-<!--  -->
 
     <div class="Inverter1">
       <h5>Inverter Details</h5>
-    
+
       <div class="tablediv">
         <div class="row">
           <div class="card-body">
             <table id="example2" class="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <th  class="text-center">Device ID</th>
-                
-                 
+                  <th class="text-center">Device ID</th>
                   <th class="text-center">Total Generation</th>
                   <th class="text-center">Total Consumption</th>
                   <th class="text-center">Remaining</th>
@@ -327,36 +231,34 @@
                 </tr>
               </thead>
               <tbody>
-              
 
                 {% for item in alldataprint %}
-                <tr>
+                <tr class="text-center">
                   <td>{{ item[0] }}</td>
-                  <td>{{ item[1] }}</td>
-                  <td>{{ item[2] }}</td>
-                  <td>{{ item[3] }}</td>
-                  <td > <button  class="btn btn-outline-primary" ><a href="{{ url_for('summary', device=item[0]) }}">Summary</a></button> </td>
-
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td> <a class="btn btn-outline-primary" href="{{ url_for('summary', device=item[0]) }}">Summary</a>
+                  </td>
                 </tr>
                 {% endfor %}
-               
-              
+
               </tbody>
             </table>
-
-
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Ensure Chart.js is loaded -->
-
-    
-  
-  
+    <!-- Footer -->
+    <div class="footer">
+      <p>Copyright © 2024 <a href="https://www.skilancersolar.com/" target="_blank" class="linnk">Skilancer Solar</a> .
+        All rights reserved.</p>
+      <p class="version">Version 1.0.1</p>
+    </div>
+  </div>
+    <!-- script for table -->
     <script>
-    
       $(document).ready(function () {
         var table = $('#example2').DataTable({
           "pageLength": 10,
@@ -395,11 +297,10 @@
               'margin': '0 -0px 0 -0px'
             });
 
-            // Style active page
             $('.paginate_button.current').css({
-              'background-color': '#007BFF', // Active page background color
-              'color': 'white', // Active page text color
-              'border': '1px solid #007BFF' // Optional: active page border color
+              'background-color': '#007BFF',
+              'color': 'white',
+              'border': '1px solid #007BFF'
             });
           }
         });
@@ -411,6 +312,8 @@
         });
       });
     </script>
+
+    <!-- script for sidenav -->
     <script>
       function openNav() {
         document.getElementById("mySidenav").style.width = "250px";
@@ -422,7 +325,35 @@
         document.getElementById("main").style.marginLeft = "0";
       }
     </script>
-  </div>
-</body>
 
+    <!-- script for logout -->
+  <script>
+    document.getElementById('logout-btn').addEventListener('click', function (event) {
+      event.preventDefault();
+      window.location.href = "{{ url_for('logout') }}";
+    });
+  </script>
+
+  <!-- script for session out automatically -->
+  <script>
+    var timeout;
+    var logoutTime = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+    function resetTimer() {
+      clearTimeout(timeout);
+      timeout = setTimeout(logout, logoutTime);
+    }
+
+    function logout() {
+      window.location.href = "{{ url_for('logout') }}";
+    }
+
+    document.onload = resetTimer;
+    document.onmousemove = resetTimer;
+    document.onkeypress = resetTimer;
+
+    resetTimer();
+  </script>
+
+</body>
 </html>

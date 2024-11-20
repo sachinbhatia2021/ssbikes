@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="icon" type="image/x-icon" href="/static/logo.jpeg" />
+    <title>Inverter Analytics</title>
+    <style>
+      .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #f5f7fa;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+      }
+
+      .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 20px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+      }
+
+      .sidenav a:hover {
+        color: #0e0707;
+      }
+
+      .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+      }
+
+      #main {
+        transition: margin-left 0.5s;
+        padding: 16px;
+      }
+
+      @media screen and (max-height: 450px) {
+        .sidenav {
+          padding-top: 15px;
+        }
+
+        .sidenav a {
+          font-size: 18px;
+        }
+      }
+
+      .nav {
+        height: 60px;
+        width: 100%;
+        float: left;
+        background-color: #f5f7fa;
+        position: fixed;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        flex-direction: row;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      li {
+        display: inline-flex;
+        float: right-reverse;
+      }
+
+      .logo {
+        height: auto;
+        width: 50px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .nav a {
+        display: flex;
+        align-items: center;
+        color: blue;
+        text-decoration: none;
+      }
+
+      .nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .nav ul li {
+        display: inline-block;
+        margin-left: 10px;
+        padding-right: 15px;
+      }
+
+      li a.ex2:hover,
+      a.ex2:active {
+        height: 60px;
+        width: 100%;
+      }
+
+      li a:hover:not(.active) {
+        background-color: #5bcefc;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+      }
+
+      .nav .name a {
+        margin-left: 45px;
+        font-size: 20px;
+        top: 15px;
+        color: #043585;
+        float: left;
+        position: absolute;
+        left: 0;
+      }
+
+      .con_small {
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        margin-top: 30px;
+        justify-content: space-between;
+      }
+
+      .half-width {
+        width: calc(50% - 10px);
+        height: 150px;
+        margin: 20px;
+        border: none;
+        box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.7s ease;
+        overflow: hidden;
+      }
+
+      .half-width:hover {
+        transform: scale(1.03);
+        background-color: #f2f4f8;
+      }
+
+      @media (max-width: 768px) {
+        .con_small {
+          flex-wrap: wrap;
+        }
+
+        .half-width {
+          width: calc(50% - 20px);
+          margin: 10px;
+        }
+      }
+
+      .line2 {
+        background-color: #f2f4f8;
+        height: 80px;
+        margin: 28px;
+        padding: 20px;
+        border: none;
+        box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.7s ease;
+        overflow: hidden;
+      }
+
+      .Inverter1 {
+        height: auto;
+        background-color: #f2f4f8;
+        margin: 24px;
+        padding: 10px;
+        border: none;
+        box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.7s ease;
+        overflow: hidden;
+      }
+
+      .graphdiv1 {
+        display: flex;
+      }
+
+      .chart1 {
+        height: auto;
+        background-color: #f2f4f8;
+        margin: 28px;
+        padding: 20px;
+        border: none;
+        box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.7s ease;
+        overflow: hidden;
+      }
+
+      .chart2 {
+        height: auto;
+        background-color: #f2f4f8;
+        margin: 28px;
+        padding: 20px;
+        width: 50%;
+        border: none;
+        box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.7s ease;
+        overflow: hidden;
+      }
+
+      @media (max-width: 576px) {
+        .Inverter1 {
+          height: auto;
+          background-color: #f2f4f8;
+          width: 100%;
+          border: none;
+          box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+          transition: transform 0.7s ease;
+          overflow: hidden;
+        }
+
+        .graphdiv1 {
+          display: block;
+        }
+
+        .chart2 {
+          height: auto;
+          background-color: #f2f4f8;
+          width: 95%;
+          border: none;
+          box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+          transition: transform 0.7s ease;
+          overflow: hidden;
+        }
+      }
+
+      small {
+        font-size: 0.7em;
+      }
+
+      svg {
+        display: block;
+      }
+
+      .page-spacer {
+        min-height: 171px;
+        height: calc(100% - 160px);
+      }
+
+      .battery-container {
+        display: flex;
+        position: relative;
+        top: 150px;
+      }
+
+      .battery-text {
+        width: 16%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-color: #fff;
+        background-image: linear-gradient(#fff 50%, #c3c3c3 0%);
+        background-repeat: repeat;
+        background-size: 100% 200%;
+        transition: background-position 0.5s ease, opacity 0.5s ease;
+        opacity: 0;
+        z-index: 2;
+      }
+
+      .battery,
+      .battery-text,
+      .slider {
+        margin: 0 auto;
+        position: absolute;
+        line-height: 5.38em;
+        text-align: center;
+        font-size: 30px;
+        color: white;
+        font-family: Ebrima;
+        top: calc(40% - 150px);
+        left: calc(50% - 90px);
+      }
+
+      .pointer {
+        cursor: pointer;
+      }
+
+      .battery {
+        border: 5px solid #444;
+        height: 160px;
+        border-radius: 1px;
+        width: 200px;
+        background-color: #00fa57;
+        background-image: linear-gradient(#00fa57 50%, #444 0%);
+        background-repeat: repeat;
+        background-size: 100% 200%;
+        background-position: 0 -100%;
+        transition: background-position 0.5s ease;
+      }
+
+      .battery::after {
+        background-color: #000000;
+        content: "";
+        display: block;
+        height: 10px;
+        position: absolute;
+        right: 20px;
+        top: -16px;
+        width: 30px;
+        border-top: 1px solid transparent;
+        border-bottom: 1px solid transparent;
+        border-top-left-radius: 1px;
+        border-top-right-radius: 1px;
+      }
+
+      .battery1::after {
+        background-color: #ff0000;
+        content: "";
+        display: block;
+        height: 10px;
+        position: absolute;
+        left: 20px;
+        top: -16px;
+        width: 30px;
+        border-top: 1px solid transparent;
+        border-bottom: 1px solid transparent;
+        border-top-left-radius: 1px;
+        border-top-right-radius: 1px;
+      }
+
+      .bubbles {
+        display: inline-block;
+        position: relative;
+      }
+
+      .battery-bubbles {
+        width: 69px;
+        right: calc(50% - 35px);
+        height: 149px;
+      }
+
+      .bottom-bubbles {
+        width: 120px;
+        left: calc(50% - 30px);
+        height: 70px;
+      }
+
+      .bubbles span {
+        position: relative;
+        margin: 3em 0 0;
+        color: #fff;
+        z-index: 2;
+      }
+
+      .individual-bubble {
+        position: absolute;
+        border-radius: 100%;
+        bottom: 0;
+        background-color: #00fa57;
+        z-index: 1;
+      }
+
+      .vertical {
+        writing-mode: bt-lr;
+        /* IE */
+        -webkit-appearance: slider-vertical;
+        width: 8px;
+        height: 159.5px;
+        margin: 0;
+        margin-left: 95px;
+      }
+
+      .liquid {
+        position: absolute;
+        width: 190px;
+        height: 5px;
+        overflow: hidden;
+        -webkit-backface-visibility: hidden;
+        -webkit-transform: translate3d(0, 0, 0);
+        -webkit-transform: translate(0, 50px);
+        transform: translate(0, 50px);
+        margin-top: -51px;
+        transition: top 0.5s ease;
+        display: none;
+      }
+
+      .wave {
+        -webkit-animation-name: wave-action;
+        animation-name: wave-action;
+        -webkit-animation-iteration-count: infinite;
+        animation-iteration-count: infinite;
+        -webkit-animation-timing-function: linear;
+        animation-timing-function: linear;
+        -webkit-animation-duration: 0.8s;
+        animation-duration: 0.8s;
+        width: 70px;
+        height: 1px;
+        fill: #00fa57;
+      }
+
+      @-webkit-keyframes wave-action {
+        0% {
+          -webkit-transform: translate(-150px, 0);
+        }
+
+        100% {
+          -webkit-transform: translate(0, 0);
+        }
+      }
+
+      @keyframes wave-action {
+        0% {
+          transform: translate(-150px, 0);
+        }
+
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+
+      @media all and (max-height: 332px) {
+        .onscreen {
+          top: 11px;
+        }
+      }
+
+      _:-ms-lang(x),
+      _:-webkit-full-screen,
+      .individual-bubble {
+        top: inherit !important;
+      }
+
+      .full-width4 {
+        padding-left: 10px;
+        border-radius: 8px;
+        margin-left: 30px;
+        margin-top: 40px;
+        background-color: #eeeef2;
+        padding-top: 40px;
+        width: calc(97% - 10px);
+        height: 180px;
+        margin-bottom: 10px;
+        border-left: 6px solid #460abf;
+      }
+
+      .dates {
+        font-size: 13px;
+        color: rgb(203, 9, 9);
+      }
+
+      .submitbtn {
+        margin-right: 30px;
+      }
+
+      .datess {
+        display: flex;
+        flex-direction: row;
+        justify-content: right;
+        gap: 100px;
+        margin-right: 130px;
+      }
+
+      .footer {
+        display: flex;
+        margin-left: -16px;
+        position: absolute;
+        width: 100%;
+        background-color: #edeff5;
+        padding: 10px;
+        /* bottom: 0; */
+        justify-content: space-between;
+      }
+
+      .footer a {
+        color: #2452db;
+      }
+
+      .footer .version {
+        position: absolute;
+        display: flex;
+        right: 10px;
+      }
+      .on-off1 {
+        display: flex;
+        justify-content: flex-end; /* Aligns buttons to the right */
+        margin: 10px; /* Optional: adds some space around the container */
+      }
+
+      .on-off {
+        display: flex;
+        z-index: 10000;
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        margin-left: 10px;
+        border: 0;
+        background-color: #eceef1;
+      }
+
+      .on-off:hover {
+        background-color: #979595;
+      }
+      .unit {
+        display: flex;
+        right: 100px;
+        position: absolute;
+        height: 30px;
+        width: 180px;
+        font-size: 14px;
+        background-color: #8adbec;
+        justify-content: center;
+        align-items: center;
+        border-radius: 15px;
+        /* margin-top: -30px; */
+      }
+      .bulb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: rgb(250, 7, 7);
+  box-shadow: 0 0 20px rgb(209, 15, 15);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.bulb.glow {
+  background-color: rgb(45, 205, 30);
+  box-shadow: 0 0 20px rgb(5, 235, 59); /* Add glow effect */
+}
+/* panel charging  */
+.chargingonoff {
+    height: 30px;
+    width: 60px;
+    border-radius: 8px;
+    border: solid 3px rgba(26, 17, 17, 0.772);
+    background-color: #7ee72f; /* Default green */
+    margin-left: 40%;
+  }
+
+  .chargingonoff.red {
+    background-color: red;
+  }
+
+  .chargingonoff.green {
+    background-color: #8af835d7;
+    
+  }
+
+  .bb {
+    height: 10px;
+    width: 6px;
+    border: 2px solid black;
+    background-color: #000000;
+    color: #000000;
+    margin-top: 10px;
+  }
+    </style>
+  </head>
+
+  <body>
+    <div id="main">
+      <!-- upper navbar -->
+      <div class="nav" style="width: 100%; margin-left: -20px">
+        <span style="cursor: pointer; margin: 15px" onclick="openNav()"
+          >&#9776;</span
+        >
+        <div class="name">
+          <a href="{{ url_for('dash')}}">Inverter Analytics</a>
+        </div>
+        <ul>
+          <a href="{{url_for('dash')}}"
+            ><img src="/static/logo.jpeg" class="logo" alt="LOGO"
+          /></a>
+        </ul>
+      </div>
+      <!-- side navbar -->
+      <div id="mySidenav" class="sidenav" style="z-index: 10">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
+          >&times;</a
+        >
+        <a href="{{ url_for('dash')}}">Home</a>
+        <a href="{{ url_for('data_table')}}">Table</a>
+       <a href="#" id="logout-btn">Log Out</a>
+      </div>
+
+      <!-- battery -->
+      <div id="batteryOverlay"></div>
+
+      <div class="battery-container">
+        <div class="battery onscreen">
+          <div class="battery1"></div>
+          <div class="bubbles battery-bubbles">
+            <span>&nbsp;</span>
+          </div>
+          <div class="liquid liquid-bg-color">
+            <svg
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              width="300px"
+              height="5px"
+              viewBox="0 0 300 5"
+              enable-background="new 0 0 300 5"
+              xml:space="preserve"
+            >
+              <path
+                fill="#00fa57"
+                class="wave"
+                d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4
+          c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9
+          c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V300H300z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="battery-text onscreen">
+          <div id="batteryPercentage"></div>
+
+          <span class="percentage"></span><small class="units"></small>
+        </div>
+        <div class="slider onscreen"></div>
+        <div class="page-spacer"></div>
+        <div class="bubbles bottom-bubbles">
+          <span>&nbsp;</span>
+        </div>
+      </div>
+      <br /><br />
+      <div class="on-off1">
+        <div class="on-off">AC</div>
+        <div class="on-off">DC</div>
+      </div>
+
+      <br /><br />
+      <!-- Panel Data -->
+      <h3 style="display: flex; justify-content: center">
+        <u
+          ><b>Panel Data</b> || LAST PACKET : {{Dccurrent[1]}} || PANEL INPUT</u
+        >
+      </h3>
+      <div class="con_small">
+        <div class="half-width" style="text-align: center">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center mt-2"
+            >{{Dccurrent[8]}}
+            <span class="ms-2 mt-4" style="font-size: 18px">A</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b> Current </b>
+          </div>
+        </div>
+
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{Dccurrent[9]}}
+            <span class="mt-4 ms-2" style="font-size: 15px">V</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b> Voltage</b>
+          </div>
+        </div>
+        <div class="half-width" style="text-align: center">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center mt-2"
+            >{{Dccurrent[8]*Dccurrent[9]}}
+            <span class="ms-2 mt-4" style="font-size: 18px">W</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b> Power </b>
+          </div>
+        </div>
+        <div class="half-width" style="text-align: center">
+          <div class="d-flex " style="margin-left: 37%; margin-top: 60px;">
+            <div><p id="chargingIndicator" class="chargingonoff"></p>
+            </div>
+              <div class="ms-4 bb"></div>            
+          </div>
+           <div class="mt-2"><b> Charging </b>
+           </div>
+          </div>
+      </div>
+
+      <script>
+    function panel() {
+          const accurrent = "{{Dccurrent[8]}}"; // Assuming accurrent is a valid number
+          
+          const chargingIndicator = document.getElementById("chargingIndicator");
+      
+          if (chargingIndicator) {
+            if (accurrent>= 0.1) {
+           
+              chargingIndicator.classList.add("green");
+              chargingIndicator.classList.remove("red");
+            } else {
+             
+              chargingIndicator.classList.add("red");
+              chargingIndicator.classList.remove("green");
+            }
+          } else {
+            console.error("Element with id 'chargingIndicator' not found.");
+          }
+        };
+        panel()
+      </script>
+      <hr />
+      <!-- DC DATA -->
+      <h3 style="display: flex; justify-content: center">
+        <u
+          ><b>DC Data</b> || LAST PACKET : {{Dccurrent[1]}} || MPPT CHARGING
+          STATE</u
+        >
+      </h3>
+      <div class="unit"><b>Generated</b> -> {{dc_total_unit[0]}} Units</div>
+      <div class="con_small">
+        <div class="half-width" style="text-align: center">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center mt-2"
+            >{{Dccurrent[0]}}
+            <span class="ms-2 mt-4" style="font-size: 18px">A</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>DC Current </b>
+          </div>
+        </div>
+
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{Dccurrent[4]}}
+            <span class="mt-4 ms-2" style="font-size: 15px">V</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>DC Voltage</b>
+          </div>
+        </div>
+
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{Dccurrent[3]}}
+            <span class="mt-4 ms-2" style="font-size: 15px">°C</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>Temperature</b>
+          </div>
+        </div>
+
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{Dccurrent[2]}}
+            <span class="mt-4 ms-2" style="font-size: 15px">W</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>Input Power</b>
+          </div>
+        </div>
+      </div>
+      <div class="con_small">
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{Dccurrent[5]}}
+            <span class="mt-4 ms-2" style="font-size: 15px">W</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>Cal. Power</b>
+          </div>
+        </div>
+
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{ Dccurrent[7] }}
+            <span class="ms-1" style="font-size: 18px"></span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>Error</b>
+          </div>
+        </div>
+
+        <div class="half-width" style="text-align: center">
+          {{dc_kwh[1]}} - {{dc_kwh[2]}}
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center mt-2"
+            >{{dc_kwh[0] if dc_kwh[0] is not none else 'N/A'}}
+            <span class="ms-2 mt-4" style="font-size: 18px"></span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>KWH (per Interval Hour) </b>
+          </div>
+        </div>
+
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{dc_total_kwh_value}}
+            <span class="ms-1" style="font-size: 18px"></span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>KWH (24 Hours) </b>
+          </div>
+        </div>
+
+        <!-- <div class="half-width">
+        <br />
+        <span style="font-size: 40px; display: flex; justify-content: center" class="text-center">{{dc_total_unit[0]}}
+          <span class="ms-1" style="font-size: 18px"></span>
+        </span>
+        <br />
+        <div class="text-center" style="margin-bottom: 15px">
+          <b>Total units Generated </b>
+        </div>
+      </div> -->
+      </div>
+      <hr />
+
+      <!-- AC DATA -->
+      <h3 style="display: flex; justify-content: center">
+        <u><b>AC Data</b> || LAST PACKET : {{Accurrent[1]}}</u>
+        <div id="bulb" class="bulb ms-5"></div>
+
+      </h3>
+   
+   <script>
+ window.onload = function() {
+  const accurrent = parseFloat("{{ Accurrent[0] }}");
+  const accurrentTimestampString = "{{ Accurrent[1] }}"; 
+
+  const accurrentTimestamp = new Date(accurrentTimestampString.replace(" ", "T")).getTime();
+
+  const bulb = document.getElementById("bulb");
+  const currentTime = Date.now();
+
+  const isWithinLastHour = (currentTime - accurrentTimestamp) <= 3600000;
+
+  if (bulb && isWithinLastHour) {
+    if (accurrent >= 0.2) {
+      bulb.classList.add("glow");
+    } else {
+      bulb.classList.remove("glow");
+    }
+  } else if (!bulb) {
+    console.error("Element with id 'bulb' not found.");
+  }
+};
+
+
+
+   </script>
+      <div class="unit"><b>Consumed</b>-> {{total_unit[0]}} Units</div>
+      <div class="con_small">
+        <div class="half-width" style="text-align: center">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center mt-2"
+            >{{Accurrent[0]}}
+            <span class="ms-2 mt-4" style="font-size: 18px">A</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>AC Current </b>
+          </div>
+        </div>
+
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{Accurrent[4]}}
+            <span class="mt-4 ms-2" style="font-size: 15px">V</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>AC Voltage</b>
+          </div>
+        </div>
+
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{Accurrent[3]}}
+            <span class="mt-4 ms-2" style="font-size: 15px">°C</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>Temperature</b>
+          </div>
+        </div>
+
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{Accurrent[2]}}
+            <span class="mt-4 ms-2" style="font-size: 15px">W</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>Output Power</b>
+          </div>
+        </div>
+      </div>
+      <div class="con_small">
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{Accurrent[5]}}
+            <span class="mt-4 ms-2" style="font-size: 15px">W</span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>Cal. Power</b>
+          </div>
+        </div>
+
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{ Accurrent[7] }}
+            <span class="ms-1" style="font-size: 18px"></span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>Error</b>
+          </div>
+        </div>
+
+        <div class="half-width" style="text-align: center">
+          {{ac_total_kwh[1]}} - {{ac_total_kwh[2]}}
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center mt-2"
+            >{{ac_total_kwh[0] if ac_total_kwh[0] is not none else 'N/A'}}
+            <span class="ms-2 mt-4" style="font-size: 18px"></span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>KWH (per Interval Hour) </b>
+          </div>
+        </div>
+
+        <div class="half-width">
+          <br />
+          <span
+            style="font-size: 40px; display: flex; justify-content: center"
+            class="text-center"
+            >{{total_kwh_value}}
+            <span class="ms-1" style="font-size: 18px"></span>
+          </span>
+          <br />
+          <div class="text-center" style="margin-bottom: 15px">
+            <b>KWH (24 Hours) </b>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="half-width">
+      <br />
+      <span style="font-size: 40px; display: flex; justify-content: center" class="text-center">{{total_unit[0]}}
+        <span class="ms-1" style="font-size: 18px"></span>
+      </span>
+      <br />
+      <div class="text-center" style="margin-bottom: 15px">
+        <b>Total units Consumed </b>
+      </div>
+    </div> -->
+      <hr />
+
+      <!-- Date selection -->
+      <div class="full-width4">
+        <label><b>Date Range For Analysis</b></label>
+        <div class="dates">Both dates are mandatory</div>
+        <div class="datess">
+          <div>
+            <label for="start_date"
+              ><b
+                >Start Date
+                <span class="required-asterisk" style="color: red">*</span></b
+              ></label
+            ><br />
+            <input
+              style="width: 250px"
+              type="date"
+              value="{{ today_date }}"
+              id="start_date"
+              name="start_date"
+            />
+          </div>
+          <div>
+            <label for="end_date"
+              ><b
+                >End Date
+                <span class="required-asterisk" style="color: red">*</span></b
+              ></label
+            ><br />
+            <input
+              style="width: 250px"
+              type="date"
+              value="{{ today_date }}"
+              id="end_date"
+              name="end_date"
+            />
+          </div>
+          <!-- <div>
+            <button id="submitBtn" type="button"
+              class="submitbtn btn btn-outline-primary btn-block mt-2 pe-5">Submit</button>
+          </div> -->
+        </div>
+      </div>
+
+      <!-- Graphs -->
+      <div class="chart1">
+        <h4 style="text-align: center">
+          DC Current, Dc Voltage & Power vs. Time
+        </h4>
+        <canvas id="live1" width="1400" height="450"></canvas>
+      </div>
+      <div class="chart1">
+        <h4 style="text-align: center">
+          AC Current, Ac Voltage & Power vs. Time
+        </h4>
+        <canvas id="live2" width="1400" height="430"></canvas>
+      </div>
+
+      <!-- Alert -->
+      <div class="line2">
+        <h5>Smart Alerts</h5>
+      </div>
+      <br />
+      <!-- Footer -->
+      <div class="footer">
+        <p>
+          Copyright © 2024
+          <a
+            href="https://www.skilancersolar.com/"
+            target="_blank"
+            class="linnk"
+            >Skilancer Solar</a
+          >
+          . All rights reserved.
+        </p>
+        <p class="version">Version 1.0.1</p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+    <!-- script for battery -->
+    <script>
+      let batteryLevel = "{{battery_chargefull}}";
+
+      document
+        .getElementById("batteryOverlay")
+        .style.setProperty("--battery-level", batteryLevel);
+      document.getElementById("batteryPercentage").innerText =
+        batteryLevel + "%";
+
+      const batteryOverlay = document.getElementById("batteryOverlay");
+      if (batteryLevel > 50) {
+        batteryOverlay.style.background = `conic-gradient(green 0deg, green calc(3.6deg * ${batteryLevel}), #222 calc(3.6deg * ${batteryLevel}), #222 360deg)`;
+      } else if (batteryLevel > 20) {
+        batteryOverlay.style.background = `conic-gradient(yellow 0deg, yellow calc(3.6deg * ${batteryLevel}), #222 calc(3.6deg * ${batteryLevel}), #222 360deg)`;
+      } else {
+        batteryOverlay.style.background = `conic-gradient(red 0deg, red calc(3.6deg * ${batteryLevel}), #222 calc(3.6deg * ${batteryLevel}), #222 360deg)`;
+      }
+    </script>
+
+    <!-- script for battery animation -->
+    <script>
+      function changeStylesheetRule(s, selector, property, value) {
+        selector = selector.toLowerCase();
+        value = value.toLowerCase();
+
+        for (var i = 0; i < s.cssRules.length; i++) {
+          var rule = s.cssRules[i];
+          if (rule.selectorText === selector) {
+            s.deleteRule(i);
+            break;
+          }
+        }
+
+        property = property.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+        s.insertRule(selector + " { " + property + ": " + value + "; }", 0);
+      }
+      function randomValue(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      jQuery.easing["jswing"] = jQuery.easing["swing"];
+      jQuery.extend(jQuery.easing, {
+        def: "easeOutQuad",
+        swing: function (x, t, b, c, d) {
+          return jQuery.easing[jQuery.easing.def](x, t, b, c, d);
+        },
+        easeOutQuad: function (x, t, b, c, d) {
+          return -c * (t /= d) * (t - 2) + b;
+        },
+      });
+
+      $(document).ready(function () {
+        var perc = "{{battery_chargefull}}";
+        var s = document.styleSheets[0];
+        var sArray = [];
+
+        setTimeout(function () {
+          updateBattery(perc, s);
+          $(".percentage").text(perc);
+          $(".units").text("%");
+          $(".battery-text").css("opacity", 1);
+          $(".slider input").animate({ value: perc }, 500, "easeOutQuad");
+
+          setTimeout(function () {
+            $(".liquid").show();
+          }, 500);
+        }, 500);
+
+        function updateBattery(perc, s) {
+          if (perc === 100) {
+            sArray = [];
+          } else if (sArray.length === 0) {
+            sArray = [4, 6, 8, 10];
+          }
+
+          document.querySelector(".battery").style.backgroundPosition = `0 -${
+            100 - perc
+          }%`;
+          document.querySelector(
+            ".battery-text"
+          ).style.backgroundPosition = `0 -${100 - perc}%`;
+          document.querySelector(".liquid").style.top = `${100 - perc}%`;
+
+          if (perc === 100) {
+            changeStylesheetRule(
+              s,
+              ".liquid-bg-color",
+              "backgroundColor",
+              "#00fa57"
+            );
+          } else {
+            changeStylesheetRule(
+              s,
+              ".liquid-bg-color",
+              "backgroundColor",
+              "#444"
+            );
+          }
+        }
+
+        setInterval(function () {
+          if (sArray.length > 0) {
+            var size = randomValue(sArray);
+
+            var largestSize = Math.max.apply(Math, sArray);
+            var offset = largestSize / 2;
+            offset += 5;
+            $(".bubbles").each(function () {
+              var bArray = new Array(parseInt($(this).width()) - offset)
+                .join()
+                .split(",")
+                .map(function (item, index) {
+                  return ++index;
+                });
+
+              $(this).append(
+                '<div class="individual-bubble" style="left: ' +
+                  randomValue(bArray) +
+                  "px; width: " +
+                  size +
+                  "px; height: " +
+                  size +
+                  'px"></div>'
+              );
+            });
+
+            $(".individual-bubble").animate(
+              {
+                top: 0,
+                bottom: "100%",
+                opacity: "-=0.7",
+              },
+              3000,
+              function () {
+                $(this).remove();
+              }
+            );
+          }
+        }, 350);
+
+        $(".slider input")
+          .on("input", function () {
+            $(this).stop();
+            var original = this.value;
+            this.value = perc;
+            perc = parseInt(original);
+            $(this).animate({ value: perc }, 500, "easeOutQuad");
+            $(".percentage").text(perc);
+          })
+          .on("mouseup", function () {
+            $(this).trigger("change");
+          })
+          .on("change", function () {
+            updateBattery(perc, s);
+          });
+      });
+    </script>
+
+    <!-- script for sideNav Bar -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+      }
+
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+      }
+    </script>
+
+    <!--Graph for DC Data -->
+    <script>
+      const id = "{{Dccurrent[6]}}";
+      let chart4 = null;
+
+      function livegraphDc(startDate, endDate) {
+        const url =
+          startDate && endDate
+            ? `/livegraphdc/${id}?start_date=${startDate}&end_date=${endDate}`
+            : `/livegraphdc/${id}`;
+
+        fetch(url)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (!Array.isArray(data)) {
+              throw new Error("Data is not an array.");
+            }
+
+            const labels = data.map((item) => new Date(item.timestamp));
+            const voltageValues = data.map((item) => item.Dc_Voltage);
+            const currentValues = data.map((item) => item.Dc_Current);
+            const powerValues = data.map(
+              (item) => item.Dc_Voltage * item.Dc_Current
+            );
+
+            if (chart4) {
+              chart4.destroy();
+            }
+
+            const ctx = document.getElementById("live1").getContext("2d");
+            chart4 = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    label: "DC Voltage (V)",
+                    data: voltageValues,
+                    borderColor: "#21b1ff",
+                    backgroundColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3,
+                    yAxisID: "y1",
+                  },
+                  {
+                    label: "DC Current (A)",
+                    data: currentValues,
+                    borderColor: "#ff218c",
+                    backgroundColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3,
+                    yAxisID: "y2",
+                  },
+                  {
+                    label: "Power (W)",
+                    data: powerValues,
+                    borderColor: "#ffd800",
+                    backgroundColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3,
+                    yAxisID: "y1",
+                  },
+                ],
+              },
+              options: {
+                scales: {
+                  x: {
+                    type: "time",
+                    time: {
+                      unit: "minute",
+                      tooltipFormat: "MMM d, h:mm a",
+                    },
+                    grid: {
+                      display: false,
+                    },
+                  },
+                  y1: {
+                    beginAtZero: true,
+                    grid: {
+                      display: false,
+                    },
+                    title: {
+                      display: true,
+                      text: "Voltage & Power (V/W)",
+                    },
+                  },
+                  y2: {
+                    beginAtZero: true,
+                    position: "right",
+                    grid: {
+                      drawOnChartArea: true,
+                    },
+                    title: {
+                      display: true,
+                      text: "Current (A)",
+                    },
+                  },
+                },
+              },
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching graph data:", error);
+          });
+      }
+      livegraphDc();
+      document
+        .getElementById("start_date")
+        .addEventListener("change", updateGraph);
+      document
+        .getElementById("end_date")
+        .addEventListener("change", updateGraph);
+
+      function updateGraph() {
+        const startDate = document.getElementById("start_date").value;
+        const endDate = document.getElementById("end_date").value;
+        livegraphDc(startDate, endDate);
+      }
+
+      // Alternatively, use setInterval to keep calling it every second
+      // setInterval(() => {
+      //   livegraphDc();
+      // }, 1000);
+    </script>
+
+    <!--Graph for AC Data -->
+    <script>
+      const id1 = "{{Accurrent[6]}}";
+      let chart5 = null;
+      function livegraphAc(startDate, endDate) {
+        const url =
+          startDate && endDate
+            ? `/livegraphac/${id1}?start_date=${startDate}&end_date=${endDate}`
+            : `/livegraphac/${id1}`;
+
+        fetch(url)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (!Array.isArray(data)) {
+              throw new Error("Data is not an array.");
+            }
+
+            const labels = data.map((item) => new Date(item.timestamp));
+            const voltageValues = data.map((item) => item.Voltage);
+            const currentValues = data.map((item) => item.Current);
+            const powerValues = data.map((item) => item.Voltage * item.Current);
+
+            if (chart5) {
+              chart5.destroy();
+            }
+
+            const ctx = document.getElementById("live2").getContext("2d");
+            chart5 = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    label: "AC Voltage (V)",
+                    data: voltageValues,
+                    borderColor: "#207bff",
+                    backgroundColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3,
+                    yAxisID: "y1",
+                  },
+                  {
+                    label: "AC Current (A)",
+                    data: currentValues,
+                    borderColor: "#db2b39",
+                    backgroundColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3,
+                    yAxisID: "y2",
+                  },
+                  {
+                    label: "Power (W)",
+                    data: powerValues,
+                    borderColor: "#f3a712",
+                    backgroundColor: "rgba(0, 0, 0, 0)",
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3,
+                    yAxisID: "y1",
+                  },
+                ],
+              },
+              options: {
+                scales: {
+                  x: {
+                    type: "time",
+                    time: {
+                      unit: "hour",
+                      tooltipFormat: "MMM d, h:mm a",
+                    },
+                    grid: {
+                      display: false,
+                    },
+                  },
+                  y1: {
+                    beginAtZero: true,
+                    grid: {
+                      display: false,
+                    },
+                    title: {
+                      display: true,
+                      text: "Voltage & Power (V/W)",
+                    },
+                  },
+                  y2: {
+                    beginAtZero: true,
+                    position: "right",
+                    grid: {
+                      drawOnChartArea: true,
+                    },
+                    title: {
+                      display: true,
+                      text: "Current (A)",
+                    },
+                  },
+                },
+              },
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching graph data:", error);
+          });
+      }
+
+      livegraphAc();
+
+      document
+        .getElementById("start_date")
+        .addEventListener("change", updateGraph);
+      document
+        .getElementById("end_date")
+        .addEventListener("change", updateGraph);
+
+      function updateGraph() {
+        const startDate = document.getElementById("start_date").value;
+        const endDate = document.getElementById("end_date").value;
+        livegraphAc(startDate, endDate);
+      }
+
+      // Optionally, you can keep refreshing the graph data every second
+      // setInterval(() => {
+      //    livegraphAc();
+      // }, 1000);
+    </script>
+
+    <!-- script for logout -->
+    <script>
+      document
+        .getElementById("logout-btn")
+        .addEventListener("click", function (event) {
+          event.preventDefault();
+          window.location.href = "{{ url_for('logout') }}";
+        });
+    </script>
+
+    <!-- script for disable futue dates -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const today = new Date().toISOString().split("T")[0];
+
+        // Set the max attribute for both date inputs
+        document.getElementById("start_date").setAttribute("max", today);
+        document.getElementById("end_date").setAttribute("max", today);
+      });
+    </script>
+
+    <!-- script for session out automatically -->
+    <script>
+      var timeout;
+      var logoutTime = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+      function resetTimer() {
+        clearTimeout(timeout);
+        timeout = setTimeout(logout, logoutTime);
+      }
+
+      function logout() {
+        window.location.href = "{{ url_for('logout') }}";
+      }
+
+      document.onload = resetTimer;
+      document.onmousemove = resetTimer;
+      document.onkeypress = resetTimer;
+
+      resetTimer();
+    </script>
+  </body>
+</html>

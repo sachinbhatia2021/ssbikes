@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/static/logo.jpeg" type="image/x-icon" />
+    <title>Skilancer Solar</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background-image: url("/static/bg.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      .content {
+        background-color: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(15px);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 40px 20px;
+        max-width: 600px;
+        width: 100%;
+        z-index: 1;
+      }
+
+      .logo {
+        width: 120px;
+        height: auto;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 36px;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 18px;
+        color: #555;
+        margin-bottom: 15px;
+      }
+
+      p:last-child {
+        font-weight: bold;
+        color: #3bb3d1;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 28px;
+        }
+
+        p {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content">
+        <img src="/static/logo.jpeg" alt="Skilancer Solar" class="logo" />
+        <h1>Skilancer Solar</h1>
+        <p>We're currently upgrading our systems to serve you better.</p>
+        <p>
+          Our website is under maintenance and will be back online shortly. We
+          apologize for any inconvenience caused.
+        </p>
+        <p>Thank you for your patience and understanding!</p>
+      </div>
+    </div>
+  </body>
+</html>

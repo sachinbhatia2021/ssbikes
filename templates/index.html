@@ -1,10 +1,14 @@
 <html>
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -395,7 +399,7 @@
       <div class="signin-signup">
         <form action="{{ url_for('index')}}" class="sign-in-form" method="POST">
           <h1 class="title">Wattmeter</h1>
-            <h2 class="title">Login</h2>
+          <h2 class="title">Login</h2>
           {% if error %}
           <p style="color: red">{{ error }}</p>
           {% endif %} {% if message %}
@@ -431,7 +435,6 @@
       const togglePassword = document.getElementById('togglePassword');
 
       togglePassword.addEventListener('click', function () {
-        // Toggle the type attribute
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
         password.setAttribute('type', type);
         this.classList.toggle('fa-lock-open');
@@ -439,5 +442,4 @@
       });
     </script>
 </body>
-
 </html>
