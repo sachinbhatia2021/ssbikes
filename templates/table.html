@@ -510,18 +510,48 @@
     });
   </script>
 
-<!-- script for logout -->
+<!-- logout -->
 <script>
   document.getElementById('logout-btn').addEventListener('click', function (event) {
-    event.preventDefault();
-    window.location.href = "{{ url_for('logout') }}";
+    function logout() {
+      fetch('/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = '/';
+          } else {
+            window.location.href = '/';
+          }
+        })
+        .catch(error => {
+          console.error('Logout failed:', error);
+          window.location.href = '/';
+        });
+    }
+
+    function preventBack() {
+
+      window.history.replaceState(null, null, window.location.href);
+      window.onpopstate = function () {
+        window.history.replaceState(null, null, window.location.href);
+        window.location.href = '/';
+      };
+    }
+
+    logout();
+    preventBack();
   });
+
 </script>
 
-<!-- script for session out automatically -->
+<!-- for automatically logout -->
 <script>
   var timeout;
-  var logoutTime = 30 * 60 * 1000; // 30 minutes in milliseconds
+  var logoutTime = 30 * 60 * 1000; // 30 minutes
 
   function resetTimer() {
     clearTimeout(timeout);
@@ -529,15 +559,42 @@
   }
 
   function logout() {
-    window.location.href = "{{ url_for('logout') }}";
+    fetch('/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = '/';
+        } else {
+          window.location.href = '/';
+        }
+      })
+      .catch(error => {
+        console.error('Logout failed:', error);
+        window.location.href = '/';
+      });
   }
 
   document.onload = resetTimer;
   document.onmousemove = resetTimer;
   document.onkeypress = resetTimer;
 
-  // Initial call to start the timer
   resetTimer();
+
+  function preventBack() {
+    window.history.replaceState(null, null, window.location.href);
+    window.onpopstate = function () {
+      window.history.replaceState(null, null, window.location.href);
+      window.location.href = '/';
+    };
+  }
+
+  if (window.location.pathname === "/") {
+    preventBack();
+  }
 </script>
 
 </body>

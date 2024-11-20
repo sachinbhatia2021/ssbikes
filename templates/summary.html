@@ -1547,15 +1547,92 @@
       // }, 1000);
     </script>
 
-    <!-- script for logout -->
-    <script>
-      document
-        .getElementById("logout-btn")
-        .addEventListener("click", function (event) {
-          event.preventDefault();
-          window.location.href = "{{ url_for('logout') }}";
+    <!-- logout -->
+<script>
+  document.getElementById('logout-btn').addEventListener('click', function (event) {
+    function logout() {
+      fetch('/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = '/';
+          } else {
+            window.location.href = '/';
+          }
+        })
+        .catch(error => {
+          console.error('Logout failed:', error);
+          window.location.href = '/';
         });
-    </script>
+    }
+
+    function preventBack() {
+
+      window.history.replaceState(null, null, window.location.href);
+      window.onpopstate = function () {
+        window.history.replaceState(null, null, window.location.href);
+        window.location.href = '/';
+      };
+    }
+
+    logout();
+    preventBack();
+  });
+
+</script>
+
+<!-- for automatically logout -->
+<script>
+  var timeout;
+  var logoutTime = 30 * 60 * 1000; // 30 minutes
+
+  function resetTimer() {
+    clearTimeout(timeout);
+    timeout = setTimeout(logout, logoutTime);
+  }
+
+  function logout() {
+    fetch('/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = '/';
+        } else {
+          window.location.href = '/';
+        }
+      })
+      .catch(error => {
+        console.error('Logout failed:', error);
+        window.location.href = '/';
+      });
+  }
+
+  document.onload = resetTimer;
+  document.onmousemove = resetTimer;
+  document.onkeypress = resetTimer;
+
+  resetTimer();
+
+  function preventBack() {
+    window.history.replaceState(null, null, window.location.href);
+    window.onpopstate = function () {
+      window.history.replaceState(null, null, window.location.href);
+      window.location.href = '/';
+    };
+  }
+
+  if (window.location.pathname === "/") {
+    preventBack();
+  }
+</script>
 
     <!-- script for disable futue dates -->
     <script>
@@ -1568,25 +1645,6 @@
       });
     </script>
 
-    <!-- script for session out automatically -->
-    <script>
-      var timeout;
-      var logoutTime = 30 * 60 * 1000; // 30 minutes in milliseconds
-
-      function resetTimer() {
-        clearTimeout(timeout);
-        timeout = setTimeout(logout, logoutTime);
-      }
-
-      function logout() {
-        window.location.href = "{{ url_for('logout') }}";
-      }
-
-      document.onload = resetTimer;
-      document.onmousemove = resetTimer;
-      document.onkeypress = resetTimer;
-
-      resetTimer();
-    </script>
+    
   </body>
 </html>

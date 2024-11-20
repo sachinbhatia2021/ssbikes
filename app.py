@@ -2,19 +2,21 @@ from flask import render_template, Flask, redirect, request, url_for, jsonify,se
 from dotenv import load_dotenv
 import mysql.connector.pooling
 from mysql.connector import Error
-from datetime import datetime,date
+from datetime import datetime,date,timedelta
 import math
 import os
 load_dotenv()
-
+########################################################################################################
 # load the values
 Host = os.getenv("Host")
 user = os.getenv("User")
 db_password = os.getenv("db_password")
-db_name = os.getenv("db_name")
-
+db_name = os.getenv("db_name") 
+########################################################################################################
 app = Flask(__name__)
-
+########################################################################################################
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+########################################################################################################
 # Database connection pool for AWS database
 dbconfig = {
     "host": Host,
@@ -22,18 +24,19 @@ dbconfig = {
     "password": db_password,
     "database": db_name
 }
-
+########################################################################################################
 # connection Pool
 mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool",
                                                         pool_size=5,
                                                         **dbconfig)
+########################################################################################################
 # secret key for session
 app.secret_key='neeraj'
-
+########################################################################################################
 # database connection
 def get_db_connection():
     return mydb_pool.get_connection()
-
+########################################################################################################
 # login / index page
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -50,7 +53,7 @@ def index():
             print(f"Error during login process: {e}")
             return "An error occurred during login. Please try again later.", 500
     return render_template('index.html', error="")
-
+########################################################################################################
 # frontpage / homepage
 @app.route('/dashboard')
 def dash():
@@ -61,8 +64,7 @@ def dash():
             alldata = """
             SELECT distinct(dc.Device_id)
             FROM dc_data dc
-            JOIN ac_data ac ON dc.Device_id = ac.Device_id
-            ORDER BY dc.Device_id"""
+            JOIN ac_data ac ON dc.Device_id = ac.Device_id"""
             cursor.execute(alldata)
             alldataprint = cursor.fetchall()
             
@@ -74,7 +76,7 @@ def dash():
     finally:
         if connection:
             connection.close() 
-
+########################################################################################################
 # Summary page
 @app.route('/summary/<device>')
 def summary(device):
@@ -200,7 +202,7 @@ def summary(device):
                 )    
     except Exception as e:
                  return str(e), 500
-
+########################################################################################################
 # Table data
 @app.route('/data')
 def data_table():    
@@ -221,7 +223,7 @@ def data_table():
 
     except Exception as e:
         return "An error occurred while retrieving the data. Please try again later.", 500
-
+########################################################################################################
 #DC DATA GRAPH
 @app.route('/livegraphdc/<string:id>')
 def livegraphdc(id):
@@ -255,7 +257,7 @@ def livegraphdc(id):
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
-
+########################################################################################################
 #AC DATA GRAPH
 @app.route('/livegraphac/<string:id>')
 def livegraphac(id):
@@ -288,20 +290,26 @@ def livegraphac(id):
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
-    
-
-# Logout Page
-@app.route('/logout')
+########################################################################################################
+# Function for logout and clear it sessions
+@app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
     response = make_response(redirect(url_for('index')))
-    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'DENY'
     response.headers['X-XSS-Protection'] = '1; mode=block'
-    return response
 
+    return response
+########################################################################################################
+@app.route('/logout', methods=['GET'])
+def logout_get_redirect():
+    return redirect(url_for('index'))
+########################################################################################################
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+########################################################################################################
