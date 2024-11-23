@@ -531,45 +531,44 @@
         /* margin-top: -30px; */
       }
       .bulb {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background-color: rgb(250, 7, 7);
-  box-shadow: 0 0 20px rgb(209, 15, 15);
-  transition: background-color 0.3s, box-shadow 0.3s;
-}
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background-color: rgb(250, 7, 7);
+        box-shadow: 0 0 20px rgb(209, 15, 15);
+        transition: background-color 0.3s, box-shadow 0.3s;
+      }
 
-.bulb.glow {
-  background-color: rgb(45, 205, 30);
-  box-shadow: 0 0 20px rgb(5, 235, 59); /* Add glow effect */
-}
-/* panel charging  */
-.chargingonoff {
-    height: 30px;
-    width: 60px;
-    border-radius: 8px;
-    border: solid 3px rgba(26, 17, 17, 0.772);
-    background-color: #7ee72f; /* Default green */
-    margin-left: 40%;
-  }
+      .bulb.glow {
+        background-color: rgb(45, 205, 30);
+        box-shadow: 0 0 20px rgb(5, 235, 59); /* Add glow effect */
+      }
+      /* panel charging  */
+      .chargingonoff {
+        height: 30px;
+        width: 60px;
+        border-radius: 8px;
+        border: solid 3px rgba(26, 17, 17, 0.772);
+        background-color: #7ee72f; /* Default green */
+        margin-left: 40%;
+      }
 
-  .chargingonoff.red {
-    background-color: red;
-  }
+      .chargingonoff.red {
+        background-color: red;
+      }
 
-  .chargingonoff.green {
-    background-color: #8af835d7;
-    
-  }
+      .chargingonoff.green {
+        background-color: #8af835d7;
+      }
 
-  .bb {
-    height: 10px;
-    width: 6px;
-    border: 2px solid black;
-    background-color: #000000;
-    color: #000000;
-    margin-top: 10px;
-  }
+      .bb {
+        height: 10px;
+        width: 6px;
+        border: 2px solid black;
+        background-color: #000000;
+        color: #000000;
+        margin-top: 10px;
+      }
     </style>
   </head>
 
@@ -596,7 +595,7 @@
         >
         <a href="{{ url_for('dash')}}">Home</a>
         <a href="{{ url_for('data_table')}}">Table</a>
-       <a href="#" id="logout-btn">Log Out</a>
+        <a href="#" id="logout-btn">Log Out</a>
       </div>
 
       <!-- battery -->
@@ -632,12 +631,10 @@
           </div>
         </div>
         <div class="battery-text onscreen">
-
           <span class="percentage"></span><small class="units"></small>
         </div>
         <div class="slider onscreen"></div>
         <div class="page-spacer"></div>
-      
       </div>
       <br /><br />
       <div class="on-off1">
@@ -658,7 +655,7 @@
           <span
             style="font-size: 40px; display: flex; justify-content: center"
             class="text-center mt-2"
-            >{{Dccurrent[8]}}
+            >{{Dccurrent[9]}}
             <span class="ms-2 mt-4" style="font-size: 18px">A</span>
           </span>
           <br />
@@ -672,7 +669,7 @@
           <span
             style="font-size: 40px; display: flex; justify-content: center"
             class="text-center"
-            >{{Dccurrent[9]}}
+            >{{Dccurrent[8]}}
             <span class="mt-4 ms-2" style="font-size: 15px">V</span>
           </span>
           <br />
@@ -694,37 +691,34 @@
           </div>
         </div>
         <div class="half-width" style="text-align: center">
-          <div class="d-flex " style="margin-left: 37%; margin-top: 60px;">
-            <div><p id="chargingIndicator" class="chargingonoff"></p>
-            </div>
-              <div class="ms-4 bb"></div>            
+          <div class="d-flex" style="margin-left: 37%; margin-top: 60px">
+            <div><p id="chargingIndicator" class="chargingonoff"></p></div>
+            <div class="ms-4 bb"></div>
           </div>
-           <div class="mt-2"><b> Charging </b>
-           </div>
-          </div>
+          <div class="mt-2"><b> Charging </b></div>
+        </div>
       </div>
 
       <script>
-    function panel() {
-          const accurrent = "{{Dccurrent[8]}}"; // Assuming accurrent is a valid number
-          
-          const chargingIndicator = document.getElementById("chargingIndicator");
-      
+        function panel() {
+          const accurrent = "{{Dccurrent[9]}}"; // Assuming accurrent is a valid number
+
+          const chargingIndicator =
+            document.getElementById("chargingIndicator");
+
           if (chargingIndicator) {
-            if (accurrent>= 0.1) {
-           
+            if (accurrent >= 0.1) {
               chargingIndicator.classList.add("green");
               chargingIndicator.classList.remove("red");
             } else {
-             
               chargingIndicator.classList.add("red");
               chargingIndicator.classList.remove("green");
             }
           } else {
             console.error("Element with id 'chargingIndicator' not found.");
           }
-        };
-        panel()
+        }
+        panel();
       </script>
       <hr />
       <!-- DC DATA -->
@@ -867,35 +861,33 @@
       <h3 style="display: flex; justify-content: center">
         <u><b>AC Data</b> || LAST PACKET : {{Accurrent[1]}}</u>
         <div id="bulb" class="bulb ms-5"></div>
-
       </h3>
-   
-   <script>
- window.onload = function() {
-  const accurrent = parseFloat("{{ Accurrent[0] }}");
-  const accurrentTimestampString = "{{ Accurrent[1] }}"; 
 
-  const accurrentTimestamp = new Date(accurrentTimestampString.replace(" ", "T")).getTime();
+      <script>
+        window.onload = function () {
+          const accurrent = parseFloat("{{ Accurrent[0] }}");
+          const accurrentTimestampString = "{{ Accurrent[1] }}";
 
-  const bulb = document.getElementById("bulb");
-  const currentTime = Date.now();
+          const accurrentTimestamp = new Date(
+            accurrentTimestampString.replace(" ", "T")
+          ).getTime();
 
-  const isWithinLastHour = (currentTime - accurrentTimestamp) <= 3600000;
+          const bulb = document.getElementById("bulb");
+          const currentTime = Date.now();
 
-  if (bulb && isWithinLastHour) {
-    if (accurrent >= 0.2) {
-      bulb.classList.add("glow");
-    } else {
-      bulb.classList.remove("glow");
-    }
-  } else if (!bulb) {
-    console.error("Element with id 'bulb' not found.");
-  }
-};
+          const isWithinLastHour = currentTime - accurrentTimestamp <= 3600000;
 
-
-
-   </script>
+          if (bulb && isWithinLastHour) {
+            if (accurrent >= 0.2) {
+              bulb.classList.add("glow");
+            } else {
+              bulb.classList.remove("glow");
+            }
+          } else if (!bulb) {
+            console.error("Element with id 'bulb' not found.");
+          }
+        };
+      </script>
       <div class="unit"><b>Consumed</b>-> {{total_unit[0]}} Units</div>
       <div class="con_small">
         <div class="half-width" style="text-align: center">
@@ -1548,91 +1540,91 @@
     </script>
 
     <!-- logout -->
-<script>
-  document.getElementById('logout-btn').addEventListener('click', function (event) {
-    function logout() {
-      fetch('/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            window.location.href = '/';
-          } else {
-            window.location.href = '/';
+    <script>
+      document
+        .getElementById("logout-btn")
+        .addEventListener("click", function (event) {
+          function logout() {
+            fetch("/logout", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => {
+                if (response.ok) {
+                  window.location.href = "/";
+                } else {
+                  window.location.href = "/";
+                }
+              })
+              .catch((error) => {
+                console.error("Logout failed:", error);
+                window.location.href = "/";
+              });
           }
-        })
-        .catch(error => {
-          console.error('Logout failed:', error);
-          window.location.href = '/';
+
+          function preventBack() {
+            window.history.replaceState(null, null, window.location.href);
+            window.onpopstate = function () {
+              window.history.replaceState(null, null, window.location.href);
+              window.location.href = "/";
+            };
+          }
+
+          logout();
+          preventBack();
         });
-    }
+    </script>
 
-    function preventBack() {
+    <!-- for automatically logout -->
+    <script>
+      var timeout;
+      var logoutTime = 30 * 60 * 1000; // 30 minutes
 
-      window.history.replaceState(null, null, window.location.href);
-      window.onpopstate = function () {
-        window.history.replaceState(null, null, window.location.href);
-        window.location.href = '/';
-      };
-    }
-
-    logout();
-    preventBack();
-  });
-
-</script>
-
-<!-- for automatically logout -->
-<script>
-  var timeout;
-  var logoutTime = 30 * 60 * 1000; // 30 minutes
-
-  function resetTimer() {
-    clearTimeout(timeout);
-    timeout = setTimeout(logout, logoutTime);
-  }
-
-  function logout() {
-    fetch('/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
+      function resetTimer() {
+        clearTimeout(timeout);
+        timeout = setTimeout(logout, logoutTime);
       }
-    })
-      .then(response => {
-        if (response.ok) {
-          window.location.href = '/';
-        } else {
-          window.location.href = '/';
-        }
-      })
-      .catch(error => {
-        console.error('Logout failed:', error);
-        window.location.href = '/';
-      });
-  }
 
-  document.onload = resetTimer;
-  document.onmousemove = resetTimer;
-  document.onkeypress = resetTimer;
+      function logout() {
+        fetch("/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              window.location.href = "/";
+            } else {
+              window.location.href = "/";
+            }
+          })
+          .catch((error) => {
+            console.error("Logout failed:", error);
+            window.location.href = "/";
+          });
+      }
 
-  resetTimer();
+      document.onload = resetTimer;
+      document.onmousemove = resetTimer;
+      document.onkeypress = resetTimer;
 
-  function preventBack() {
-    window.history.replaceState(null, null, window.location.href);
-    window.onpopstate = function () {
-      window.history.replaceState(null, null, window.location.href);
-      window.location.href = '/';
-    };
-  }
+      resetTimer();
 
-  if (window.location.pathname === "/") {
-    preventBack();
-  }
-</script>
+      function preventBack() {
+        window.history.replaceState(null, null, window.location.href);
+        window.onpopstate = function () {
+          window.history.replaceState(null, null, window.location.href);
+          window.location.href = "/";
+        };
+      }
+
+      if (window.location.pathname === "/") {
+        preventBack();
+      }
+    </script>
 
     <!-- script for disable futue dates -->
     <script>
@@ -1644,7 +1636,5 @@
         document.getElementById("end_date").setAttribute("max", today);
       });
     </script>
-
-    
   </body>
 </html>
