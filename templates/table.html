@@ -193,7 +193,8 @@
       <ul>
         <a href="{{url_for('dash')}}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
       </ul>
-    </div><div class="row1">
+    </div>
+    <div class="row1">
       <section class="col-lg-12 connectedSortable">
         <div class="card">
           <div class="card-header">
@@ -274,6 +275,42 @@
       <section class="col-lg-12 connectedSortable">
         <div class="card">
           <div class="card-header">
+            <h4 class="card-title"><i class='bx bxs-data'></i> DC KWH Data</h4>
+          </div>
+          <div class="row">
+            <div class="card-body x">
+              <table id="example4" class="table table-bordered table-striped" style="margin-top: 80px;">
+                <thead>
+                  <tr>
+                    <th>Device ID</th>
+                    <th>Start Hour</th>
+                    <th>End Hour</th>
+                    <th>KWH per hour</th>
+                    <th>KWH 24-Hour</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in dc_kwh_dataprint %}
+                  <tr>
+                    <td>{{ item['Device_id'] }}</td>
+                    <td>{{ item['start_hour'] }}</td>
+                    <td>{{ item['end_hour'] }}</td>
+                    <td>{{ item['avg_kWh'] }}</td>
+                    <td>{{ item['24_kwh'] }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </section>
+    </div>
+
+    <br><br>
+    <div class="row1">
+      <section class="col-lg-12 connectedSortable">
+        <div class="card">
+          <div class="card-header">
             <h4 class="card-title"><i class='bx bxs-data'></i> AC Data</h4>
           </div>
           <div class="row">
@@ -302,6 +339,41 @@
                     <td>{{ item['Power'] }}</td>
                     <td>{{ item['kWh_Consumed'] }}</td>
                     <td>{{ item['Frequency'] }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </section>
+    </div>
+<br> <br>
+    <div class="row1">
+      <section class="col-lg-12 connectedSortable">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title"><i class='bx bxs-data'></i> AC KWH Data</h4>
+          </div>
+          <div class="row">
+            <div class="card-body x">
+              <table id="example5" class="table table-bordered table-striped" style="margin-top: 80px;">
+                <thead>
+                  <tr>
+                    <th>Device ID</th>
+                    <th>Start Hour</th>
+                    <th>End Hour</th>
+                    <th>KWH per hour</th>
+                    <th>KWH 24-Hour</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in ac_kwh_dataprint %}
+                  <tr>
+                    <td>{{ item['Device_id'] }}</td>
+                    <td>{{ item['start_hour'] }}</td>
+                    <td>{{ item['end_hour'] }}</td>
+                    <td>{{ item['avg_kWh'] }}</td>
+                    <td>{{ item['24_kwh'] }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -511,6 +583,122 @@
       });
     });
   </script>
+
+<script>
+  $(document).ready(function () {
+    var table = $('#example4').DataTable({
+      "pageLength": 10,
+      "order": [
+        [1, "desc"]
+      ],
+      "drawCallback": function (settings) {
+        $('#example4 thead').css({
+          'background-color': '#0069D9',
+          'color': 'white',
+          'border': '1px solid #F7F6F7',
+        });
+        $('#example4_paginate').css({
+          'text-align': 'center',
+          'cursor': 'pointer'
+        });
+        $('#example4_previous').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '2px 0 0 2px',
+          'display': 'inline-block',
+          'color': '#007BFF',
+          'margin': '0'
+        });
+        $('#example4_next').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '0 2px 2px 0',
+          'display': 'inline-block',
+          'color': '#007BFF',
+          'margin': '0'
+        });
+        $('.paginate_button').not('.previous, .next').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '0',
+          'color': '#999699',
+          'display': 'inline-block',
+          'margin': '0 -0px 0 -0px'
+        });
+
+        $('.paginate_button.current').css({
+          'background-color': '#007BFF',
+          'color': 'white',
+          'border': '1px solid #007BFF'
+        });
+      }
+    });
+
+    $('#example4_filter').css({ 'margin-left': '75%' });
+
+    $('#searchInput').on('keyup', function () {
+      table.search($(this).val()).draw();
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    var table = $('#example5').DataTable({
+      "pageLength": 10,
+      "order": [
+        [1, "desc"]
+      ],
+      "drawCallback": function (settings) {
+        $('#example5 thead').css({
+          'background-color': '#0069D9',
+          'color': 'white',
+          'border': '1px solid #F7F6F7',
+        });
+        $('#example5_paginate').css({
+          'text-align': 'center',
+          'cursor': 'pointer'
+        });
+        $('#example5_previous').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '2px 0 0 2px',
+          'display': 'inline-block',
+          'color': '#007BFF',
+          'margin': '0'
+        });
+        $('#example5_next').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '0 2px 2px 0',
+          'display': 'inline-block',
+          'color': '#007BFF',
+          'margin': '0'
+        });
+        $('.paginate_button').not('.previous, .next').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '0',
+          'color': '#999699',
+          'display': 'inline-block',
+          'margin': '0 -0px 0 -0px'
+        });
+
+        $('.paginate_button.current').css({
+          'background-color': '#007BFF',
+          'color': 'white',
+          'border': '1px solid #007BFF'
+        });
+      }
+    });
+
+    $('#example5_filter').css({ 'margin-left': '75%' });
+
+    $('#searchInput').on('keyup', function () {
+      table.search($(this).val()).draw();
+    });
+  });
+</script>
 
 <!-- logout -->
 <script>

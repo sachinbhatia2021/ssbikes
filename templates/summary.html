@@ -69,7 +69,7 @@
           font-size: 18px;
         }
       }
-
+      
       .nav {
         height: 60px;
         width: 100%;
@@ -502,7 +502,7 @@
 
       .on-off {
         display: flex;
-        z-index: 10000;
+        z-index: 1;
         border-radius: 50%;
         height: 40px;
         width: 40px;
@@ -597,8 +597,7 @@
         <a href="{{ url_for('data_table')}}">Table</a>
         <a href="#" id="logout-btn">Log Out</a>
       </div>
-
-      <!-- battery -->
+        <!-- battery -->
       <div id="batteryOverlay"></div>
 
       <div class="battery-container">
@@ -641,8 +640,9 @@
         <div class="on-off">AC</div>
         <div class="on-off">DC</div>
       </div>
-
+      <div class="manf"> <b>Manufacturing Date : </b>{{man_date [2]}}</div>
       <br /><br />
+      
       <!-- Panel Data -->
       <h3 style="display: flex; justify-content: center">
         <u
@@ -655,7 +655,7 @@
           <span
             style="font-size: 40px; display: flex; justify-content: center"
             class="text-center mt-2"
-            >{{Dccurrent[9]}}
+            >{{Dccurrent[7]}}
             <span class="ms-2 mt-4" style="font-size: 18px">A</span>
           </span>
           <br />
@@ -669,7 +669,7 @@
           <span
             style="font-size: 40px; display: flex; justify-content: center"
             class="text-center"
-            >{{Dccurrent[8]}}
+            >{{Dccurrent[6]}}
             <span class="mt-4 ms-2" style="font-size: 15px">V</span>
           </span>
           <br />
@@ -682,7 +682,7 @@
           <span
             style="font-size: 40px; display: flex; justify-content: center"
             class="text-center mt-2"
-            >{{Dccurrent[8]*Dccurrent[9]}}
+            >{{Dccurrent[8]}}
             <span class="ms-2 mt-4" style="font-size: 18px">W</span>
           </span>
           <br />
@@ -695,13 +695,13 @@
             <div><p id="chargingIndicator" class="chargingonoff"></p></div>
             <div class="ms-4 bb"></div>
           </div>
-          <div class="mt-2"><b> Charging </b></div>
+          <div class="mt-2"><b> Status </b></div>
         </div>
       </div>
 
       <script>
         function panel() {
-          const accurrent = "{{Dccurrent[9]}}"; // Assuming accurrent is a valid number
+          const accurrent = "{{Dccurrent[7]}}"; // Assuming accurrent is a valid number
 
           const chargingIndicator =
             document.getElementById("chargingIndicator");
@@ -772,6 +772,9 @@
           </div>
         </div>
 
+        
+      </div>
+      <div class="con_small">
         <div class="half-width">
           <br />
           <span
@@ -785,9 +788,7 @@
             <b>Input Power</b>
           </div>
         </div>
-      </div>
-      <div class="con_small">
-        <div class="half-width">
+        <!-- <div class="half-width">
           <br />
           <span
             style="font-size: 40px; display: flex; justify-content: center"
@@ -813,16 +814,16 @@
           <div class="text-center" style="margin-bottom: 15px">
             <b>Error</b>
           </div>
-        </div>
+        </div> -->
 
         <div class="half-width" style="text-align: center">
-          {{dc_kwh[1]}} - {{dc_kwh[2]}}
+          {{dc_kwh[2]}} - {{dc_kwh[3]}}
           <br />
           <span
             style="font-size: 40px; display: flex; justify-content: center"
             class="text-center mt-2"
-            >{{dc_kwh[0] if dc_kwh[0] is not none else 'N/A'}}
-            <span class="ms-2 mt-4" style="font-size: 18px"></span>
+            >{{dc_kwh[4] if dc_kwh[4] is not none else 'N/A'}}
+            <span class="ms-2 mt-4" style="font-size: 18px">W</span>
           </span>
           <br />
           <div class="text-center" style="margin-bottom: 15px">
@@ -835,8 +836,8 @@
           <span
             style="font-size: 40px; display: flex; justify-content: center"
             class="text-center"
-            >{{dc_total_kwh_value}}
-            <span class="ms-1" style="font-size: 18px"></span>
+            >{{dc_kwh[5] if dc_kwh[5] is not none else 'N/A'}} 
+            <span class="ms-2 mt-4" style="font-size: 18px">W</span>
           </span>
           <br />
           <div class="text-center" style="margin-bottom: 15px">
@@ -931,7 +932,8 @@
             <b>Temperature</b>
           </div>
         </div>
-
+      </div>
+      <div class="con_small">
         <div class="half-width">
           <br />
           <span
@@ -945,9 +947,7 @@
             <b>Output Power</b>
           </div>
         </div>
-      </div>
-      <div class="con_small">
-        <div class="half-width">
+        <!-- <div class="half-width">
           <br />
           <span
             style="font-size: 40px; display: flex; justify-content: center"
@@ -973,16 +973,16 @@
           <div class="text-center" style="margin-bottom: 15px">
             <b>Error</b>
           </div>
-        </div>
+        </div> -->
 
         <div class="half-width" style="text-align: center">
-          {{ac_total_kwh[1]}} - {{ac_total_kwh[2]}}
+          {{ac_total_kwh[2]}} - {{ac_total_kwh[3]}}
           <br />
           <span
             style="font-size: 40px; display: flex; justify-content: center"
             class="text-center mt-2"
-            >{{ac_total_kwh[0] if ac_total_kwh[0] is not none else 'N/A'}}
-            <span class="ms-2 mt-4" style="font-size: 18px"></span>
+            >{{ac_total_kwh[4] if ac_total_kwh[4] is not none else 'N/A'}}
+            <span class="ms-2 mt-4" style="font-size: 18px">W</span>
           </span>
           <br />
           <div class="text-center" style="margin-bottom: 15px">
@@ -995,8 +995,8 @@
           <span
             style="font-size: 40px; display: flex; justify-content: center"
             class="text-center"
-            >{{total_kwh_value}}
-            <span class="ms-1" style="font-size: 18px"></span>
+            >{{ac_total_kwh[5] if ac_total_kwh[5] is not none else 'N/A'}} W
+            <span class="ms-2 mt-4" style="font-size: 18px">W</span>
           </span>
           <br />
           <div class="text-center" style="margin-bottom: 15px">
@@ -1276,7 +1276,7 @@
 
     <!--Graph for DC Data -->
     <script>
-      const id = "{{Dccurrent[6]}}";
+      const id = "{{Dccurrent[5]}}";
       let chart4 = null;
 
       function livegraphDc(startDate, endDate) {
@@ -1409,7 +1409,7 @@
 
     <!--Graph for AC Data -->
     <script>
-      const id1 = "{{Accurrent[6]}}";
+      const id1 = "{{Accurrent[5]}}";
       let chart5 = null;
       function livegraphAc(startDate, endDate) {
         const url =

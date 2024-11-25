@@ -64,7 +64,8 @@ def dash():
             alldata = """
             SELECT distinct(dc.Device_id)
             FROM dc_data dc
-            JOIN ac_data ac ON dc.Device_id = ac.Device_id"""
+            JOIN ac_data ac ON dc.Device_id = ac.Device_id
+            """
             cursor.execute(alldata)
             alldataprint = cursor.fetchall()
             
@@ -86,8 +87,7 @@ def summary(device):
                 # Fetch DC data
                 current_query = """
                 SELECT TRUNCATE(Dc_Current, 5) AS Current, timestamp,Dc_Power, Temperature, 
-                TRUNCATE(Dc_Voltage, 5) AS Voltage, TRUNCATE((Dc_Voltage * Dc_Current),5) AS cal_power,Device_id,
-                TRUNCATE(TRUNCATE(Dc_Power,5)-TRUNCATE((Dc_Voltage * Dc_Current),5),5) as error,panel_voltage,panel_current 
+                TRUNCATE(Dc_Voltage, 5) AS Voltage,Device_id,panel_voltage,panel_current,Panel_Power 
                 FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(current_query, (device,))
                 currentdata = cursor.fetchone()
@@ -95,47 +95,56 @@ def summary(device):
                 #DC KWH 1 hour
                 dc_total_kwh_query = """
                 SELECT 
-                CAST(AVG(Dc_KWH) AS DECIMAL(10, 5)) AS avg_kWh,
-                DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS start_time,
-                DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS end_time
-                FROM dc_data 
-                WHERE Device_id = %s
-                AND timestamp >= DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') 
-                AND timestamp < DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00')
+                    * FROM dc_kwh where Device_id = %s
+                ORDER BY start_hour DESC
+                LIMIT 1
                 """
+                # dc_total_kwh_query = """
+                # SELECT 
+                # CAST(AVG(Dc_KWH) AS DECIMAL(10, 5)) AS avg_kWh,
+                # DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS start_time,
+                # DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS end_time
+                # FROM dc_data 
+                # WHERE Device_id = %s
+                # AND timestamp >= DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') 
+                # AND timestamp < DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00')
+                # """
                 cursor.execute(dc_total_kwh_query, (device,))
                 dc_kwh = cursor.fetchone()
+
                 today_date = date.today()
                 
                 #DC KWH 24-hours
-                dc_total_kwh_query = """
-                SELECT 
-                CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
-                FROM (
-                    SELECT 
-                        DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
-                        AVG(Dc_KWH) AS avg_kWh
-                    FROM dc_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
-                ) AS hourly
-                """
-                cursor.execute(dc_total_kwh_query, (device,today_date))
-                dc_total_kwh = cursor.fetchone()
-                dc_total_kwh_value = dc_total_kwh[0] if dc_total_kwh and dc_total_kwh[0] is not None else 0
+                # dc_total_kwh_query = """
+                # SELECT 
+                # CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
+                # FROM (
+                #     SELECT 
+                #         DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
+                #         AVG(Dc_KWH) AS avg_kWh
+                #     FROM dc_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
+                # ) AS hourly
+                # """
+                # cursor.execute(dc_total_kwh_query, (device,today_date))
+                # dc_total_kwh = cursor.fetchone()
+                # dc_total_kwh_value = dc_total_kwh[0] if dc_total_kwh and dc_total_kwh[0] is not None else 0
 
                 #DC Units
+                # dc_total_unit_query = """
+                # SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
+                # AVG(Dc_KWH) AS avg_kWh FROM dc_data WHERE Device_id = %s GROUP BY hour
+                # ) AS hourly """
                 dc_total_unit_query = """
-                SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
-                AVG(Dc_KWH) AS avg_kWh FROM dc_data WHERE Device_id = %s GROUP BY hour
-                ) AS hourly """
+                SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                FROM dc_kwh where device_id= %s"""
                 cursor.execute(dc_total_unit_query, (device,))
                 dc_total_unit = cursor.fetchone()
 
                 # Fetch AC data
                 Accurrent_query = """
                 SELECT TRUNCATE(Current, 5) AS Current, timestamp,Power, Temperature, TRUNCATE(Voltage, 5) AS Voltage, 
-                TRUNCATE((Voltage * Current),5) AS cal_power,Device_id,
-                TRUNCATE(TRUNCATE(Power,5)-TRUNCATE((Voltage * Current),5),5) as error FROM ac_data 
+                Device_id FROM ac_data 
                 WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(Accurrent_query, (device,))
                 Accurrentdata = cursor.fetchone()
@@ -143,12 +152,9 @@ def summary(device):
                 #AC KWH 1 hour
                 ac_total_kwh_query = """
                 SELECT 
-                CAST(AVG(kWh_Consumed) AS DECIMAL(10, 5)) AS avg_kWh,
-                DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS start_time,
-                DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS end_time
-                FROM ac_data WHERE Device_id = %s
-                AND timestamp >= DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') 
-                AND timestamp < DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00')
+                    * FROM ac_kwh where Device_id = %s
+                ORDER BY start_hour DESC
+                LIMIT 1
                 """
                 cursor.execute(ac_total_kwh_query, (device,))
                 ac_total_kwh = cursor.fetchone()
@@ -156,30 +162,39 @@ def summary(device):
                 today_date = date.today()
                 
                 #AC KWH 24-hours
-                total_kwh_query = """
-                SELECT CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
-                FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
-                AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
-                ) AS hourly
-                """
-                cursor.execute(total_kwh_query, (device,today_date))
-                total_kwh = cursor.fetchone()
+                # total_kwh_query = """
+                # SELECT CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
+                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
+                # AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
+                # ) AS hourly
+                # """
+                # cursor.execute(total_kwh_query, (device,today_date))
+                # total_kwh = cursor.fetchone()
 
-                total_kwh_value = total_kwh[0] if total_kwh and total_kwh[0] is not None else 0
+                # total_kwh_value = total_kwh[0] if total_kwh and total_kwh[0] is not None else 0
                 
                 # AC Units Calculation
+                # total_unit_query = """
+                # SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
+                # AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s 
+                # GROUP BY hour) AS hourly """
                 total_unit_query = """
-                SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
-                AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s 
-                GROUP BY hour) AS hourly """
+                SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                FROM ac_kwh where Device_id = %s """
                 cursor.execute(total_unit_query, (device,))
                 total_unit = cursor.fetchone()
+
+                inst_date="""
+                select * from dc_data where Device_id = %s order by timestamp  asc
+              """
+                cursor.execute(inst_date,(device,))
+                man_date=cursor.fetchone()
 
                 # Determine Device Type and Battery Voltage Range
                 device2 = int(device)
                 if 2000 <= device2 < 3000: #12V LEAD
-                    battery_percentage = ((currentdata[4]-10.5)/(12.7-10.5))*100
+                    battery_percentage = ((currentdata[4]-10.5)/(13.5-10.5))*100
                 elif 1000 <= device2 < 2000: #24V LEAD
                     battery_percentage = ((currentdata[4]-22)/(27-22))*100
                 elif 3000 <= device2 < 4000: #12V Lithium
@@ -194,11 +209,9 @@ def summary(device):
                     Dccurrent=currentdata,
                     Accurrent=Accurrentdata,
                     dc_kwh=dc_kwh,
-                    dc_total_kwh_value=dc_total_kwh_value,
                     dc_total_unit=dc_total_unit,
-                    total_kwh_value=total_kwh_value,
                     ac_total_kwh=ac_total_kwh,
-                    total_unit=total_unit,today_date=today_date
+                    total_unit=total_unit,today_date=today_date,man_date=man_date
                 )    
     except Exception as e:
                  return str(e), 500
@@ -219,7 +232,18 @@ def data_table():
                 cursor.execute(Acdata)
                 allAcdataprint = cursor.fetchall()
 
-        return render_template('table.html', alldataprint=alldataprint, Acalldataprint=allAcdataprint)
+                # Fetch DC KWH data
+                dc_kwh_data = "select * from dc_kwh order by start_hour desc LIMIT 700"
+                cursor.execute(dc_kwh_data)
+                dc_kwh_dataprint = cursor.fetchall()
+                print(dc_kwh_dataprint)
+                # Fetch AC KWH data
+                ac_kwh_data = "SELECT * FROM ac_kwh order by start_hour desc LIMIT 700"
+                cursor.execute(ac_kwh_data)
+                ac_kwh_dataprint = cursor.fetchall()
+
+        return render_template('table.html', alldataprint=alldataprint, Acalldataprint=allAcdataprint
+                               ,dc_kwh_dataprint=dc_kwh_dataprint,ac_kwh_dataprint=ac_kwh_dataprint)
 
     except Exception as e:
         return "An error occurred while retrieving the data. Please try again later.", 500

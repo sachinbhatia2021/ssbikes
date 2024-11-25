@@ -1,191 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="icon" type="image/x-icon" href="/static/logo.jpeg" />
+    <link
+      href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nanum+Brush+Script&family=Open+Sans:wght@600&family=Poppins:wght@200;400;500;600;700;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <title>Inverter Analytics</title>
+  </head>
+  <style>
+    body {
+      font-family: "Lato", sans-serif;
+      background-color: #f2f3f5;
+      margin-top: 50px;
+    }
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-  <meta http-equiv="X-UA-Compatible" content="IE edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="icon" type="image/x-icon" href="/static/logo.jpeg">
-  <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nanum+Brush+Script&family=Open+Sans:wght@600&family=Poppins:wght@200;400;500;600;700;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500&display=swap"
-    rel="stylesheet">
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-  <title>Inverter Analytics</title>
-</head>
-<style>
-  body {
-    font-family: "Lato", sans-serif;
-    background-color: #f2f3f5;
-    margin-top: 50px;
-  }
-
-  .sidenav {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: #f5f7fa;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-  }
-
-  .sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 20px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-  }
-
-  .sidenav a:hover {
-    color: #0e0707;
-  }
-
-  .sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-  }
-
-  #main {
-    transition: margin-left .5s;
-    padding: 16px;
-  }
-
-  @media screen and (max-height: 450px) {
     .sidenav {
-      padding-top: 15px;
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #f5f7fa;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
     }
 
     .sidenav a {
-      font-size: 18px;
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 20px;
+      color: #818181;
+      display: block;
+      transition: 0.3s;
     }
-  }
 
-  .nav {
-    height: 60px;
-    width: 100%;
-    float: left;
-    background-color: #f5f7fa;
-    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 0;
-    z-index: 10;
-    display: flex;
-    flex-direction: row;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+    .sidenav a:hover {
+      color: #0e0707;
+    }
 
-  li {
-    display: inline-flex;
-    float: right-reverse;
-  }
+    .sidenav .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
 
-  .logo {
-    height: auto;
-    width: 50px;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
+    #main {
+      transition: margin-left 0.5s;
+      padding: 16px;
+    }
 
-  .nav a {
-    display: flex;
-    align-items: center;
-    color: blue;
-    text-decoration: none;
-  }
+    @media screen and (max-height: 450px) {
+      .sidenav {
+        padding-top: 15px;
+      }
 
-  .nav ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
+      .sidenav a {
+        font-size: 18px;
+      }
+    }
 
-  .nav ul li {
-    display: inline-block;
-    margin-left: 10px;
-    padding-right: 15px;
-  }
+    .nav {
+      height: 60px;
+      width: 100%;
+      float: left;
+      background-color: #f5f7fa;
+      box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: row;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-  li a.ex2:hover,
-  a.ex2:active {
-    height: 60px;
-    width: 100%;
-  }
+    li {
+      display: inline-flex;
+      float: right-reverse;
+    }
 
-  li a:hover:not(.active) {
-    background-color: #5bcefc;
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-  }
+    .logo {
+      height: auto;
+      width: 50px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
 
-  .nav .name a {
-    margin-left: 45px;
-    font-size: 20px;
-    top: 15px;
-    color: #043585;
-    float: left;
-    position: absolute;
-    left: 0;
-  }
+    .nav a {
+      display: flex;
+      align-items: center;
+      color: blue;
+      text-decoration: none;
+    }
 
-  .Inverter1 {
-    height: auto;
-    background-color: #f2f4f8;
-    margin: 24px;
-    padding: 10px;
-    border: none;
-    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.7s ease;
-    overflow: hidden;
-  }
+    .nav ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
 
-  @media(max-width:576px) {
+    .nav ul li {
+      display: inline-block;
+      margin-left: 10px;
+      padding-right: 15px;
+    }
+
+    li a.ex2:hover,
+    a.ex2:active {
+      height: 60px;
+      width: 100%;
+    }
+
+    li a:hover:not(.active) {
+      background-color: #5bcefc;
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
+    }
+
+    .nav .name a {
+      margin-left: 45px;
+      font-size: 20px;
+      top: 15px;
+      color: #043585;
+      float: left;
+      position: absolute;
+      left: 0;
+    }
+
     .Inverter1 {
       height: auto;
       background-color: #f2f4f8;
-      width: 100%;
+      margin: 24px;
+      padding: 10px;
       border: none;
       box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
       transition: transform 0.7s ease;
       overflow: hidden;
     }
-  }
 
-  .footer {
-  display: flex;
-  margin-left: -16px;
-  position: absolute; 
-  width: 100%;
-  background-color: #edeff5;
-  padding: 10px;
-  bottom: 0;
-  margin-bottom: 0;
-  justify-content: space-between; 
-}
+    @media (max-width: 576px) {
+      .Inverter1 {
+        height: auto;
+        background-color: #f2f4f8;
+        width: 100%;
+        border: none;
+        box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.7s ease;
+        overflow: hidden;
+      }
+    }
 
+    .footer {
+      display: flex;
+      margin-left: -16px;
+      position: absolute;
+      width: 100%;
+      background-color: #edeff5;
+      padding: 10px;
+      bottom: 0;
+      margin-bottom: 0;
+      justify-content: space-between;
+    }
 
     .footer a {
       color: #2452db;
@@ -196,119 +215,136 @@
       display: flex;
       right: 10px;
     }
-</style>
+  </style>
 
-<body>
-  <div id="main">
-    <div class="nav" style="width: 100%; margin-left: -20px;">
-      <span style="cursor:pointer; margin: 15px" onclick="openNav()">&#9776;</span>
-      <div class="name"><a href="{{ url_for('dash')}}">Inverter Analytics</a></div>
-      <ul>
-        <a href="{{url_for('dash')}}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
-      </ul>
-    </div>
+  <body>
+    <div id="main">
+      <div class="nav" style="width: 100%; margin-left: -20px">
+        <span style="cursor: pointer; margin: 15px" onclick="openNav()"
+          >&#9776;</span
+        >
+        <div class="name">
+          <a href="{{ url_for('dash')}}">Inverter Analytics</a>
+        </div>
+        <ul>
+          <a href="{{url_for('dash')}}"
+            ><img src="/static/logo.jpeg" class="logo" alt="LOGO"
+          /></a>
+        </ul>
+      </div>
 
-    <div id="mySidenav" class="sidenav" style="z-index: 10;">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-      <a href="{{ url_for('dash')}}"><u>Home</u></a>
-      <a href="{{ url_for('data_table')}}">Table</a>
-      <a href="#" id="logout-btn">Log Out</a>
-    </div>
+      <div id="mySidenav" class="sidenav" style="z-index: 10">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
+          >&times;</a
+        >
+        <a href="{{ url_for('dash')}}"><u>Home</u></a>
+        <a href="{{ url_for('data_table')}}">Table</a>
+        <a href="#" id="logout-btn">Log Out</a>
+      </div>
 
-    <div class="Inverter1">
-      <h5>Inverter Details</h5>
+      <div class="Inverter1">
+        <h5>Inverter Details</h5>
 
-      <div class="tablediv">
-        <div class="row">
-          <div class="card-body">
-            <table id="example2" class="table table-bordered table-striped">
-              <thead>
-                <tr>
-                  <th class="text-center">Device ID</th>
-                  <th class="text-center">Total Generation</th>
-                  <th class="text-center">Total Consumption</th>
-                  <th class="text-center">Remaining</th>
-                  <th class="text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-
-                {% for item in alldataprint %}
-                <tr class="text-center">
-                  <td>{{ item[0] }}</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td> <a class="btn btn-outline-primary" href="{{ url_for('summary', device=item[0]) }}">Summary</a>
-                  </td>
-                </tr>
-                {% endfor %}
-
-              </tbody>
-            </table>
+        <div class="tablediv">
+          <div class="row">
+            <div class="card-body">
+              <table id="example2" class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th class="text-center">Device ID</th>
+                    <th class="text-center">Total Generation</th>
+                    <th class="text-center">Total Consumption</th>
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in alldataprint %}
+                  <tr class="text-center">
+                    <td>{{ item[0] }}</td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      <a
+                        class="btn btn-outline-primary"
+                        href="{{ url_for('summary', device=item[0]) }}"
+                        >Summary</a
+                      >
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Footer -->
-    <div class="footer">
-      <p>Copyright © 2024 <a href="https://www.skilancersolar.com/" target="_blank" class="linnk">Skilancer Solar</a> .
-        All rights reserved.</p>
-      <p class="version">Version 1.0.1</p>
+      <!-- Footer -->
+      <div class="footer">
+        <p>
+          Copyright © 2024
+          <a
+            href="https://www.skilancersolar.com/"
+            target="_blank"
+            class="linnk"
+            >Skilancer Solar</a
+          >
+          . All rights reserved.
+        </p>
+        <p class="version">Version 1.0.1</p>
+      </div>
     </div>
-  </div>
     <!-- script for table -->
     <script>
       $(document).ready(function () {
-        var table = $('#example2').DataTable({
-          "pageLength": 10,
-          "drawCallback": function (settings) {
-            $('#example2 thead').css({
-              'background-color': '#0069D9',
-              'color': 'white',
-              'border': '1px solid #F7F6F7',
+        var table = $("#example2").DataTable({
+          pageLength: 10,
+          drawCallback: function (settings) {
+            $("#example2 thead").css({
+              "background-color": "#0069D9",
+              color: "white",
+              border: "1px solid #F7F6F7",
             });
-            $('#example2_paginate').css({
-              'text-align': 'center',
-              'cursor': 'pointer'
+            $("#example2_paginate").css({
+              "text-align": "center",
+              cursor: "pointer",
             });
-            $('#example2_previous').css({
-              'padding': '4px 8px',
-              'border': '1px solid #e3e3e3',
-              'border-radius': '2px 0 0 2px',
-              'display': 'inline-block',
-              'color': '#007BFF',
-              'margin': '0'
+            $("#example2_previous").css({
+              padding: "4px 8px",
+              border: "1px solid #e3e3e3",
+              "border-radius": "2px 0 0 2px",
+              display: "inline-block",
+              color: "#007BFF",
+              margin: "0",
             });
-            $('#example2_next').css({
-              'padding': '4px 8px',
-              'border': '1px solid #e3e3e3',
-              'border-radius': '0 2px 2px 0',
-              'display': 'inline-block',
-              'color': '#007BFF',
-              'margin': '0'
+            $("#example2_next").css({
+              padding: "4px 8px",
+              border: "1px solid #e3e3e3",
+              "border-radius": "0 2px 2px 0",
+              display: "inline-block",
+              color: "#007BFF",
+              margin: "0",
             });
-            $('.paginate_button').not('.previous, .next').css({
-              'padding': '4px 8px',
-              'border': '1px solid #e3e3e3',
-              'border-radius': '0',
-              'color': '#999699',
-              'display': 'inline-block',
-              'margin': '0 -0px 0 -0px'
+            $(".paginate_button").not(".previous, .next").css({
+              padding: "4px 8px",
+              border: "1px solid #e3e3e3",
+              "border-radius": "0",
+              color: "#999699",
+              display: "inline-block",
+              margin: "0 -0px 0 -0px",
             });
 
-            $('.paginate_button.current').css({
-              'background-color': '#007BFF',
-              'color': 'white',
-              'border': '1px solid #007BFF'
+            $(".paginate_button.current").css({
+              "background-color": "#007BFF",
+              color: "white",
+              border: "1px solid #007BFF",
             });
-          }
+          },
         });
 
-        $('#example2_filter').css({ 'margin-left': '75%' });
+        $("#example2_filter").css({ "margin-left": "75%" });
 
-        $('#searchInput').on('keyup', function () {
+        $("#searchInput").on("keyup", function () {
           table.search($(this).val()).draw();
         });
       });
@@ -327,92 +363,91 @@
       }
     </script>
 
-   <!-- logout -->
-<script>
-  document.getElementById('logout-btn').addEventListener('click', function (event) {
-    function logout() {
-      fetch('/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          if (response.ok) {
-            window.location.href = '/';
-          } else {
-            window.location.href = '/';
+    <!-- logout -->
+    <script>
+      document
+        .getElementById("logout-btn")
+        .addEventListener("click", function (event) {
+          function logout() {
+            fetch("/logout", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => {
+                if (response.ok) {
+                  window.location.href = "/";
+                } else {
+                  window.location.href = "/";
+                }
+              })
+              .catch((error) => {
+                console.error("Logout failed:", error);
+                window.location.href = "/";
+              });
           }
-        })
-        .catch(error => {
-          console.error('Logout failed:', error);
-          window.location.href = '/';
+
+          function preventBack() {
+            window.history.replaceState(null, null, window.location.href);
+            window.onpopstate = function () {
+              window.history.replaceState(null, null, window.location.href);
+              window.location.href = "/";
+            };
+          }
+
+          logout();
+          preventBack();
         });
-    }
+    </script>
 
-    function preventBack() {
+    <!-- for automatically logout -->
+    <script>
+      var timeout;
+      var logoutTime = 30 * 60 * 1000; // 30 minutes
 
-      window.history.replaceState(null, null, window.location.href);
-      window.onpopstate = function () {
-        window.history.replaceState(null, null, window.location.href);
-        window.location.href = '/';
-      };
-    }
-
-    logout();
-    preventBack();
-  });
-
-</script>
-
-<!-- for automatically logout -->
-<script>
-  var timeout;
-  var logoutTime = 30 * 60 * 1000; // 30 minutes
-
-  function resetTimer() {
-    clearTimeout(timeout);
-    timeout = setTimeout(logout, logoutTime);
-  }
-
-  function logout() {
-    fetch('/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
+      function resetTimer() {
+        clearTimeout(timeout);
+        timeout = setTimeout(logout, logoutTime);
       }
-    })
-      .then(response => {
-        if (response.ok) {
-          window.location.href = '/';
-        } else {
-          window.location.href = '/';
-        }
-      })
-      .catch(error => {
-        console.error('Logout failed:', error);
-        window.location.href = '/';
-      });
-  }
 
-  document.onload = resetTimer;
-  document.onmousemove = resetTimer;
-  document.onkeypress = resetTimer;
+      function logout() {
+        fetch("/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              window.location.href = "/";
+            } else {
+              window.location.href = "/";
+            }
+          })
+          .catch((error) => {
+            console.error("Logout failed:", error);
+            window.location.href = "/";
+          });
+      }
 
-  resetTimer();
+      document.onload = resetTimer;
+      document.onmousemove = resetTimer;
+      document.onkeypress = resetTimer;
 
-  function preventBack() {
-    window.history.replaceState(null, null, window.location.href);
-    window.onpopstate = function () {
-      window.history.replaceState(null, null, window.location.href);
-      window.location.href = '/';
-    };
-  }
+      resetTimer();
 
-  if (window.location.pathname === "/") {
-    preventBack();
-  }
-</script>
+      function preventBack() {
+        window.history.replaceState(null, null, window.location.href);
+        window.onpopstate = function () {
+          window.history.replaceState(null, null, window.location.href);
+          window.location.href = "/";
+        };
+      }
 
-</body>
+      if (window.location.pathname === "/") {
+        preventBack();
+      }
+    </script>
+  </body>
 </html>
