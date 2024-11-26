@@ -135,8 +135,11 @@ def summary(device):
                 # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
                 # AVG(Dc_KWH) AS avg_kWh FROM dc_data WHERE Device_id = %s GROUP BY hour
                 # ) AS hourly """
+                # dc_total_unit_query = """
+                # SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM dc_kwh where device_id= %s"""
                 dc_total_unit_query = """
-                SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                SELECT SUM(avg_kWh) AS total_avg_kWh_24h
                 FROM dc_kwh where device_id= %s"""
                 cursor.execute(dc_total_unit_query, (device,))
                 dc_total_unit = cursor.fetchone()
@@ -179,8 +182,11 @@ def summary(device):
                 # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
                 # AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s 
                 # GROUP BY hour) AS hourly """
+                # total_unit_query = """
+                # SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM ac_kwh where Device_id = %s """
                 total_unit_query = """
-                SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                SELECT SUM(avg_kWh) AS total_avg_kWh_24h
                 FROM ac_kwh where Device_id = %s """
                 cursor.execute(total_unit_query, (device,))
                 total_unit = cursor.fetchone()
@@ -236,7 +242,6 @@ def data_table():
                 dc_kwh_data = "select * from dc_kwh order by start_hour desc LIMIT 700"
                 cursor.execute(dc_kwh_data)
                 dc_kwh_dataprint = cursor.fetchall()
-                print(dc_kwh_dataprint)
                 # Fetch AC KWH data
                 ac_kwh_data = "SELECT * FROM ac_kwh order by start_hour desc LIMIT 700"
                 cursor.execute(ac_kwh_data)

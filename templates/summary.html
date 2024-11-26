@@ -69,7 +69,7 @@
           font-size: 18px;
         }
       }
-      
+
       .nav {
         height: 60px;
         width: 100%;
@@ -597,7 +597,7 @@
         <a href="{{ url_for('data_table')}}">Table</a>
         <a href="#" id="logout-btn">Log Out</a>
       </div>
-        <!-- battery -->
+      <!-- battery -->
       <div id="batteryOverlay"></div>
 
       <div class="battery-container">
@@ -640,9 +640,9 @@
         <div class="on-off">AC</div>
         <div class="on-off">DC</div>
       </div>
-      <div class="manf"> <b>Manufacturing Date : </b>{{man_date [2]}}</div>
+      <div class="manf"><b>Manufacturing Date : </b>{{man_date [2]}}</div>
       <br /><br />
-      
+
       <!-- Panel Data -->
       <h3 style="display: flex; justify-content: center">
         <u
@@ -701,12 +701,21 @@
 
       <script>
         function panel() {
-          const accurrent = "{{Dccurrent[7]}}"; // Assuming accurrent is a valid number
+          const accurrent = parseFloat("{{ Dccurrent[7] }}");
+          const timestampString = "{{ Dccurrent[1] }}";
+
+          const timestamp = new Date(
+            timestampString.replace(" ", "T")
+          ).getTime();
+          const currentTime = Date.now();
+
+          const isWithinLastThirtyMinutes =
+            currentTime - timestamp <= 30 * 60 * 1000; // 30 minutes in milliseconds
 
           const chargingIndicator =
             document.getElementById("chargingIndicator");
 
-          if (chargingIndicator) {
+          if (chargingIndicator && isWithinLastThirtyMinutes) {
             if (accurrent >= 0.1) {
               chargingIndicator.classList.add("green");
               chargingIndicator.classList.remove("red");
@@ -714,13 +723,18 @@
               chargingIndicator.classList.add("red");
               chargingIndicator.classList.remove("green");
             }
-          } else {
+          } else if (!chargingIndicator) {
             console.error("Element with id 'chargingIndicator' not found.");
+          } else if (!isWithinLastThirtyMinutes) {
+            chargingIndicator.classList.add("red");
+            chargingIndicator.classList.remove("green");
           }
         }
         panel();
       </script>
+
       <hr />
+
       <!-- DC DATA -->
       <h3 style="display: flex; justify-content: center">
         <u
@@ -771,8 +785,6 @@
             <b>Temperature</b>
           </div>
         </div>
-
-        
       </div>
       <div class="con_small">
         <div class="half-width">
@@ -836,7 +848,7 @@
           <span
             style="font-size: 40px; display: flex; justify-content: center"
             class="text-center"
-            >{{dc_kwh[5] if dc_kwh[5] is not none else 'N/A'}} 
+            >{{dc_kwh[5] if dc_kwh[5] is not none else 'N/A'}}
             <span class="ms-2 mt-4" style="font-size: 18px">W</span>
           </span>
           <br />
@@ -876,7 +888,8 @@
           const bulb = document.getElementById("bulb");
           const currentTime = Date.now();
 
-          const isWithinLastHour = currentTime - accurrentTimestamp <= 3600000;
+          const isWithinLastHour =
+            currentTime - accurrentTimestamp <= 30 * 60 * 1000; // 30 minutes in milliseconds;
 
           if (bulb && isWithinLastHour) {
             if (accurrent >= 0.2) {
@@ -995,7 +1008,7 @@
           <span
             style="font-size: 40px; display: flex; justify-content: center"
             class="text-center"
-            >{{ac_total_kwh[5] if ac_total_kwh[5] is not none else 'N/A'}} W
+            >{{ac_total_kwh[5] if ac_total_kwh[5] is not none else 'N/A'}}
             <span class="ms-2 mt-4" style="font-size: 18px">W</span>
           </span>
           <br />
