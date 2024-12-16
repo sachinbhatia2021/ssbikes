@@ -36,6 +36,24 @@ app.secret_key='neeraj'
 # database connection
 def get_db_connection():
     return mydb_pool.get_connection()
+
+utc_now = datetime.utcnow()
+india_time = utc_now + timedelta(hours=5, minutes=30)
+timestamp = india_time.strftime("%Y-%m-%d %H:%M:%S") 
+start_of_day = india_time.replace(hour=0, minute=0, second=0, microsecond=0)
+hour_end = india_time.replace(minute=0, second=0, microsecond=0)
+hour_start = hour_end - timedelta(hours=1)
+last_day = start_of_day - timedelta(days=1)
+
+
+print("utc_now",utc_now)
+print("india_time",india_time)
+print("timestamp",timestamp)
+print("start_of_day",start_of_day)
+print("hour_end",hour_end)
+print("hour_start",hour_start)
+print("last-day",last_day)
+
 ########################################################################################################
 # login / index page
 @app.route('/', methods=['POST', 'GET'])
