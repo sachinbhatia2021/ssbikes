@@ -226,7 +226,7 @@
                   <th class="text-center">Device ID</th>
                   <th class="text-center">Total Generation</th>
                   <th class="text-center">Total Consumption</th>
-                  <th class="text-center">Remaining</th>
+                  <th class="text-center">Status</th>
                   <th class="text-center">Action</th>
                 </tr>
               </thead>
@@ -237,7 +237,7 @@
                   <td>{{ item[0] }}</td>
                   <td></td>
                   <td></td>
-                  <td></td>
+                  <td>{{Accurrentdata}}</td>
                   <td> <a class="btn btn-outline-primary" href="{{ url_for('summary', device=item[0]) }}">Summary</a>
                   </td>
                 </tr>
