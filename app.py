@@ -45,15 +45,6 @@ hour_end = india_time.replace(minute=0, second=0, microsecond=0)
 hour_start = hour_end - timedelta(hours=1)
 last_day = start_of_day - timedelta(days=1)
 
-
-print("utc_now",utc_now)
-print("india_time",india_time)
-print("timestamp",timestamp)
-print("start_of_day",start_of_day)
-print("hour_end",hour_end)
-print("hour_start",hour_start)
-print("last-day",last_day)
-
 ########################################################################################################
 # login / index page
 @app.route('/', methods=['POST', 'GET'])
@@ -80,9 +71,20 @@ def dash():
         connection = get_db_connection()  
         with connection.cursor(buffered=True) as cursor:
             alldata = """
-            SELECT distinct(dc.Device_id)
-            FROM dc_data dc
+            WITH LatestData AS (
+                SELECT dc.Device_id, 
+                    dc.timestamp,
+                    ROW_NUMBER() OVER (PARTITION BY dc.Device_id ORDER BY dc.timestamp DESC) AS rn
+                FROM dc_data dc
+            )
+            SELECT distinct(dc.Device_id),
+                CASE 
+                    WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
+                    ELSE 'Inactive'
+                END AS status
+            FROM LatestData dc
             JOIN ac_data ac ON dc.Device_id = ac.Device_id
+            WHERE dc.rn = 1
             """
             cursor.execute(alldata)
             alldataprint = cursor.fetchall()
