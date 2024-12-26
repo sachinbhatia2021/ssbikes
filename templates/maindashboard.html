@@ -196,7 +196,10 @@
 
 
     .footer {
+      margin-top: auto;
+bottom: 0;
         display: flex;
+        width: 100%;
         justify-content: space-between;
         align-items: center;
         padding: 10px;
@@ -242,12 +245,14 @@
         <a href="#" id="logout-btn">Log Out</a>
       </div>
 
+
       <div class="Inverter1">
         <h5>Inverter Details</h5>
 
         <div class="tablediv">
-          <div class="row">
-            <div class="card-body">
+          <div class="row ">
+            <div class="card-body " >
+              <div style="overflow-x: scroll;">
               <table id="example2" class="table table-bordered table-striped">
                 <thead>
                   <tr>
@@ -285,8 +290,10 @@
               </table>
             </div>
           </div>
+          </div>
         </div>
       </div>
+    </div>
 
       <!-- Footer -->
       <div class="footer">
@@ -302,7 +309,6 @@
         </p>
         <p class="version">Version 1.0.1</p>
       </div>
-    </div>
     <!-- script for table -->
     <script>
       $(document).ready(function () {
