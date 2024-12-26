@@ -2,19 +2,21 @@ from flask import render_template, Flask, redirect, request, url_for, jsonify,se
 from dotenv import load_dotenv
 import mysql.connector.pooling
 from mysql.connector import Error
-from datetime import datetime,date
+from datetime import datetime,date,timedelta
 import math
 import os
 load_dotenv()
-
+########################################################################################################
 # load the values
 Host = os.getenv("Host")
 user = os.getenv("User")
 db_password = os.getenv("db_password")
-db_name = os.getenv("db_name")
-
+db_name = os.getenv("db_name") 
+########################################################################################################
 app = Flask(__name__)
-
+########################################################################################################
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+########################################################################################################
 # Database connection pool for AWS database
 dbconfig = {
     "host": Host,
@@ -22,18 +24,28 @@ dbconfig = {
     "password": db_password,
     "database": db_name
 }
-
+########################################################################################################
 # connection Pool
 mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool",
                                                         pool_size=5,
                                                         **dbconfig)
+########################################################################################################
 # secret key for session
 app.secret_key='neeraj'
-
+########################################################################################################
 # database connection
 def get_db_connection():
     return mydb_pool.get_connection()
 
+utc_now = datetime.utcnow()
+india_time = utc_now + timedelta(hours=5, minutes=30)
+timestamp = india_time.strftime("%Y-%m-%d %H:%M:%S") 
+start_of_day = india_time.replace(hour=0, minute=0, second=0, microsecond=0)
+hour_end = india_time.replace(minute=0, second=0, microsecond=0)
+hour_start = hour_end - timedelta(hours=1)
+last_day = start_of_day - timedelta(days=1)
+
+########################################################################################################
 # login / index page
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -50,7 +62,7 @@ def index():
             print(f"Error during login process: {e}")
             return "An error occurred during login. Please try again later.", 500
     return render_template('index.html', error="")
-
+########################################################################################################
 # frontpage / homepage
 @app.route('/dashboard')
 def dash():
@@ -59,10 +71,21 @@ def dash():
         connection = get_db_connection()  
         with connection.cursor(buffered=True) as cursor:
             alldata = """
-            SELECT distinct(dc.Device_id)
-            FROM dc_data dc
+            WITH LatestData AS (
+                SELECT dc.Device_id, 
+                    dc.timestamp,
+                    ROW_NUMBER() OVER (PARTITION BY dc.Device_id ORDER BY dc.timestamp DESC) AS rn
+                FROM dc_data dc
+            )
+            SELECT distinct(dc.Device_id),
+                CASE 
+                    WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
+                    ELSE 'Inactive'
+                END AS status
+            FROM LatestData dc
             JOIN ac_data ac ON dc.Device_id = ac.Device_id
-            ORDER BY dc.Device_id"""
+            WHERE dc.rn = 1
+            """
             cursor.execute(alldata)
             alldataprint = cursor.fetchall()
             
@@ -74,7 +97,7 @@ def dash():
     finally:
         if connection:
             connection.close() 
-
+########################################################################################################
 # Summary page
 @app.route('/summary/<device>')
 def summary(device):
@@ -84,8 +107,7 @@ def summary(device):
                 # Fetch DC data
                 current_query = """
                 SELECT TRUNCATE(Dc_Current, 5) AS Current, timestamp,Dc_Power, Temperature, 
-                TRUNCATE(Dc_Voltage, 5) AS Voltage, TRUNCATE((Dc_Voltage * Dc_Current),5) AS cal_power,Device_id,
-                TRUNCATE(TRUNCATE(Dc_Power,5)-TRUNCATE((Dc_Voltage * Dc_Current),5),5) as error,panel_voltage,panel_current 
+                TRUNCATE(Dc_Voltage, 5) AS Voltage,Device_id,panel_voltage,panel_current,Panel_Power 
                 FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(current_query, (device,))
                 currentdata = cursor.fetchone()
@@ -93,47 +115,59 @@ def summary(device):
                 #DC KWH 1 hour
                 dc_total_kwh_query = """
                 SELECT 
-                CAST(AVG(Dc_KWH) AS DECIMAL(10, 5)) AS avg_kWh,
-                DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS start_time,
-                DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS end_time
-                FROM dc_data 
-                WHERE Device_id = %s
-                AND timestamp >= DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') 
-                AND timestamp < DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00')
+                    * FROM dc_kwh where Device_id = %s
+                ORDER BY start_hour DESC
+                LIMIT 1
                 """
+                # dc_total_kwh_query = """
+                # SELECT 
+                # CAST(AVG(Dc_KWH) AS DECIMAL(10, 5)) AS avg_kWh,
+                # DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS start_time,
+                # DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS end_time
+                # FROM dc_data 
+                # WHERE Device_id = %s
+                # AND timestamp >= DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') 
+                # AND timestamp < DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00')
+                # """
                 cursor.execute(dc_total_kwh_query, (device,))
                 dc_kwh = cursor.fetchone()
+
                 today_date = date.today()
                 
                 #DC KWH 24-hours
-                dc_total_kwh_query = """
-                SELECT 
-                CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
-                FROM (
-                    SELECT 
-                        DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
-                        AVG(Dc_KWH) AS avg_kWh
-                    FROM dc_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
-                ) AS hourly
-                """
-                cursor.execute(dc_total_kwh_query, (device,today_date))
-                dc_total_kwh = cursor.fetchone()
-                dc_total_kwh_value = dc_total_kwh[0] if dc_total_kwh and dc_total_kwh[0] is not None else 0
+                # dc_total_kwh_query = """
+                # SELECT 
+                # CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
+                # FROM (
+                #     SELECT 
+                #         DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
+                #         AVG(Dc_KWH) AS avg_kWh
+                #     FROM dc_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
+                # ) AS hourly
+                # """
+                # cursor.execute(dc_total_kwh_query, (device,today_date))
+                # dc_total_kwh = cursor.fetchone()
+                # dc_total_kwh_value = dc_total_kwh[0] if dc_total_kwh and dc_total_kwh[0] is not None else 0
 
                 #DC Units
+                # dc_total_unit_query = """
+                # SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
+                # AVG(Dc_KWH) AS avg_kWh FROM dc_data WHERE Device_id = %s GROUP BY hour
+                # ) AS hourly """
+                # dc_total_unit_query = """
+                # SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM dc_kwh where device_id= %s"""
                 dc_total_unit_query = """
-                SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
-                AVG(Dc_KWH) AS avg_kWh FROM dc_data WHERE Device_id = %s GROUP BY hour
-                ) AS hourly """
+                SELECT SUM(avg_kWh) AS total_avg_kWh_24h
+                FROM dc_kwh where device_id= %s"""
                 cursor.execute(dc_total_unit_query, (device,))
                 dc_total_unit = cursor.fetchone()
 
                 # Fetch AC data
                 Accurrent_query = """
                 SELECT TRUNCATE(Current, 5) AS Current, timestamp,Power, Temperature, TRUNCATE(Voltage, 5) AS Voltage, 
-                TRUNCATE((Voltage * Current),5) AS cal_power,Device_id,
-                TRUNCATE(TRUNCATE(Power,5)-TRUNCATE((Voltage * Current),5),5) as error FROM ac_data 
+                Device_id FROM ac_data 
                 WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(Accurrent_query, (device,))
                 Accurrentdata = cursor.fetchone()
@@ -141,12 +175,9 @@ def summary(device):
                 #AC KWH 1 hour
                 ac_total_kwh_query = """
                 SELECT 
-                CAST(AVG(kWh_Consumed) AS DECIMAL(10, 5)) AS avg_kWh,
-                DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS start_time,
-                DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS end_time
-                FROM ac_data WHERE Device_id = %s
-                AND timestamp >= DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') 
-                AND timestamp < DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00')
+                    * FROM ac_kwh where Device_id = %s
+                ORDER BY start_hour DESC
+                LIMIT 1
                 """
                 cursor.execute(ac_total_kwh_query, (device,))
                 ac_total_kwh = cursor.fetchone()
@@ -154,30 +185,42 @@ def summary(device):
                 today_date = date.today()
                 
                 #AC KWH 24-hours
-                total_kwh_query = """
-                SELECT CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
-                FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
-                AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
-                ) AS hourly
-                """
-                cursor.execute(total_kwh_query, (device,today_date))
-                total_kwh = cursor.fetchone()
+                # total_kwh_query = """
+                # SELECT CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
+                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
+                # AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
+                # ) AS hourly
+                # """
+                # cursor.execute(total_kwh_query, (device,today_date))
+                # total_kwh = cursor.fetchone()
 
-                total_kwh_value = total_kwh[0] if total_kwh and total_kwh[0] is not None else 0
+                # total_kwh_value = total_kwh[0] if total_kwh and total_kwh[0] is not None else 0
                 
                 # AC Units Calculation
+                # total_unit_query = """
+                # SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
+                # AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s 
+                # GROUP BY hour) AS hourly """
+                # total_unit_query = """
+                # SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM ac_kwh where Device_id = %s """
                 total_unit_query = """
-                SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
-                AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s 
-                GROUP BY hour) AS hourly """
+                SELECT SUM(avg_kWh) AS total_avg_kWh_24h
+                FROM ac_kwh where Device_id = %s """
                 cursor.execute(total_unit_query, (device,))
                 total_unit = cursor.fetchone()
+
+                inst_date="""
+                select * from dc_data where Device_id = %s order by timestamp  asc
+              """
+                cursor.execute(inst_date,(device,))
+                man_date=cursor.fetchone()
 
                 # Determine Device Type and Battery Voltage Range
                 device2 = int(device)
                 if 2000 <= device2 < 3000: #12V LEAD
-                    battery_percentage = ((currentdata[4]-10.5)/(12.7-10.5))*100
+                    battery_percentage = ((currentdata[4]-10.5)/(13.5-10.5))*100
                 elif 1000 <= device2 < 2000: #24V LEAD
                     battery_percentage = ((currentdata[4]-22)/(27-22))*100
                 elif 3000 <= device2 < 4000: #12V Lithium
@@ -192,15 +235,13 @@ def summary(device):
                     Dccurrent=currentdata,
                     Accurrent=Accurrentdata,
                     dc_kwh=dc_kwh,
-                    dc_total_kwh_value=dc_total_kwh_value,
                     dc_total_unit=dc_total_unit,
-                    total_kwh_value=total_kwh_value,
                     ac_total_kwh=ac_total_kwh,
-                    total_unit=total_unit,today_date=today_date
+                    total_unit=total_unit,today_date=today_date,man_date=man_date
                 )    
     except Exception as e:
                  return str(e), 500
-
+########################################################################################################
 # Table data
 @app.route('/data')
 def data_table():    
@@ -217,11 +258,21 @@ def data_table():
                 cursor.execute(Acdata)
                 allAcdataprint = cursor.fetchall()
 
-        return render_template('table.html', alldataprint=alldataprint, Acalldataprint=allAcdataprint)
+                # Fetch DC KWH data
+                dc_kwh_data = "select * from dc_kwh order by start_hour desc LIMIT 700"
+                cursor.execute(dc_kwh_data)
+                dc_kwh_dataprint = cursor.fetchall()
+                # Fetch AC KWH data
+                ac_kwh_data = "SELECT * FROM ac_kwh order by start_hour desc LIMIT 700"
+                cursor.execute(ac_kwh_data)
+                ac_kwh_dataprint = cursor.fetchall()
+
+        return render_template('table.html', alldataprint=alldataprint, Acalldataprint=allAcdataprint
+                               ,dc_kwh_dataprint=dc_kwh_dataprint,ac_kwh_dataprint=ac_kwh_dataprint)
 
     except Exception as e:
         return "An error occurred while retrieving the data. Please try again later.", 500
-
+########################################################################################################
 #DC DATA GRAPH
 @app.route('/livegraphdc/<string:id>')
 def livegraphdc(id):
@@ -255,7 +306,7 @@ def livegraphdc(id):
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
-
+########################################################################################################
 #AC DATA GRAPH
 @app.route('/livegraphac/<string:id>')
 def livegraphac(id):
@@ -288,20 +339,26 @@ def livegraphac(id):
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
-    
-
-# Logout Page
-@app.route('/logout')
+########################################################################################################
+# Function for logout and clear it sessions
+@app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
     response = make_response(redirect(url_for('index')))
-    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'DENY'
     response.headers['X-XSS-Protection'] = '1; mode=block'
-    return response
 
+    return response
+########################################################################################################
+@app.route('/logout', methods=['GET'])
+def logout_get_redirect():
+    return redirect(url_for('index'))
+########################################################################################################
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+########################################################################################################

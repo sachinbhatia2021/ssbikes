@@ -157,32 +157,27 @@
     position: absolute;
     left: 0;
   }
+  
   .footer {
-  display: flex;
-  margin-left: -16px;
-  position: absolute; 
-  width: 100%;
-  background-color: #edeff5;
-  padding: 10px;
-  /* bottom: 0; */
-  justify-content: space-between; 
-}
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background-color: #edeff5;
+        color: #333;
+      }
 
+      .footer a {
+        color: #2452db;
+        text-decoration: none;
+      }
 
-    .footer a {
-      color: #2452db;
-    }
-
-    .footer .version {
-      position: absolute;
-      display: flex;
-      right: 10px;
-    }
-    .x{
-    overflow-x: auto;
-    margin-right: 26px;
-    margin-left: 15px;
-}
+      @media screen and (max-width: 576px) {
+        .footer {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
 </style>
 
 <body>
@@ -193,7 +188,16 @@
       <ul>
         <a href="{{url_for('dash')}}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
       </ul>
-    </div><div class="row1">
+    </div>
+
+    <div id="mySidenav" class="sidenav" style="z-index: 1001;">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <a href="{{ url_for('dash')}}">Home</a>
+      <a href="{{ url_for('data_table')}}"><u>Table</u></a>
+      <a href="#" id="logout-btn">Log Out</a>
+    </div>
+  
+    <div class="row1">
       <section class="col-lg-12 connectedSortable">
         <div class="card">
           <div class="card-header">
@@ -208,6 +212,7 @@
                     <th>Timestamp</th>
                     <th>Current</th>
                     <th>Voltage</th>
+                    <th>Power</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -217,6 +222,7 @@
                     <td>{{ item['timestamp'] }}</td>
                     <td>{{ item['panel_current'] }}</td>
                     <td>{{ item['panel_voltage'] }}</td>
+                    <td>{{ item['Panel_Power'] }}</td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -272,6 +278,42 @@
       <section class="col-lg-12 connectedSortable">
         <div class="card">
           <div class="card-header">
+            <h4 class="card-title"><i class='bx bxs-data'></i> DC KWH Data</h4>
+          </div>
+          <div class="row">
+            <div class="card-body x">
+              <table id="example4" class="table table-bordered table-striped" style="margin-top: 80px;">
+                <thead>
+                  <tr>
+                    <th>Device ID</th>
+                    <th>Start Hour</th>
+                    <th>End Hour</th>
+                    <th>KWH per hour</th>
+                    <th>KWH 24-Hour</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in dc_kwh_dataprint %}
+                  <tr>
+                    <td>{{ item['Device_id'] }}</td>
+                    <td>{{ item['start_hour'] }}</td>
+                    <td>{{ item['end_hour'] }}</td>
+                    <td>{{ item['avg_kWh'] }}</td>
+                    <td>{{ item['24_kwh'] }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </section>
+    </div>
+
+    <br><br>
+    <div class="row1">
+      <section class="col-lg-12 connectedSortable">
+        <div class="card">
+          <div class="card-header">
             <h4 class="card-title"><i class='bx bxs-data'></i> AC Data</h4>
           </div>
           <div class="row">
@@ -308,6 +350,41 @@
           </div>
       </section>
     </div>
+<br> <br>
+    <div class="row1">
+      <section class="col-lg-12 connectedSortable">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title"><i class='bx bxs-data'></i> AC KWH Data</h4>
+          </div>
+          <div class="row">
+            <div class="card-body x">
+              <table id="example5" class="table table-bordered table-striped" style="margin-top: 80px;">
+                <thead>
+                  <tr>
+                    <th>Device ID</th>
+                    <th>Start Hour</th>
+                    <th>End Hour</th>
+                    <th>KWH per hour</th>
+                    <th>KWH 24-Hour</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in ac_kwh_dataprint %}
+                  <tr>
+                    <td>{{ item['Device_id'] }}</td>
+                    <td>{{ item['start_hour'] }}</td>
+                    <td>{{ item['end_hour'] }}</td>
+                    <td>{{ item['avg_kWh'] }}</td>
+                    <td>{{ item['24_kwh'] }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </section>
+    </div>
 
     <br>
      <!-- Footer -->
@@ -316,13 +393,6 @@
         All rights reserved.</p>
       <p class="version">Version 1.0.1</p>
     </div>
-  </div>
-
-  <div id="mySidenav" class="sidenav" style="z-index: 1001;">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="{{ url_for('dash')}}">Home</a>
-    <a href="{{ url_for('data_table')}}"><u>Table</u></a>
-    <a href="#" id="logout-btn">Log Out</a>
   </div>
 
   <script>
@@ -510,18 +580,164 @@
     });
   </script>
 
-<!-- script for logout -->
 <script>
-  document.getElementById('logout-btn').addEventListener('click', function (event) {
-    event.preventDefault();
-    window.location.href = "{{ url_for('logout') }}";
+  $(document).ready(function () {
+    var table = $('#example4').DataTable({
+      "pageLength": 10,
+      "order": [
+        [1, "desc"]
+      ],
+      "drawCallback": function (settings) {
+        $('#example4 thead').css({
+          'background-color': '#0069D9',
+          'color': 'white',
+          'border': '1px solid #F7F6F7',
+        });
+        $('#example4_paginate').css({
+          'text-align': 'center',
+          'cursor': 'pointer'
+        });
+        $('#example4_previous').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '2px 0 0 2px',
+          'display': 'inline-block',
+          'color': '#007BFF',
+          'margin': '0'
+        });
+        $('#example4_next').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '0 2px 2px 0',
+          'display': 'inline-block',
+          'color': '#007BFF',
+          'margin': '0'
+        });
+        $('.paginate_button').not('.previous, .next').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '0',
+          'color': '#999699',
+          'display': 'inline-block',
+          'margin': '0 -0px 0 -0px'
+        });
+
+        $('.paginate_button.current').css({
+          'background-color': '#007BFF',
+          'color': 'white',
+          'border': '1px solid #007BFF'
+        });
+      }
+    });
+
+    $('#example4_filter').css({ 'margin-left': '75%' });
+
+    $('#searchInput').on('keyup', function () {
+      table.search($(this).val()).draw();
+    });
   });
 </script>
 
-<!-- script for session out automatically -->
+<script>
+  $(document).ready(function () {
+    var table = $('#example5').DataTable({
+      "pageLength": 10,
+      "order": [
+        [1, "desc"]
+      ],
+      "drawCallback": function (settings) {
+        $('#example5 thead').css({
+          'background-color': '#0069D9',
+          'color': 'white',
+          'border': '1px solid #F7F6F7',
+        });
+        $('#example5_paginate').css({
+          'text-align': 'center',
+          'cursor': 'pointer'
+        });
+        $('#example5_previous').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '2px 0 0 2px',
+          'display': 'inline-block',
+          'color': '#007BFF',
+          'margin': '0'
+        });
+        $('#example5_next').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '0 2px 2px 0',
+          'display': 'inline-block',
+          'color': '#007BFF',
+          'margin': '0'
+        });
+        $('.paginate_button').not('.previous, .next').css({
+          'padding': '4px 8px',
+          'border': '1px solid #e3e3e3',
+          'border-radius': '0',
+          'color': '#999699',
+          'display': 'inline-block',
+          'margin': '0 -0px 0 -0px'
+        });
+
+        $('.paginate_button.current').css({
+          'background-color': '#007BFF',
+          'color': 'white',
+          'border': '1px solid #007BFF'
+        });
+      }
+    });
+
+    $('#example5_filter').css({ 'margin-left': '75%' });
+
+    $('#searchInput').on('keyup', function () {
+      table.search($(this).val()).draw();
+    });
+  });
+</script>
+
+<!-- logout -->
+<script>
+  document.getElementById('logout-btn').addEventListener('click', function (event) {
+    function logout() {
+      fetch('/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = '/';
+          } else {
+            window.location.href = '/';
+          }
+        })
+        .catch(error => {
+          console.error('Logout failed:', error);
+          window.location.href = '/';
+        });
+    }
+
+    function preventBack() {
+
+      window.history.replaceState(null, null, window.location.href);
+      window.onpopstate = function () {
+        window.history.replaceState(null, null, window.location.href);
+        window.location.href = '/';
+      };
+    }
+
+    logout();
+    preventBack();
+  });
+
+</script>
+
+<!-- for automatically logout -->
 <script>
   var timeout;
-  var logoutTime = 30 * 60 * 1000; // 30 minutes in milliseconds
+  var logoutTime = 30 * 60 * 1000; // 30 minutes
 
   function resetTimer() {
     clearTimeout(timeout);
@@ -529,15 +745,42 @@
   }
 
   function logout() {
-    window.location.href = "{{ url_for('logout') }}";
+    fetch('/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = '/';
+        } else {
+          window.location.href = '/';
+        }
+      })
+      .catch(error => {
+        console.error('Logout failed:', error);
+        window.location.href = '/';
+      });
   }
 
   document.onload = resetTimer;
   document.onmousemove = resetTimer;
   document.onkeypress = resetTimer;
 
-  // Initial call to start the timer
   resetTimer();
+
+  function preventBack() {
+    window.history.replaceState(null, null, window.location.href);
+    window.onpopstate = function () {
+      window.history.replaceState(null, null, window.location.href);
+      window.location.href = '/';
+    };
+  }
+
+  if (window.location.pathname === "/") {
+    preventBack();
+  }
 </script>
 
 </body>
