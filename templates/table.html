@@ -56,7 +56,7 @@
     <a href="{{ url_for('dash') }}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
     <ul>
       <li><a href="{{ url_for('data_table') }}" class="ex2">Table</a></li>
-      <a href="{{url_for('alldevices')}}">dvs</a>
+      <a href="{{url_for('alldevices')}}">Devices</a>
 
       <a href="#" id="logout-btn">Log Out</a>
     </ul>
@@ -89,25 +89,18 @@
     </div>
   </div>
 </div>
-<style>
-  .Inverter1{
-     box-shadow: 2px 2px 12px 2px rgb(37, 36, 36);
-margin-right: 20px;
-padding: 10px;
-margin-top: 20px;
-}   
- </style>
+<br><br><br>
 <!--  -->
 <div class="content ">
    <div class="row1 Inverter1">
-      <section class="col-lg-12 connectedSortable">
-        <div class="card">
+      <section class="col-lg-12 connectedSortable scroll">
+        <div class="">
           <div class="card-header">
             <h4 class="card-title"><i class='bx bxs-data'></i> Panel Data</h4>
           </div>
           <div class="row">
             <div class="card-body x">
-              <div style="overflow-x: scroll;">
+              <div >
 
               <table id="example21" class="table table-bordered table-striped" style="margin-top: 80px;">
                 <thead>
@@ -137,14 +130,14 @@ margin-top: 20px;
     </div>
     <br><br>
     <div class="row1 Inverter1">
-      <section class="col-lg-12 connectedSortable">
-        <div class="card">
+      <section class="col-lg-12 connectedSortable scroll">
+        <div class="">
           <div class="card-header">
             <h4 class="card-title"><i class='bx bxs-data'></i> DC Data</h4>
           </div>
           <div class="row">
             <div class="card-body x">
-              <div style="overflow-x: scroll;">
+              <div >
 
               <table id="example2" class="table table-bordered table-striped" style="margin-top: 80px;">
                 <thead>
@@ -184,14 +177,14 @@ margin-top: 20px;
     </div>
     <br><br>
     <div class=" Inverter1">
-      <section class="col-lg-12 connectedSortable">
-        <div class="card">
+      <section class="col-lg-12 connectedSortable scroll">
+        <div class="">
           <div class="card-header">
             <h4 class="card-title"><i class='bx bxs-data'></i> DC KWH Data</h4>
           </div>
           <div class="row">
             <div class="card-body x">
-          <div style="overflow-x: scroll;">
+          <div >
 
               <table id="example4" class="table table-bordered table-striped" style="margin-top: 80px;">
                 <thead>
@@ -223,14 +216,14 @@ margin-top: 20px;
 
     <br><br>
     <div class="row1 Inverter1">
-      <section class="col-lg-12 connectedSortable">
-        <div class="card">
+      <section class="col-lg-12 connectedSortable scroll">
+        <div class="">
           <div class="card-header">
             <h4 class="card-title"><i class='bx bxs-data'></i> AC Data</h4>
           </div>
           <div class="row">
             <div class="card-body x">
-              <div style="overflow-x: scroll;">
+              <div >
 
               <table id="example3" class="table table-bordered table-striped" style="margin-top: 80px;">
                 <thead>
@@ -267,14 +260,14 @@ margin-top: 20px;
     </div>
 <br> <br>
     <div class="row1 Inverter1">
-      <section class="col-lg-12 connectedSortable">
-        <div class="card">
+      <section class="col-lg-12 connectedSortable scroll">
+        <div class="">
           <div class="card-header">
             <h4 class="card-title"><i class='bx bxs-data'></i> AC KWH Data</h4>
           </div>
           <div class="row">
             <div class="card-body x">
-              <div style="overflow-x: scroll;">
+              <div>
 
               <table id="example5" class="table table-bordered table-striped" style="margin-top: 80px;">
                 <thead>
@@ -334,7 +327,7 @@ margin-top: 20px;
         ],
         "drawCallback": function (settings) {
           $('#example21 thead').css({
-            'background-color': '#0069D9',
+            'background-color': '#045B62',
             'color': 'white',
             'border': '1px solid #F7F6F7',
           });
@@ -392,7 +385,7 @@ margin-top: 20px;
         ],
         "drawCallback": function (settings) {
           $('#example2 thead').css({
-            'background-color': '#0069D9',
+            'background-color': '#045B62',
             'color': 'white',
             'border': '1px solid #F7F6F7',
           });
@@ -450,7 +443,7 @@ margin-top: 20px;
         ],
         "drawCallback": function (settings) {
           $('#example3 thead').css({
-            'background-color': '#0069D9',
+            'background-color': '#045B62',
             'color': 'white',
             'border': '1px solid #F7F6F7',
           });
@@ -508,7 +501,7 @@ margin-top: 20px;
       ],
       "drawCallback": function (settings) {
         $('#example4 thead').css({
-          'background-color': '#0069D9',
+          'background-color': '#045B62',
           'color': 'white',
           'border': '1px solid #F7F6F7',
         });
@@ -566,7 +559,7 @@ margin-top: 20px;
       ],
       "drawCallback": function (settings) {
         $('#example5 thead').css({
-          'background-color': '#0069D9',
+          'background-color': '#045B62',
           'color': 'white',
           'border': '1px solid #F7F6F7',
         });
