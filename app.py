@@ -91,7 +91,44 @@ def dash():
             cursor.execute(alldata)
             alldataprint = cursor.fetchall()
             
-        return render_template('maindashboard.html', alldataprint=alldataprint)
+        return render_template('maindashboard.html')
+    
+    except Exception as e:
+        return str(e), 500
+
+    finally:
+        if connection:
+            connection.close() 
+            ########################################################################################################
+#  inverter
+@app.route('/alldevices')
+def alldevices():
+    connection = None
+    try:
+        connection = get_db_connection()  
+        with connection.cursor(buffered=True) as cursor:
+            alldata = """
+            WITH LatestData AS (
+                SELECT dc.Device_id, 
+                    dc.timestamp,
+                    ROW_NUMBER() OVER (PARTITION BY dc.Device_id ORDER BY dc.timestamp DESC) AS rn
+                FROM dc_data dc
+            )
+            SELECT distinct(dc.Device_id),t_generated.total_generated,t_consumed.total_consumed,
+                CASE 
+                    WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
+                    ELSE 'Inactive'
+                END AS status
+            FROM LatestData dc
+            JOIN ac_data ac ON dc.Device_id = ac.Device_id
+			LEFT JOIN (select device_id,sum(avg_kwh) as total_generated from dc_kwh group by device_id) t_generated ON t_generated.device_id = dc.Device_id     
+            LEFT JOIN (select device_id,sum(avg_kwh) as total_consumed from ac_kwh group by device_id) t_consumed ON t_consumed.device_id = dc.Device_id     
+            WHERE dc.rn = 1
+            """
+            cursor.execute(alldata)
+            alldataprint = cursor.fetchall()
+            
+        return render_template('all_devices.html', alldataprint=alldataprint)
     
     except Exception as e:
         return str(e), 500
