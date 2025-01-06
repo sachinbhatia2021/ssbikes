@@ -3,139 +3,54 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+  />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1"
+  />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  />
   <link rel="icon" type="image/x-icon" href="/static/logo.jpeg" />
+  <link
+    href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nanum+Brush+Script&family=Open+Sans:wght@600&family=Poppins:wght@200;400;500;600;700;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
   <link rel="stylesheet" href="../static/nav_foot.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
   <title>Inverter Analytics</title>
+
   <style>
-    .sidenav {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      z-index: 1;
-      top: 0;
-      left: 0;
-      background-color: #f5f7fa;
-      overflow-x: hidden;
-      transition: 0.5s;
-      padding-top: 60px;
-    }
-
-    .sidenav a {
-      padding: 8px 8px 8px 32px;
-      text-decoration: none;
-      font-size: 20px;
-      color: #818181;
-      display: block;
-      transition: 0.3s;
-    }
-
-    .sidenav a:hover {
-      color: #0e0707;
-    }
-
-    .sidenav .closebtn {
-      position: absolute;
-      top: 0;
-      right: 25px;
-      font-size: 36px;
-      margin-left: 50px;
-    }
-
-    #main {
-      transition: margin-left 0.5s;
-      padding: 16px;
-    }
-
-    @media screen and (max-height: 450px) {
-      .sidenav {
-        padding-top: 15px;
-      }
-
-      .sidenav a {
-        font-size: 18px;
-      }
-    }
-
-    .nav {
-      height: 60px;
-      width: 100%;
-      float: left;
-      background-color: #f5f7fa;
-      position: fixed;
-      top: 0;
-      z-index: 10;
-      display: flex;
-      flex-direction: row;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    li {
-      display: inline-flex;
-      float: right-reverse;
-    }
-
-    .logo {
-      height: auto;
-      width: 50px;
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-
-    .nav a {
-      display: flex;
-      align-items: center;
-      color: blue;
-      text-decoration: none;
-    }
-
-    .nav ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .nav ul li {
-      display: inline-block;
-      margin-left: 10px;
-      padding-right: 15px;
-    }
-
-    li a.ex2:hover,
-    a.ex2:active {
-      height: 60px;
-      width: 100%;
-    }
-
-    li a:hover:not(.active) {
-      background-color: #5bcefc;
-      color: white;
-      padding: 5px;
-      border-radius: 5px;
-    }
-
-    .nav .name a {
-      margin-left: 45px;
-      font-size: 20px;
-      top: 15px;
-      color: #043585;
-      float: left;
-      position: absolute;
-      left: 0;
-    }
-
+    
     .con_small {
       padding: 10px;
       display: flex;
@@ -584,7 +499,7 @@
     <a href="{{ url_for('dash') }}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
     <ul>
       <li><a href="{{ url_for('data_table') }}" class="ex2">Table</a></li>
-      <a href="{{url_for('alldevices')}}">dvs</a>
+      <a href="{{url_for('alldevices')}}">Devices</a>
 
       <a href="#" id="logout-btn">Log Out</a>
     </ul>
@@ -592,15 +507,15 @@
 </div>
 
 <!-- side navbar -->
-<div class="navbg text-center ">
+<div class="navbg text-center " >
   <div class="text d-flex">
     <div class="hideicon">
       <a href="{{ url_for('dash') }}" class="ex2 me-2">
-        <img class="ms-1" src="/static/logo.jpeg" height="39px" style="margin-left: -5px;" alt="">
+        <img class="ms-" src="/static/logo.jpeg" height="39px" style="margin-left: -5px;" alt="">
 
       </a>
-      
       <a href="{{url_for('alldevices')}}"><h3><i class="bi bi-projector"></i></h3></a>
+
 
       <a href="{{ url_for('data_table') }}" class="ex2">
         <h3><i class="fa-solid fa-table"></i></h3>
@@ -608,6 +523,7 @@
       <a href="#" id="logout-btn">
         <h3><i class="fa-solid fa-arrow-right-from-bracket"></i></h3>
       </a>
+  
     </div>
     <!-- next txtdiv link -->
 
@@ -615,13 +531,12 @@
 <h4 class="text-light mt-3">Analytics</h4>
 <a href="{{url_for('alldevices')}}" class="ex2 mt-4">Devices</a>
 
-      <a href="{{ url_for('data_table') }}" class="ex2 mt-2">Table</a>
+      <a href="{{ url_for('data_table') }}" class="ex2 mt-3">Table</a>
 
       <a class="mt-2" href="#" id="logout-btn" class="ex2 mt-5">Log Out</a>
     </div>
   </div>
 </div>
-<!-- nav end -->
 
   <!-- maindashboard -->
   <div class="content">
