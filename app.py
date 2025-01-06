@@ -382,9 +382,8 @@ def livegraphac(id):
 # Function for logout and clear it sessions
 @app.route('/logout', methods=['POST'])
 def logout():
-    session.clear()
-    response = make_response(redirect(url_for('index')))
-
+    session.clear()  # Clear session data
+    response = make_response(redirect(url_for('index')))  # Redirect to index
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
@@ -393,7 +392,8 @@ def logout():
     response.headers['X-XSS-Protection'] = '1; mode=block'
 
     return response
-########################################################################################################
+
+# Optionally, you may want to allow GET to log out as well for general safety.
 @app.route('/logout', methods=['GET'])
 def logout_get_redirect():
     return redirect(url_for('index'))
