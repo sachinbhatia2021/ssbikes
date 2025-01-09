@@ -16,6 +16,7 @@ db_name = os.getenv("db_name")
 app = Flask(__name__)
 ########################################################################################################
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+
 ########################################################################################################
 # Database connection pool for AWS database
 dbconfig = {
