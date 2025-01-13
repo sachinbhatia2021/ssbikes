@@ -31,10 +31,6 @@
   <title>Inverter Analytics</title>
 </head>
 <style>
-  body {
-    /* background-color: #f6f6f690; */
-  }
-
   .flexdiv {
     display: flex;
     justify-content: space-evenly;
@@ -61,51 +57,11 @@
     width: 30%;
     background-color: rgb(127, 117, 117);
   }
-  @media (max-width: 1120px) {
-  .box {
-    position: absolute; /* Ensures the transform works correctly */
-    top: 50%; /* Centers vertically */
-    left: 0; /* Centers horizontally */
-    transform: translate(-50%, -50%);
-    background: #48e913;
-    border-radius: 100%;
-    overflow: hidden;
-    width: 100px; /* Define a width for the circle */
-    height: 100px; /* Define a height for the circle */
-  }
-}
-
-  @media (max-width: 576px) {
-    .flexdiv {
-      display: block;
-      /* margin-top: 50px; */
-    }
-
-   
-    .flex1 {
-      height: 500px;
-      width: 100%;
-    }
-
-    .flex2 {
-      height: 500px;
-      width: 100%;
-      background-color: rgb(111, 78, 78);
-      margin-top: 20px;
-    }
-
-    .flex3 {
-      height: 500px;
-      width: 100%;
-      background-color: rgb(127, 117, 117);
-      margin-top: 20px;
-    }
-  }
 
   .flex1div1 {
     height: 50px;
     width: 95.5%;
-    background-color:#041f3c;
+    background-color: #041f3c;
     margin: 11px;
     font-size: 24px;
     font-family: Georgia;
@@ -124,12 +80,15 @@
     height: 200px;
     width: 95.5%;
     color: rgb(9, 3, 3);
-    background-color:white;
+    background-color: white;
     margin: 10px;
     margin-left: 13.4px;
-display: flex;
-justify-content: center;
+    display: flex;
+    justify-content: center;
     border-radius: 8px;
+    align-items: center;
+    /* Center items vertically */
+
   }
 
   .lastflexdiv {
@@ -162,22 +121,6 @@ justify-content: center;
     width: 47%;
   }
 
-  @media(max-width:576px) {
-    .lastflexdiv {
-      display: block;
-
-    }
-
-    .box12 {
-      width: 100%;
-      background-color: rgb(180, 127, 255);
-    }
-
-    .lastpacket {
-      margin-top: 60px;
-    }
-  }
-
   .Voltage {
     margin-top: 25px;
   }
@@ -185,6 +128,48 @@ justify-content: center;
   .voltageValues {
     margin-top: 40px;
 
+  }
+
+
+  .full-width4 {
+    padding-left: 10px;
+    border-radius: 8px;
+    margin-left: 30px;
+    margin-top: 40px;
+    background-color: #eeeef2;
+    padding-top: 40px;
+    width: calc(97% - 10px);
+    height: 180px;
+    margin-bottom: 10px;
+    border-left: 6px solid #460abf;
+  }
+
+  .dates {
+    font-size: 13px;
+    color: rgb(203, 9, 9);
+  }
+
+  .submitbtn {
+    margin-right: 30px;
+  }
+
+  .datess {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    gap: 100px;
+    margin-right: 130px;
+  }
+
+  .chart1 {
+    height: auto;
+    background-color: #f2f4f8;
+    margin: 28px;
+    padding: 20px;
+    border: none;
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.7s ease;
+    overflow: hidden;
   }
 
   .box {
@@ -196,6 +181,7 @@ justify-content: center;
     background: #717171;
     border-radius: 100%;
     overflow: hidden;
+    position: relative;
   }
 
   .box .percent {
@@ -271,49 +257,63 @@ justify-content: center;
   @media (max-width: 576px) {
     .box {
       background-color: red;
-      /* margin-left: 180px; */
     }
   }
 
-  .full-width4 {
-    padding-left: 10px;
-    border-radius: 8px;
-    margin-left: 30px;
-    margin-top: 40px;
-    background-color: #eeeef2;
-    padding-top: 40px;
-    width: calc(97% - 10px);
-    height: 180px;
-    margin-bottom: 10px;
-    border-left: 6px solid #460abf;
+  @media (max-width: 1120px) {
+    .box {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(-50%, -50%);
+      background: #48e913;
+      border-radius: 100%;
+      overflow: hidden;
+      width: 100px;
+      height: 100px;
+    }
   }
 
-  .dates {
-    font-size: 13px;
-    color: rgb(203, 9, 9);
+  @media (max-width: 576px) {
+    .flexdiv {
+      display: block;
+    }
+
+
+    .flex1 {
+      height: 500px;
+      width: 100%;
+    }
+
+    .flex2 {
+      height: 500px;
+      width: 100%;
+      background-color: rgb(111, 78, 78);
+      margin-top: 20px;
+    }
+
+    .flex3 {
+      height: 500px;
+      width: 100%;
+      background-color: rgb(127, 117, 117);
+      margin-top: 20px;
+    }
   }
 
-  .submitbtn {
-    margin-right: 30px;
-  }
+  @media(max-width:576px) {
+    .lastflexdiv {
+      display: block;
 
-  .datess {
-    display: flex;
-    flex-direction: row;
-    justify-content: right;
-    gap: 100px;
-    margin-right: 130px;
-  }
+    }
 
-  .chart1 {
-    height: auto;
-    background-color: #f2f4f8;
-    margin: 28px;
-    padding: 20px;
-    border: none;
-    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.7s ease;
-    overflow: hidden;
+    .box12 {
+      width: 100%;
+      background-color: rgb(180, 127, 255);
+    }
+
+    .lastpacket {
+      margin-top: 60px;
+    }
   }
 </style>
 
@@ -347,8 +347,8 @@ justify-content: center;
           <h3><i class="fa-solid fa-arrow-right-from-bracket"></i></h3>
         </a>
       </div>
-      <!-- next textdiv link -->
 
+      <!-- next textdiv link navbar -->
       <div class="mt-2" style="font-size: 25px;">
         <h4 class="text-light mt-3">Analytics</h4>
         <a href="{{url_for('alldevices')}}" class="ex2 mt-4">Devices</a>
@@ -360,7 +360,8 @@ justify-content: center;
 
   <!-- Dashboard -->
   <div class="content">
-    <div >    <p class="lastpacket ">LAST PACKET : {{Dccurrent[1]}}</p>
+    <div>
+      <p class="lastpacket ">LAST PACKET : {{Dccurrent[1]}}</p>
     </div>
     <div class="flexdiv">
       <div class="flex1">
@@ -370,7 +371,7 @@ justify-content: center;
         <div class="d-flex justify-content-around pt-2">
           <div class="flex1box1" style="background-color:#f3991b;">
             <!-- Voltage -->
-            <div class="voltageValues" >
+            <div class="voltageValues">
               <h3>{{Dccurrent[6]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">V</span>
               </h3>
@@ -385,14 +386,14 @@ justify-content: center;
               </h3>
             </div>
             <div class="Voltage">Current </div>
-
           </div>
         </div>
         <!-- charging status -->
         <div class="flex1lastdiv">
-          <img src="https://cdn.dribbble.com/users/6705959/screenshots/15582515/media/cd6d9da88f1ec05573215b4adf1fbbf3.gif" height="200px"  alt="">
+          <img
+            src="https://cdn.dribbble.com/users/6705959/screenshots/15582515/media/cd6d9da88f1ec05573215b4adf1fbbf3.gif"
+            height="200px" alt="">
         </div>
-
       </div>
 
       <!-- Battery performance-->
@@ -400,46 +401,42 @@ justify-content: center;
         <br />
         <div class="flex1div1 "><b>Battery Health Analysis</b></div>
         <div class="flex1lastdiv">
-
-          <div class="pt-5" >
-           
-
-              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                y="0px" style="display: none;">
-                <symbol id="wave">
-                  <path
-                    d="M420,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C514,6.5,518,4.7,528.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H420z">
-                  </path>
-                  <path
-                    d="M420,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C326,6.5,322,4.7,311.5,2.7C304.3,1.4,293.6-0.1,280,0c0,0,0,0,0,0v20H420z">
-                  </path>
-                  <path
-                    d="M140,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C234,6.5,238,4.7,248.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H140z">
-                  </path>
-                  <path
-                    d="M140,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C46,6.5,42,4.7,31.5,2.7C24.3,1.4,13.6-0.1,0,0c0,0,0,0,0,0l0,20H140z">
-                  </path>
-                </symbol>
-              </svg>
-              <!-- battery percentage animation -->
-              <div class="box">
-                <div class="percent">
-                  <div class="percentNum" id="count">0</div>
-                  <div class="percentB">%</div>
-                </div>
-                <div id="water" class="water">
-                  <svg viewBox="0 0 560 20" class="water_wave water_wave_back">
-                    <use xlink:href="#wave"></use>
-                  </svg>
-                  <svg viewBox="0 0 560 20" class="water_wave water_wave_front">
-                    <use xlink:href="#wave"></use>
-                  </svg>
-                </div>
+          <div class="pt-5">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+              y="0px" style="display: none;">
+              <symbol id="wave">
+                <path
+                  d="M420,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C514,6.5,518,4.7,528.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H420z">
+                </path>
+                <path
+                  d="M420,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C326,6.5,322,4.7,311.5,2.7C304.3,1.4,293.6-0.1,280,0c0,0,0,0,0,0v20H420z">
+                </path>
+                <path
+                  d="M140,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C234,6.5,238,4.7,248.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H140z">
+                </path>
+                <path
+                  d="M140,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C46,6.5,42,4.7,31.5,2.7C24.3,1.4,13.6-0.1,0,0c0,0,0,0,0,0l0,20H140z">
+                </path>
+              </symbol>
+            </svg>
+            <!-- battery percentage animation -->
+            <div class="box">
+              <div class="percent">
+                <div class="percentNum" id="count">0</div>
+                <div class="percentB">%</div>
               </div>
-            
+              <div id="water" class="water">
+                <svg viewBox="0 0 560 20" class="water_wave water_wave_back">
+                  <use xlink:href="#wave"></use>
+                </svg>
+                <svg viewBox="0 0 560 20" class="water_wave water_wave_front">
+                  <use xlink:href="#wave"></use>
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
-        <!--  -->
+        <!-- Efficiency  -->
         <div class="d-flex justify-content-around">
           <div class="flex1box1" style="background-color:#c9d5fb;">
             <div class="voltageValues">
@@ -449,16 +446,16 @@ justify-content: center;
             </div>
             <div class="Voltage">Efficiency </div>
           </div>
-          <!--  -->
+          <!-- Battery Voltage,Current -->
           <div class="flex1box1" style="background-color:#daf7db;">
             <div class="voltageValues">
               <h5>{{Dccurrent[6]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">V</span>
-              </h5> <h5>{{Dccurrent[7]}}
+              </h5>
+              <h5>{{Dccurrent[7]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">A</span>
               </h5>
             </div>
-            <!-- <div class="Voltage"> </div> -->
           </div>
         </div>
       </div>
@@ -470,8 +467,8 @@ justify-content: center;
         <div class="flex1div1"><b>24 hr Kwh</b></div>
         <div class="d-flex justify-content-around pt-2">
           <!-- dc data -->
-          <div class="flex1box1"  style="background-color:#f4353c;">
-            <div class="voltageValues" >
+          <div class="flex1box1" style="background-color:#f4353c;">
+            <div class="voltageValues">
               <h3>{{dc_kwh[5] if
                 dc_kwh[5] is not none else 'N/A'}}
                 <span class="ms-2 mt-4" style="font-size: 15px">W</span>
@@ -480,7 +477,7 @@ justify-content: center;
             <div class="Voltage"> DC </div>
           </div>
           <!-- ac data -->
-          <div class="flex1box1"  style="background-color:#f3991b;">
+          <div class="flex1box1" style="background-color:#f3991b;">
             <div class="voltageValues">
               <h3>{{ac_total_kwh[5] if
                 ac_total_kwh[5] is not none else 'N/A'}}
@@ -492,23 +489,26 @@ justify-content: center;
         </div>
         <!-- graph for ac/dc kwh per hour -->
         <div class="flex1lastdiv" style="background-color:#b1b2b1;">
-          <img src="https://community.tableau.com/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=0684T000001YPMm&operationContext=CHATTER&contentId=05T4T000006laBZ&page=0" alt="" width="400px" height="200px">
+          <img
+            src="https://community.tableau.com/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=0684T000001YPMm&operationContext=CHATTER&contentId=05T4T000006laBZ&page=0"
+            alt="" width="400px" height="200px">
         </div>
       </div>
     </div>
-<br><br>
+
+    <br><br>
+
     <!-- DC data -->
     <div class="lastflexdiv">
       <div class="box12">
         <br />
-
         <div class="">
           <div class="flex1div1 pt-2">
             <h3><b>DC Power Flow</b></h3>
           </div>
           <div class="d-flex justify-content-around">
             <!-- voltage -->
-            <div class="flex1box1" >
+            <div class="flex1box1">
               <div class="voltageValues">
                 <h3>{{Dccurrent[6]}}
                   <span class="ms-2 mt-4" style="font-size: 15px">V</span>
@@ -526,7 +526,6 @@ justify-content: center;
               <div class="Voltage">Current</div>
             </div>
           </div>
-
           <div class="d-flex justify-content-around mt-2">
             <!-- power -->
             <div class="flex1box1">
@@ -555,7 +554,6 @@ justify-content: center;
       <!-- AC data  -->
       <div class="box12">
         <br />
-
         <div class="">
           <div class="flex1div1 pt-2">
             <h3><b>AC Load Analytics</b></h3>
@@ -662,6 +660,7 @@ justify-content: center;
       }
     }, 60);
   </script>
+
   <!-- script for graphs -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
@@ -971,7 +970,7 @@ justify-content: center;
   <!-- for automatically logout -->
   <script>
     var timeout;
-    var logoutTime = 30 * 60 * 1000; // 30 minutes
+    var logoutTime = 20 * 60 * 1000; // 20 minutes
 
     function resetTimer() {
       clearTimeout(timeout);
