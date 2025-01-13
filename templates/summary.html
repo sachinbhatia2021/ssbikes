@@ -35,7 +35,6 @@
     display: flex;
     justify-content: space-evenly;
     text-align: center;
-
   }
 
   .flex1 {
@@ -43,7 +42,6 @@
     width: 30%;
     background-color: #f8f8f8;
     box-shadow: 5px 5px 15px 10px rgba(120, 119, 119, 0.4);
-
   }
 
   .flex2 {
@@ -56,6 +54,46 @@
     height: 500px;
     width: 30%;
     background-color: rgb(127, 117, 117);
+  }
+
+  @media (max-width: 1120px) {
+    .box {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(-50%, -50%);
+      background: #48e913;
+      border-radius: 100%;
+      overflow: hidden;
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .flexdiv {
+      display: block;
+    }
+
+
+    .flex1 {
+      height: 500px;
+      width: 100%;
+    }
+
+    .flex2 {
+      height: 500px;
+      width: 100%;
+      background-color: rgb(111, 78, 78);
+      margin-top: 20px;
+    }
+
+    .flex3 {
+      height: 500px;
+      width: 100%;
+      background-color: rgb(127, 117, 117);
+      margin-top: 20px;
+    }
   }
 
   .flex1div1 {
@@ -87,7 +125,6 @@
     justify-content: center;
     border-radius: 8px;
     align-items: center;
-    /* Center items vertically */
 
   }
 
@@ -121,6 +158,22 @@
     width: 47%;
   }
 
+  @media(max-width:576px) {
+    .lastflexdiv {
+      display: block;
+
+    }
+
+    .box12 {
+      width: 100%;
+      background-color: rgb(180, 127, 255);
+    }
+
+    .lastpacket {
+      margin-top: 60px;
+    }
+  }
+
   .Voltage {
     margin-top: 25px;
   }
@@ -128,48 +181,6 @@
   .voltageValues {
     margin-top: 40px;
 
-  }
-
-
-  .full-width4 {
-    padding-left: 10px;
-    border-radius: 8px;
-    margin-left: 30px;
-    margin-top: 40px;
-    background-color: #eeeef2;
-    padding-top: 40px;
-    width: calc(97% - 10px);
-    height: 180px;
-    margin-bottom: 10px;
-    border-left: 6px solid #460abf;
-  }
-
-  .dates {
-    font-size: 13px;
-    color: rgb(203, 9, 9);
-  }
-
-  .submitbtn {
-    margin-right: 30px;
-  }
-
-  .datess {
-    display: flex;
-    flex-direction: row;
-    justify-content: right;
-    gap: 100px;
-    margin-right: 130px;
-  }
-
-  .chart1 {
-    height: auto;
-    background-color: #f2f4f8;
-    margin: 28px;
-    padding: 20px;
-    border: none;
-    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.7s ease;
-    overflow: hidden;
   }
 
   .box {
@@ -260,60 +271,45 @@
     }
   }
 
-  @media (max-width: 1120px) {
-    .box {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translate(-50%, -50%);
-      background: #48e913;
-      border-radius: 100%;
-      overflow: hidden;
-      width: 100px;
-      height: 100px;
-    }
+  .full-width4 {
+    padding-left: 10px;
+    border-radius: 8px;
+    margin-left: 30px;
+    margin-top: 40px;
+    background-color: #eeeef2;
+    padding-top: 40px;
+    width: calc(97% - 10px);
+    height: 180px;
+    margin-bottom: 10px;
+    border-left: 6px solid #460abf;
   }
 
-  @media (max-width: 576px) {
-    .flexdiv {
-      display: block;
-    }
-
-
-    .flex1 {
-      height: 500px;
-      width: 100%;
-    }
-
-    .flex2 {
-      height: 500px;
-      width: 100%;
-      background-color: rgb(111, 78, 78);
-      margin-top: 20px;
-    }
-
-    .flex3 {
-      height: 500px;
-      width: 100%;
-      background-color: rgb(127, 117, 117);
-      margin-top: 20px;
-    }
+  .dates {
+    font-size: 13px;
+    color: rgb(203, 9, 9);
   }
 
-  @media(max-width:576px) {
-    .lastflexdiv {
-      display: block;
+  .submitbtn {
+    margin-right: 30px;
+  }
 
-    }
+  .datess {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    gap: 100px;
+    margin-right: 130px;
+  }
 
-    .box12 {
-      width: 100%;
-      background-color: rgb(180, 127, 255);
-    }
-
-    .lastpacket {
-      margin-top: 60px;
-    }
+  .chart1 {
+    height: auto;
+    background-color: #f2f4f8;
+    margin: 28px;
+    padding: 20px;
+    border: none;
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.7s ease;
+    overflow: hidden;
   }
 </style>
 
@@ -347,7 +343,6 @@
           <h3><i class="fa-solid fa-arrow-right-from-bracket"></i></h3>
         </a>
       </div>
-
       <!-- next textdiv link navbar -->
       <div class="mt-2" style="font-size: 25px;">
         <h4 class="text-light mt-3">Analytics</h4>
@@ -369,7 +364,7 @@
         <!-- panel data -->
         <div class="flex1div1"><b style="font-size: 24px; font-family: Georgia">Panel Data</b></div>
         <div class="d-flex justify-content-around pt-2">
-          <div class="flex1box1" style="background-color:#f3991b;">
+          <div class="flex1box1" style="background-color:#ff4046;">
             <!-- Voltage -->
             <div class="voltageValues">
               <h3>{{Dccurrent[6]}}
@@ -379,7 +374,7 @@
             <div class="Voltage">Voltage </div>
           </div>
           <!-- current -->
-          <div class="flex1box1" style="background-color:#f4353c;">
+          <div class="flex1box1" style="background-color:#E3F0AF;">
             <div class="voltageValues">
               <h3>{{Dccurrent[7]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">A</span>
@@ -388,6 +383,7 @@
             <div class="Voltage">Current </div>
           </div>
         </div>
+
         <!-- charging status -->
         <div class="flex1lastdiv">
           <img
@@ -436,7 +432,8 @@
             </div>
           </div>
         </div>
-        <!-- Efficiency  -->
+
+        <!-- Efficiency -->
         <div class="d-flex justify-content-around">
           <div class="flex1box1" style="background-color:#c9d5fb;">
             <div class="voltageValues">
@@ -446,7 +443,7 @@
             </div>
             <div class="Voltage">Efficiency </div>
           </div>
-          <!-- Battery Voltage,Current -->
+          <!-- Battery voltage,current -->
           <div class="flex1box1" style="background-color:#daf7db;">
             <div class="voltageValues">
               <h5>{{Dccurrent[6]}}
@@ -467,7 +464,7 @@
         <div class="flex1div1"><b>24 hr Kwh</b></div>
         <div class="d-flex justify-content-around pt-2">
           <!-- dc data -->
-          <div class="flex1box1" style="background-color:#f4353c;">
+          <div class="flex1box1" style="background-color:#f3991b;">
             <div class="voltageValues">
               <h3>{{dc_kwh[5] if
                 dc_kwh[5] is not none else 'N/A'}}
@@ -477,7 +474,7 @@
             <div class="Voltage"> DC </div>
           </div>
           <!-- ac data -->
-          <div class="flex1box1" style="background-color:#f3991b;">
+          <div class="flex1box1" style="background-color:#f4353c;">
             <div class="voltageValues">
               <h3>{{ac_total_kwh[5] if
                 ac_total_kwh[5] is not none else 'N/A'}}
@@ -526,6 +523,7 @@
               <div class="Voltage">Current</div>
             </div>
           </div>
+
           <div class="d-flex justify-content-around mt-2">
             <!-- power -->
             <div class="flex1box1">
@@ -660,7 +658,6 @@
       }
     }, 60);
   </script>
-
   <!-- script for graphs -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
