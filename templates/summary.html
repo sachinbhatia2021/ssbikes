@@ -166,7 +166,6 @@
 
     .box12 {
       width: 100%;
-      background-color: rgb(180, 127, 255);
     }
 
     .lastpacket {
@@ -269,16 +268,17 @@
     .box {
       background-color: red;
     }
+    
   }
 
   .full-width4 {
     padding-left: 10px;
     border-radius: 8px;
-    margin-left: 30px;
+    margin-left: 50px;
     margin-top: 40px;
     background-color: #eeeef2;
     padding-top: 40px;
-    width: calc(97% - 10px);
+    width: calc(97% - 40px);
     height: 180px;
     margin-bottom: 10px;
     border-left: 6px solid #460abf;
@@ -295,7 +295,6 @@
 
   .datess {
     display: flex;
-    flex-direction: row;
     justify-content: right;
     gap: 100px;
     margin-right: 130px;
@@ -310,6 +309,44 @@
     box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.7s ease;
     overflow: hidden;
+  }
+
+  
+  @media(max-width:576px){
+    .datess {
+    display: block;
+    justify-content: center;
+    gap: 100px;
+/* margin-left: -50px; */
+  }
+  
+  .full-width4 {
+    padding-left: 10px;
+    border-radius: 8px;
+    margin-left: 20px;
+    margin-top: 40px;
+    background-color: #eeeef2;
+    padding-top: 40px;
+    width: calc(100% - 40px);
+    height: 230px;
+    margin-bottom: 10px;
+    border-left: 6px solid #460abf;
+  }
+  
+  .chart1 {
+    height: auto;
+    
+    margin-left: -10px;
+    background-color: #f2f4f8;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    transition: transform 0.7s ease;
+    overflow: hidden;
+  }
+  .headinggraph{
+font-size: 12px;
+  }
   }
 </style>
 
@@ -488,7 +525,7 @@
         <div class="flex1lastdiv" style="background-color:#b1b2b1;">
           <img
             src="https://community.tableau.com/sfc/servlet.shepherd/version/renditionDownload?rendition=THUMB720BY480&versionId=0684T000001YPMm&operationContext=CHATTER&contentId=05T4T000006laBZ&page=0"
-            alt="" width="400px" height="200px">
+            alt="" width="300px" height="200px">
         </div>
       </div>
     </div>
@@ -624,13 +661,13 @@
 
       <!-- Graphs -->
       <div class="chart1">
-        <h4 style="text-align: center">
+        <h4 class="headinggraph" style="text-align: center">
           DC Current, Dc Voltage & Power vs. Time
         </h4>
         <canvas id="live1" width="1400" height="450"></canvas>
       </div>
       <div class="chart1">
-        <h4 style="text-align: center">
+        <h4 class="headinggraph" style="text-align: center">
           AC Current, Ac Voltage & Power vs. Time
         </h4>
         <canvas id="live2" width="1400" height="430"></canvas>
