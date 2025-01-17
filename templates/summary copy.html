@@ -31,7 +31,6 @@
   <title>Inverter Analytics</title>
 </head>
 <style>
-  
   .box {
     height: 120px;
     width: 120px;
@@ -118,7 +117,7 @@
     .box {
       background-color: red;
     }
-    
+
   }
 
   .full-width4 {
@@ -163,42 +162,43 @@
     overflow: hidden;
   }
 
-  
-  @media(max-width:576px){
+
+  @media(max-width:576px) {
     .datess {
-    display: block;
-    justify-content: center;
-    gap: 100px;
-/* margin-left: -50px; */
-  }
-  
-  .full-width4 {
-    padding-left: 10px;
-    border-radius: 8px;
-    margin-left: 10px;
-    margin-top: 40px;
-    background-color: #eeeef2;
-    padding-top: 40px;
-    width: calc(100% - 40px);
-    height: 230px;
-    margin-bottom: 10px;
-    border-left: 6px solid #460abf;
-  }
-  
-  .chart1 {
-    height: auto;
-    
-    margin-left: -10px;
-    background-color: #f2f4f8;
-    width: 100%;
-    padding: 10px;
-    border: none;
-    transition: transform 0.7s ease;
-    overflow: hidden;
-  }
-  .headinggraph{
-font-size: 12px;
-  }
+      display: block;
+      justify-content: center;
+      gap: 100px;
+      /* margin-left: -50px; */
+    }
+
+    .full-width4 {
+      padding-left: 10px;
+      border-radius: 8px;
+      margin-left: 10px;
+      margin-top: 40px;
+      background-color: #eeeef2;
+      padding-top: 40px;
+      width: calc(100% - 40px);
+      height: 230px;
+      margin-bottom: 10px;
+      border-left: 6px solid #460abf;
+    }
+
+    .chart1 {
+      height: auto;
+
+      margin-left: -10px;
+      background-color: #f2f4f8;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      transition: transform 0.7s ease;
+      overflow: hidden;
+    }
+
+    .headinggraph {
+      font-size: 12px;
+    }
   }
 </style>
 
@@ -248,7 +248,8 @@ font-size: 12px;
     <div class="con_small">
       <div class="half-width" style="text-align: center">
         <br />
-        <span style="font-size: 40px; display: flex; justify-content: center " class="text-center mt-2 sizebox">....
+        <span style="font-size: 40px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
+          {{ value }}
           <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
         </span>
         <br />
@@ -256,60 +257,62 @@ font-size: 12px;
           <b> Efficiency</b>
         </div>
       </div>
-<!--  -->
-<div class="half-width" style="text-align: center">
-  <br />
-  <span style="font-size: 30px; display: flex; justify-content: center " class="text-center mt-2 sizebox">{{Dccurrent[3]}}
-    <span class="ms-2 mt-2" style="font-size: 18px"> °C</span>
-  </span>
-  <br />
-  <div class="text-center" style="margin-bottom: 15px">
-    <b> Temperature</b>
-  </div>
-</div>
-
-     <!--  -->
-      <!-- battery -->
-       
-          <div class="pt-5">
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-              y="0px" style="display: none;">
-              <symbol id="wave">
-                <path
-                  d="M420,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C514,6.5,518,4.7,528.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H420z">
-                </path>
-                <path
-                  d="M420,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C326,6.5,322,4.7,311.5,2.7C304.3,1.4,293.6-0.1,280,0c0,0,0,0,0,0v20H420z">
-                </path>
-                <path
-                  d="M140,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C234,6.5,238,4.7,248.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H140z">
-                </path>
-                <path
-                  d="M140,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C46,6.5,42,4.7,31.5,2.7C24.3,1.4,13.6-0.1,0,0c0,0,0,0,0,0l0,20H140z">
-                </path>
-              </symbol>
-            </svg>
-            <!-- battery percentage animation -->
-            <div class="box">
-              <div class="percent">
-                <div class="percentNum" id="count">0</div>
-                <div class="percentB">%</div>
-              </div>
-              <div id="water" class="water">
-                <svg viewBox="0 0 560 20" class="water_wave water_wave_back">
-                  <use xlink:href="#wave"></use>
-                </svg>
-                <svg viewBox="0 0 560 20" class="water_wave water_wave_front">
-                  <use xlink:href="#wave"></use>
-                </svg>
-              </div>
-            </div>
-          </div>
-       
-       <!-- end battery -->
-       <div class="half-width" style="text-align: center">
+      <!--  -->
+      <div class="half-width" style="text-align: center">
         <br />
-        <span style="font-size: 30px; display: flex; justify-content: center " class="text-center mt-2 sizebox">{{dc_total_unit[0]}}
+        <span style="font-size: 30px; display: flex; justify-content: center "
+          class="text-center mt-2 sizebox">{{Dccurrent[3]}}
+          <span class="ms-2 mt-2" style="font-size: 18px"> °C</span>
+        </span>
+        <br />
+        <div class="text-center" style="margin-bottom: 15px">
+          <b> Temperature</b>
+        </div>
+      </div>
+
+      <!--  -->
+      <!-- battery -->
+
+      <div class="pt-5">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          style="display: none;">
+          <symbol id="wave">
+            <path
+              d="M420,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C514,6.5,518,4.7,528.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H420z">
+            </path>
+            <path
+              d="M420,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C326,6.5,322,4.7,311.5,2.7C304.3,1.4,293.6-0.1,280,0c0,0,0,0,0,0v20H420z">
+            </path>
+            <path
+              d="M140,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C234,6.5,238,4.7,248.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H140z">
+            </path>
+            <path
+              d="M140,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C46,6.5,42,4.7,31.5,2.7C24.3,1.4,13.6-0.1,0,0c0,0,0,0,0,0l0,20H140z">
+            </path>
+          </symbol>
+        </svg>
+        <!-- battery percentage animation -->
+        <div class="box">
+          <div class="percent">
+            <div class="percentNum" id="count">0</div>
+            <div class="percentB">%</div>
+          </div>
+          <div id="water" class="water">
+            <svg viewBox="0 0 560 20" class="water_wave water_wave_back">
+              <use xlink:href="#wave"></use>
+            </svg>
+            <svg viewBox="0 0 560 20" class="water_wave water_wave_front">
+              <use xlink:href="#wave"></use>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- end battery -->
+      <div class="half-width" style="text-align: center">
+        <br />
+        <span style="font-size: 30px; display: flex; justify-content: center "
+          class="text-center mt-2 sizebox">{{dc_total_unit[0]}}
           <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
         </span>
         <br />
@@ -317,418 +320,432 @@ font-size: 12px;
           <b> Unit Generated</b>
         </div>
       </div>
-      
-    <!--  -->
-    <div class="half-width" style="text-align: center">
-      <br />
-      <span style="font-size: 30px; display: flex; justify-content: center " class="text-center mt-2 sizebox"> {{total_unit[0]}}
-        <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
-      </span>
-      <br />
-      <div class="text-center" style="margin-bottom: 15px">
-        <b> Unit Consumed</b>
-      </div>
-    </div>
-  </div>  
-    
-    <!-- next d-flex -->
-     <style>
-.acdcflexdiv{
-  display: flex;
-  justify-content: space-around;
-}
-.dcdiv{
-  width: 50%;
-  height: 440px;
-  background-color: white;
-  box-shadow: 8px 8px 18px 8px rgba(0, 0, 0, 0.1);
 
-}
-.dcbox1{
-  padding-top: 60px;
-  height: 150px;
-  width: 160px;
-  background-color: white;
-  text-align: center;
-
-  box-shadow: 5px 5px 10px 8px rgba(12, 12, 12, 0.1);
-}
-
-.title{
-  padding: 10px;
-  margin-top: 45px;
-  text-align: center;
-  background-color: #d3d3d3;
-  height: 40px;
-  width: 60px;
-  transform: rotate(270deg);
-}
-/* ac div */
-.acdiv{
-  width: 40.5%;
-  margin-left: 3%;
-  background-color: white;
-}
-.acbox1{
-  height: 150px;
-  width: 200px;
-}
-
-@media(max-width:576px){
-  .acdcflexdiv{
-  display: block;
-
-}
-.dcdiv{
-  width: 100%;
-  height: 500px;
-  background-color: rgb(68, 0, 255);
-}
-
-}
-     </style>
-<div class="acdcflexdiv">
-  
-<div class="dcdiv">
-  <!-- dc -->
-   <div class="d-flex justify-content-around mt-5" >
-<div class="title"  ><b>DC</b></div>    
-<div class="dcbox1">
-  <div class="voltageValues">
-    <h3>{{Dccurrent[6]}}
-      <span class="ms-2 mt-4" style="font-size: 15px">V</span>
-    </h3>
-  </div>
-  <div class="Voltage">Voltage </div>
-</div>
-<div class="dcbox1">
-  <div class="voltageValues">
-    <h3> {{Dccurrent[7]}}
-      <span class="ms-2 mt-4" style="font-size: 15px">A</span>
-    </h3>
-  </div>
-  <div class="Voltage">Current</div>
-  </div>
-<div class="dcbox1">
-  <div class="voltageValues">
-    <h3>{{Dccurrent[2]}}
-      <span class="ms-2 mt-4" style="font-size: 15px">W</span>
-    </h3>
-  </div>
-  <div class="Voltage"> Power </div>
-</div>
-</div>
-<br><br>
-<!-- ac -->
-<div class="d-flex justify-content-around">
-  <div class="title"  ><b>AC</b></div>    
-
-  <div class="dcbox1">
-    <div class="voltageValues">
-      <h3>{{Accurrent[4]}}
-        <span class="ms-2 mt-4" style="font-size: 15px">V</span>
-      </h3>
-    </div>
-    <div class="Voltage"> Voltage </div>
-  </div>
-  <div class="dcbox1">
-    <div class="voltageValues">
-      <h3> {{Accurrent[0]}}
-        <span class="ms-2 mt-4" style="font-size: 15px">
-          A
+      <!--  -->
+      <div class="half-width" style="text-align: center">
+        <br />
+        <span style="font-size: 30px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
+          {{total_unit[0]}}
+          <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
         </span>
-      </h3>
-    </div>
-    <div class="Voltage">Current</div>
-  </div>
-  <div class="dcbox1"><div class="voltageValues">
-    <h3>{{Accurrent[2]}}
-      <span class="ms-2 mt-4" style="font-size: 15px">W</span>
-    </h3>
-  </div>
-  <div class="Voltage"> Power </div>
-</div>
-  </div>
-
-</div>
-<!-- panel status -->
-<div class="acdiv">
-<div class="panelimg p-3 text-center" style="background-color: white;">
-  <div class="container1" style="background-color: white;">
-<style>    .container1 {
-  text-align: center;
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-.panel, .battery {
-  width: 120px;
-  height: 120px;
-  border: 3px solid black;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.battery {
-  background-color: white;
-  width: 160px;
-  height: 70px;
-}
-
-.battery::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: -15px;
-  width: 10px;
-  height: 20px;
-  background-color: black;
-  transform: translateY(-50%);
-  border-radius: 2px;
-}
-
-.wire {
-  width: 100px;
-  height: 5px;
-  background-color: gray;
-  margin: 0 10px;
-  transition: background-color 0.3s, box-shadow 0.3s;
-  position: relative;
-}
-
-.wire.active {
-  background: linear-gradient(to right, rgb(68, 0, 255), rgb(21, 0, 255), red);
-  animation: electric-flow 1s linear infinite;
-  box-shadow: 0 0 10px rgb(43, 0, 255);
-}
-
-.charge {
-  width: 0%;
-  height: 100%;
-  background-color: green;
-  border-radius: 5px;
-  box-shadow: 0 0 15px green;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  bottom: 0;
-  margin-left: 0;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  text-shadow: 0 0 5px black;
-  overflow: hidden;
-}
-
-
-.status {
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-}
-
-.button-container {
-  margin-top: 20px;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-/* Animations */
-@keyframes electric-flow {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 100px 0;
-  }
-}
-
-
-</style>
-    <div class="row ">
-      <div class=" text-center">
-        <div class="status " id="status">Status: Not Connected</div>
-
-        <img src="../static/solar.jpg" height="150px" alt="">
-      </div>
-      <div class="wire"></div>
-      <div class="battery">
-        <div class="charge" id="charge">
-          <div class="sparkle" id="sparkle"></div>
-          0%
+        <br />
+        <div class="text-center" style="margin-bottom: 15px">
+          <b> Unit Consumed</b>
         </div>
       </div>
     </div>
-    <!-- <div class="button-container">
+
+    <!-- next d-flex -->
+    <style>
+      .acdcflexdiv {
+        display: flex;
+        justify-content: space-around;
+      }
+
+      .dcdiv {
+        width: 50%;
+        height: 440px;
+        background-color: white;
+        box-shadow: 8px 8px 18px 8px rgba(0, 0, 0, 0.1);
+
+      }
+
+      .dcbox1 {
+        padding-top: 60px;
+        height: 150px;
+        width: 160px;
+        background-color: white;
+        text-align: center;
+
+        box-shadow: 5px 5px 10px 8px rgba(12, 12, 12, 0.1);
+      }
+
+      .title {
+        padding: 10px;
+        margin-top: 45px;
+        text-align: center;
+        background-color: #d3d3d3;
+        height: 40px;
+        width: 60px;
+        transform: rotate(270deg);
+      }
+
+      /* ac div */
+      .acdiv {
+        width: 40.5%;
+        margin-left: 3%;
+        background-color: white;
+      }
+
+      .acbox1 {
+        height: 150px;
+        width: 200px;
+      }
+
+      @media(max-width:576px) {
+        .acdcflexdiv {
+          display: block;
+
+        }
+
+        .dcdiv {
+          width: 100%;
+          height: 500px;
+          background-color: rgb(68, 0, 255);
+        }
+
+      }
+    </style>
+    <div class="acdcflexdiv">
+
+      <div class="dcdiv">
+        <!-- dc -->
+        <div class="d-flex justify-content-around mt-5">
+          <div class="title"><b>DC</b></div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h3>{{Dccurrent[4]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">V</span>
+              </h3>
+            </div>
+            <div class="Voltage">Voltage </div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h3> {{Dccurrent[0]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">A</span>
+              </h3>
+            </div>
+            <div class="Voltage">Current</div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h3>{{Dccurrent[2]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">W</span>
+              </h3>
+            </div>
+            <div class="Voltage"> Power </div>
+          </div>
+        </div>
+        <br><br>
+        <!-- ac -->
+        <div class="d-flex justify-content-around">
+          <div class="title"><b>AC</b></div>
+
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h3>{{Accurrent[4]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">V</span>
+              </h3>
+            </div>
+            <div class="Voltage"> Voltage </div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h3> {{Accurrent[0]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">
+                  A
+                </span>
+              </h3>
+            </div>
+            <div class="Voltage">Current</div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h3>{{Accurrent[2]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">W</span>
+              </h3>
+            </div>
+            <div class="Voltage"> Power </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- panel status -->
+      <div class="acdiv">
+        <div class="panelimg p-3 text-center" style="background-color: white;">
+          <div class="container1" style="background-color: white;">
+            <style>
+              .container1 {
+                text-align: center;
+              }
+
+              .row {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 20px 0;
+              }
+
+              .panel,
+              .battery {
+                width: 120px;
+                height: 120px;
+                border: 3px solid black;
+                border-radius: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+              }
+
+              .battery {
+                background-color: white;
+                width: 160px;
+                height: 70px;
+              }
+
+              .battery::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                right: -15px;
+                width: 10px;
+                height: 20px;
+                background-color: black;
+                transform: translateY(-50%);
+                border-radius: 2px;
+              }
+
+              .wire {
+                width: 100px;
+                height: 5px;
+                background-color: gray;
+                margin: 0 10px;
+                transition: background-color 0.3s, box-shadow 0.3s;
+                position: relative;
+              }
+
+              .wire.active {
+                background: linear-gradient(to right, rgb(68, 0, 255), rgb(21, 0, 255), red);
+                animation: electric-flow 1s linear infinite;
+                box-shadow: 0 0 10px rgb(43, 0, 255);
+              }
+
+              .charge {
+                width: 0%;
+                height: 100%;
+                background-color: green;
+                border-radius: 5px;
+                box-shadow: 0 0 15px green;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                bottom: 0;
+                margin-left: 0;
+                color: white;
+                font-weight: bold;
+                font-size: 16px;
+                text-shadow: 0 0 5px black;
+                overflow: hidden;
+              }
+
+
+              .status {
+                font-size: 20px;
+                font-weight: bold;
+                color: #333;
+              }
+
+              .button-container {
+                margin-top: 20px;
+              }
+
+              button {
+                padding: 10px 20px;
+                font-size: 16px;
+                background-color: #007BFF;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+              }
+
+              button:hover {
+                background-color: #0056b3;
+              }
+
+              /* Animations */
+              @keyframes electric-flow {
+                0% {
+                  background-position: 0 0;
+                }
+
+                100% {
+                  background-position: 100px 0;
+                }
+              }
+            </style>
+            <div class="row ">
+              <div class=" text-center">
+                <div class="status " id="status">Status: Not Connected</div>
+
+                <img src="../static/solar.jpg" height="150px" alt="">
+              </div>
+              <div class="wire"></div>
+              <div class="battery">
+                <div class="charge" id="charge">
+                  <div class="sparkle" id="sparkle"></div>
+                  0%
+                </div>
+              </div>
+            </div>
+            <!-- <div class="button-container">
       <input type="number" id="currentInput" placeholder="Enter Current (A)" style="padding: 5px; font-size: 16px;">
       <button onclick="checkConnection()">Check Connection</button>
     </div> -->
-  </div>
+          </div>
 
-  <script>
-checkConnection()
-function checkConnection() {
-      const currentInput = 3
-      const status = document.getElementById('status');
-      const wire = document.querySelector('.wire');
-      const charge = document.getElementById('charge');
+          <script>
+            checkConnection()
+            function checkConnection() {
+              const currentInput = 3
+              const status = document.getElementById('status');
+              const wire = document.querySelector('.wire');
+              const charge = document.getElementById('charge');
 
-      if (currentInput > 1) {
-        // Connected state
-        status.textContent = "Status: Connected";
-        status.style.color = "green";
-        wire.classList.add('active');
-        charge.style.width = "0%"; // Reset the charge level
-        charge.textContent = "0%";
-        animateCharge(charge); // Animate charging to 100%
-      } else {
-        // Not connected state
-        status.textContent = "Status: Not Connected";
-        status.style.color = "red";
-        wire.classList.remove('active');
-        wire.style.backgroundColor = "gray";
-        charge.style.width = "0%"; // Reset charge level
-        charge.textContent = "0%";
-      }
-    }
+              if (currentInput > 1) {
+                // Connected state
+                status.textContent = "Status: Connected";
+                status.style.color = "green";
+                wire.classList.add('active');
+                charge.style.width = "0%"; // Reset the charge level
+                charge.textContent = "0%";
+                animateCharge(charge); // Animate charging to 100%
+              } else {
+                // Not connected state
+                status.textContent = "Status: Not Connected";
+                status.style.color = "red";
+                wire.classList.remove('active');
+                wire.style.backgroundColor = "gray";
+                charge.style.width = "0%"; // Reset charge level
+                charge.textContent = "0%";
+              }
+            }
 
-    function animateCharge(charge) {
-      let chargeLevel = 0;
-      const interval = setInterval(() => {
-        if (chargeLevel >= "{{ battery_chargefull }}") {
-          clearInterval(interval); // Stop animation when fully charged
-        } else {
-          chargeLevel++;
-          charge.style.width = chargeLevel + "%";
-          charge.textContent = chargeLevel + "%"; // Update charge percentage
+            function animateCharge(charge) {
+              let chargeLevel = 0;
+              const interval = setInterval(() => {
+                if (chargeLevel >= "{{ battery_chargefull }}") {
+                  clearInterval(interval); // Stop animation when fully charged
+                } else {
+                  chargeLevel++;
+                  charge.style.width = chargeLevel + "%";
+                  charge.textContent = chargeLevel + "%"; // Update charge percentage
+                }
+              }, 100); // 0.10 seconds per increment
+            }
+          </script>
+        </div>
+        <style>
+          .batterystatus {
+            background-color: #8e4de3;
+            height: 170px;
+            width: 16vw;
+            padding: 30px;
+            margin-top: 20px;
+          }
+        </style>
+        <div class="d-flex justify-content-between mt-3">
+          <div class="half-width" style="text-align: center">
+            <br />
+            <span style="font-size: 18px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
+              <div class="voltageValues">
+                <h3>{{dc_kwh[5] if
+                  dc_kwh[5] is not none else 'N/A'}}
+                  <span class="ms-2 mt-4" style="font-size: 15px">W</span>
+                </h3>
+              </div>
+              <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
+            </span>
+            <br />
+            <div class="text-center" style="margin-bottom: 15px">
+              <b> DC 24 hr KWH</b>
+            </div>
+          </div>
+
+          <div class="half-width" style="text-align: center">
+            <br />
+            <span style="font-size: 18px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
+              <div class="voltageValues">
+                <h3>{{ac_total_kwh[5] if
+                  ac_total_kwh[5] is not none else 'N/A'}}
+                  <span class="ms-2 mt-4" style="font-size: 15px">W</span>
+                </h3>
+              </div>
+            </span>
+            <br />
+            <div class="text-center" style="margin-bottom: 15px">
+              <b>AC 24 Hr kwh </b>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>
+    <!-- date -->
+    <div class="full-width4">
+      <label><b>Date Range For Analysis</b></label>
+      <div class="dates">Both dates are mandatory</div>
+      <div class="datess">
+        <div>
+          <label for="start_date"><b>Start Date
+              <span class="required-asterisk" style="color: red">*</span></b></label><br />
+          <input style="width: 250px" type="date" value="{{ today_date }}" id="start_date" name="start_date" />
+        </div>
+        <div>
+          <label for="end_date"><b>End Date
+              <span class="required-asterisk" style="color: red">*</span></b></label><br />
+          <input style="width: 250px" type="date" value="{{ today_date }}" id="end_date" name="end_date" />
+        </div>
+      </div>
+      <br>
+      <style>
+        .flexgraph {
+          display: flex;
+          justify-content: space-between;
         }
-      }, 100); // 0.10 seconds per increment
-    }
-  </script></div>
-<style>
-  .batterystatus{
-    background-color: #8e4de3;
-    height: 170px;
-    width: 16vw;
-    padding: 30px;
-    margin-top: 20px;
-  }
-</style>
-<div class="d-flex justify-content-between mt-3" >
-  <div class="half-width" style="text-align: center">
-    <br />
-    <span style="font-size: 18px; display: flex; justify-content: center " class="text-center mt-2 sizebox"><div class="voltageValues">
-      <h3>{{dc_kwh[5] if
-        dc_kwh[5] is not none else 'N/A'}}
-        <span class="ms-2 mt-4" style="font-size: 15px">W</span>
-      </h3>
-    </div>
-      <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
-    </span>
-    <br />
-    <div class="text-center" style="margin-bottom: 15px">
-      <b>  DC 24 hr KWH</b>
-    </div>
-  </div>
-  
-  <div class="half-width" style="text-align: center">
-    <br />
-    <span style="font-size: 18px; display: flex; justify-content: center " class="text-center mt-2 sizebox"><div class="voltageValues">
-      <h3>{{ac_total_kwh[5] if
-        ac_total_kwh[5] is not none else 'N/A'}}
-        <span class="ms-2 mt-4" style="font-size: 15px">W</span>
-      </h3>
-    </div>
-    </span>
-    <br />
-    <div class="text-center" style="margin-bottom: 15px">
-      <b>AC 24 Hr kwh </b>
-    </div>
-  </div>
-  </div>
 
-</div>
+        .acdcgraph {
+          background-color: #4D6DE3;
+          height: 370px;
+          width: 47%;
+          padding: 10px;
+          margin-top: 20px;
+          margin-left: -1%;
+        }
+      </style>
+      <!-- ac dc d- flex -->
+      <div class="flexgraph">
+        <div class="acdcgraph">
+          <img src="https://www150.statcan.gc.ca/edu/power-pouvoir/c-g/c-g05-2-1-eng.png" height="350px" width="100%"
+            alt="">
+        </div>
+        <div class="acdcgraph"> <img src="https://www150.statcan.gc.ca/edu/power-pouvoir/c-g/c-g05-2-1-eng.png"
+            height="350px" width="100%" alt=""></div>
+      </div>
 
 
-</div>
-<!-- date -->
-<div class="full-width4">
-  <label><b>Date Range For Analysis</b></label>
-  <div class="dates">Both dates are mandatory</div>
-  <div class="datess">
-    <div>
-      <label for="start_date"><b>Start Date
-          <span class="required-asterisk" style="color: red">*</span></b></label><br />
-      <input style="width: 250px" type="date" value="{{ today_date }}" id="start_date" name="start_date" />
+      <!-- Graphs -->
+      <div class="chart1">
+        <h4 class="headinggraph" style="text-align: center">
+          DC Current, Dc Voltage & Power vs. Time
+        </h4>
+        <canvas id="live1" width="1400" height="450"></canvas>
+      </div>
+      <div class="chart1">
+        <h4 class="headinggraph" style="text-align: center">
+          AC Current, Ac Voltage & Power vs. Time
+        </h4>
+        <canvas id="live2" width="1400" height="430"></canvas>
+      </div>
+      <br><br><br>
     </div>
-    <div>
-      <label for="end_date"><b>End Date
-          <span class="required-asterisk" style="color: red">*</span></b></label><br />
-      <input style="width: 250px" type="date" value="{{ today_date }}" id="end_date" name="end_date" />
-    </div>
-  </div>
-  <br>
-  <style>
-    .flexgraph{
-      display: flex;
-      justify-content: space-between;
-    }
-    .acdcgraph{
-    background-color: #4D6DE3;
-    height: 370px;
-    width: 47%;
-    padding: 10px;
-    margin-top: 20px;
-    margin-left: -1%;
-  }
-  </style>
-<!-- ac dc d- flex -->
-<div class="flexgraph" >
-  <div class="acdcgraph">
-    <img src="https://www150.statcan.gc.ca/edu/power-pouvoir/c-g/c-g05-2-1-eng.png" height="350px" width="100%" alt="">
-  </div>
-  <div class="acdcgraph">    <img src="https://www150.statcan.gc.ca/edu/power-pouvoir/c-g/c-g05-2-1-eng.png" height="350px" width="100%" alt=""></div>
-</div>
-
-
-  <!-- Graphs -->
-  <div class="chart1">
-    <h4 class="headinggraph" style="text-align: center">
-      DC Current, Dc Voltage & Power vs. Time
-    </h4>
-    <canvas id="live1" width="1400" height="450"></canvas>
-  </div>
-  <div class="chart1">
-    <h4 class="headinggraph" style="text-align: center">
-      AC Current, Ac Voltage & Power vs. Time
-    </h4>
-    <canvas id="live2" width="1400" height="430"></canvas>
-  </div>
-  <br><br><br>
-</div>
-<!--  -->
+    <!--  -->
 
 
     <!--end div  -->
@@ -753,370 +770,370 @@ function checkConnection() {
     }, 60);
   </script>
   <!-- script for graphs -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-  
-    <!--Graph for DC Data -->
-    <script>
-      const id = "{{Dccurrent[5]}}";
-      let chart4 = null;
-  
-      function livegraphDc(startDate, endDate) {
-        const url =
-          startDate && endDate
-            ? `/livegraphdc/${id}?start_date=${startDate}&end_date=${endDate}`
-            : `/livegraphdc/${id}`;
-  
-        fetch(url)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (!Array.isArray(data)) {
-              throw new Error("Data is not an array.");
-            }
-  
-            const labels = data.map((item) => new Date(item.timestamp));
-            const voltageValues = data.map((item) => item.Dc_Voltage);
-            const currentValues = data.map((item) => item.Dc_Current);
-            const powerValues = data.map(
-              (item) => item.Dc_Voltage * item.Dc_Current
-            );
-  
-            if (chart4) {
-              chart4.destroy();
-            }
-  
-            const ctx = document.getElementById("live1").getContext("2d");
-            chart4 = new Chart(ctx, {
-              type: "line",
-              data: {
-                labels: labels,
-                datasets: [
-                  {
-                    label: "DC Voltage (V)",
-                    data: voltageValues,
-                    borderColor: "#21b1ff",
-                    backgroundColor: "rgba(0, 0, 0, 0)",
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.3,
-                    yAxisID: "y1",
-                  },
-                  {
-                    label: "DC Current (A)",
-                    data: currentValues,
-                    borderColor: "#ff218c",
-                    backgroundColor: "rgba(0, 0, 0, 0)",
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.3,
-                    yAxisID: "y2",
-                  },
-                  {
-                    label: "Power (W)",
-                    data: powerValues,
-                    borderColor: "#ffd800",
-                    backgroundColor: "rgba(0, 0, 0, 0)",
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.3,
-                    yAxisID: "y1",
-                  },
-                ],
-              },
-              options: {
-                scales: {
-                  x: {
-                    type: "time",
-                    time: {
-                      unit: "minute",
-                      tooltipFormat: "MMM d, h:mm a",
-                    },
-                    grid: {
-                      display: false,
-                    },
-                  },
-                  y1: {
-                    beginAtZero: true,
-                    grid: {
-                      display: false,
-                    },
-                    title: {
-                      display: true,
-                      text: "Voltage & Power (V/W)",
-                    },
-                  },
-                  y2: {
-                    beginAtZero: true,
-                    position: "right",
-                    grid: {
-                      drawOnChartArea: true,
-                    },
-                    title: {
-                      display: true,
-                      text: "Current (A)",
-                    },
-                  },
-                },
-              },
-            });
-          })
-          .catch((error) => {
-            console.error("Error fetching graph data:", error);
-          });
-      }
-      livegraphDc();
-      document
-        .getElementById("start_date")
-        .addEventListener("change", updateGraph);
-      document
-        .getElementById("end_date")
-        .addEventListener("change", updateGraph);
-  
-      function updateGraph() {
-        const startDate = document.getElementById("start_date").value;
-        const endDate = document.getElementById("end_date").value;
-        livegraphDc(startDate, endDate);
-      }
-  
-      // Alternatively, use setInterval to keep calling it every second
-      // setInterval(() => {
-      //   livegraphDc();
-      // }, 1000);
-    </script>
-  
-    <!--Graph for AC Data -->
-    <script>
-      const id1 = "{{Accurrent[5]}}";
-      let chart5 = null;
-      function livegraphAc(startDate, endDate) {
-        const url =
-          startDate && endDate
-            ? `/livegraphac/${id1}?start_date=${startDate}&end_date=${endDate}`
-            : `/livegraphac/${id1}`;
-  
-        fetch(url)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (!Array.isArray(data)) {
-              throw new Error("Data is not an array.");
-            }
-  
-            const labels = data.map((item) => new Date(item.timestamp));
-            const voltageValues = data.map((item) => item.Voltage);
-            const currentValues = data.map((item) => item.Current);
-            const powerValues = data.map((item) => item.Voltage * item.Current);
-  
-            if (chart5) {
-              chart5.destroy();
-            }
-  
-            const ctx = document.getElementById("live2").getContext("2d");
-            chart5 = new Chart(ctx, {
-              type: "line",
-              data: {
-                labels: labels,
-                datasets: [
-                  {
-                    label: "AC Voltage (V)",
-                    data: voltageValues,
-                    borderColor: "#207bff",
-                    backgroundColor: "rgba(0, 0, 0, 0)",
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.3,
-                    yAxisID: "y1",
-                  },
-                  {
-                    label: "AC Current (A)",
-                    data: currentValues,
-                    borderColor: "#db2b39",
-                    backgroundColor: "rgba(0, 0, 0, 0)",
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.3,
-                    yAxisID: "y2",
-                  },
-                  {
-                    label: "Power (W)",
-                    data: powerValues,
-                    borderColor: "#f3a712",
-                    backgroundColor: "rgba(0, 0, 0, 0)",
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.3,
-                    yAxisID: "y1",
-                  },
-                ],
-              },
-              options: {
-                scales: {
-                  x: {
-                    type: "time",
-                    time: {
-                      unit: "hour",
-                      tooltipFormat: "MMM d, h:mm a",
-                    },
-                    grid: {
-                      display: false,
-                    },
-                  },
-                  y1: {
-                    beginAtZero: true,
-                    grid: {
-                      display: false,
-                    },
-                    title: {
-                      display: true,
-                      text: "Voltage & Power (V/W)",
-                    },
-                  },
-                  y2: {
-                    beginAtZero: true,
-                    position: "right",
-                    grid: {
-                      drawOnChartArea: true,
-                    },
-                    title: {
-                      display: true,
-                      text: "Current (A)",
-                    },
-                  },
-                },
-              },
-            });
-          })
-          .catch((error) => {
-            console.error("Error fetching graph data:", error);
-          });
-      }
-  
-      livegraphAc();
-  
-      document
-        .getElementById("start_date")
-        .addEventListener("change", updateGraph);
-      document
-        .getElementById("end_date")
-        .addEventListener("change", updateGraph);
-  
-      function updateGraph() {
-        const startDate = document.getElementById("start_date").value;
-        const endDate = document.getElementById("end_date").value;
-        livegraphAc(startDate, endDate);
-      }
-  
-      // Optionally, you can keep refreshing the graph data every second
-      // setInterval(() => {
-      //    livegraphAc();
-      // }, 1000);
-    </script>
-  
-    <!-- logout -->
-    <script>
-      document
-        .getElementById("logout-btn")
-        .addEventListener("click", function (event) {
-          function logout() {
-            fetch("/logout", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            })
-              .then((response) => {
-                if (response.ok) {
-                  window.location.href = "/";
-                } else {
-                  window.location.href = "/";
-                }
-              })
-              .catch((error) => {
-                console.error("Logout failed:", error);
-                window.location.href = "/";
-              });
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+  <!--Graph for DC Data -->
+  <script>
+    const id = "{{Dccurrent[5]}}";
+    let chart4 = null;
+
+    function livegraphDc(startDate, endDate) {
+      const url =
+        startDate && endDate
+          ? `/livegraphdc/${id}?start_date=${startDate}&end_date=${endDate}`
+          : `/livegraphdc/${id}`;
+
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
           }
-  
-          function preventBack() {
-            window.history.replaceState(null, null, window.location.href);
-            window.onpopstate = function () {
-              window.history.replaceState(null, null, window.location.href);
-              window.location.href = "/";
-            };
-          }
-          logout();
-          preventBack();
-        });
-    </script>
-  
-    <!-- for automatically logout -->
-    <script>
-      var timeout;
-      var logoutTime = 20 * 60 * 1000; // 20 minutes
-  
-      function resetTimer() {
-        clearTimeout(timeout);
-        timeout = setTimeout(logout, logoutTime);
-      }
-  
-      function logout() {
-        fetch("/logout", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          return response.json();
         })
-          .then((response) => {
-            if (response.ok) {
-              window.location.href = "/";
-            } else {
-              window.location.href = "/";
-            }
-          })
-          .catch((error) => {
-            console.error("Logout failed:", error);
-            window.location.href = "/";
+        .then((data) => {
+          if (!Array.isArray(data)) {
+            throw new Error("Data is not an array.");
+          }
+
+          const labels = data.map((item) => new Date(item.timestamp));
+          const voltageValues = data.map((item) => item.Dc_Voltage);
+          const currentValues = data.map((item) => item.Dc_Current);
+          const powerValues = data.map(
+            (item) => item.Dc_Voltage * item.Dc_Current
+          );
+
+          if (chart4) {
+            chart4.destroy();
+          }
+
+          const ctx = document.getElementById("live1").getContext("2d");
+          chart4 = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "DC Voltage (V)",
+                  data: voltageValues,
+                  borderColor: "#21b1ff",
+                  backgroundColor: "rgba(0, 0, 0, 0)",
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.3,
+                  yAxisID: "y1",
+                },
+                {
+                  label: "DC Current (A)",
+                  data: currentValues,
+                  borderColor: "#ff218c",
+                  backgroundColor: "rgba(0, 0, 0, 0)",
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.3,
+                  yAxisID: "y2",
+                },
+                {
+                  label: "Power (W)",
+                  data: powerValues,
+                  borderColor: "#ffd800",
+                  backgroundColor: "rgba(0, 0, 0, 0)",
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.3,
+                  yAxisID: "y1",
+                },
+              ],
+            },
+            options: {
+              scales: {
+                x: {
+                  type: "time",
+                  time: {
+                    unit: "minute",
+                    tooltipFormat: "MMM d, h:mm a",
+                  },
+                  grid: {
+                    display: false,
+                  },
+                },
+                y1: {
+                  beginAtZero: true,
+                  grid: {
+                    display: false,
+                  },
+                  title: {
+                    display: true,
+                    text: "Voltage & Power (V/W)",
+                  },
+                },
+                y2: {
+                  beginAtZero: true,
+                  position: "right",
+                  grid: {
+                    drawOnChartArea: true,
+                  },
+                  title: {
+                    display: true,
+                    text: "Current (A)",
+                  },
+                },
+              },
+            },
           });
-      }
-  
-      document.onload = resetTimer;
-      document.onmousemove = resetTimer;
-      document.onkeypress = resetTimer;
-  
-      resetTimer();
-  
-      function preventBack() {
-        window.history.replaceState(null, null, window.location.href);
-        window.onpopstate = function () {
+        })
+        .catch((error) => {
+          console.error("Error fetching graph data:", error);
+        });
+    }
+    livegraphDc();
+    document
+      .getElementById("start_date")
+      .addEventListener("change", updateGraph);
+    document
+      .getElementById("end_date")
+      .addEventListener("change", updateGraph);
+
+    function updateGraph() {
+      const startDate = document.getElementById("start_date").value;
+      const endDate = document.getElementById("end_date").value;
+      livegraphDc(startDate, endDate);
+    }
+
+    // Alternatively, use setInterval to keep calling it every second
+    // setInterval(() => {
+    //   livegraphDc();
+    // }, 1000);
+  </script>
+
+  <!--Graph for AC Data -->
+  <script>
+    const id1 = "{{Accurrent[5]}}";
+    let chart5 = null;
+    function livegraphAc(startDate, endDate) {
+      const url =
+        startDate && endDate
+          ? `/livegraphac/${id1}?start_date=${startDate}&end_date=${endDate}`
+          : `/livegraphac/${id1}`;
+
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (!Array.isArray(data)) {
+            throw new Error("Data is not an array.");
+          }
+
+          const labels = data.map((item) => new Date(item.timestamp));
+          const voltageValues = data.map((item) => item.Voltage);
+          const currentValues = data.map((item) => item.Current);
+          const powerValues = data.map((item) => item.Voltage * item.Current);
+
+          if (chart5) {
+            chart5.destroy();
+          }
+
+          const ctx = document.getElementById("live2").getContext("2d");
+          chart5 = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "AC Voltage (V)",
+                  data: voltageValues,
+                  borderColor: "#207bff",
+                  backgroundColor: "rgba(0, 0, 0, 0)",
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.3,
+                  yAxisID: "y1",
+                },
+                {
+                  label: "AC Current (A)",
+                  data: currentValues,
+                  borderColor: "#db2b39",
+                  backgroundColor: "rgba(0, 0, 0, 0)",
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.3,
+                  yAxisID: "y2",
+                },
+                {
+                  label: "Power (W)",
+                  data: powerValues,
+                  borderColor: "#f3a712",
+                  backgroundColor: "rgba(0, 0, 0, 0)",
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.3,
+                  yAxisID: "y1",
+                },
+              ],
+            },
+            options: {
+              scales: {
+                x: {
+                  type: "time",
+                  time: {
+                    unit: "hour",
+                    tooltipFormat: "MMM d, h:mm a",
+                  },
+                  grid: {
+                    display: false,
+                  },
+                },
+                y1: {
+                  beginAtZero: true,
+                  grid: {
+                    display: false,
+                  },
+                  title: {
+                    display: true,
+                    text: "Voltage & Power (V/W)",
+                  },
+                },
+                y2: {
+                  beginAtZero: true,
+                  position: "right",
+                  grid: {
+                    drawOnChartArea: true,
+                  },
+                  title: {
+                    display: true,
+                    text: "Current (A)",
+                  },
+                },
+              },
+            },
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching graph data:", error);
+        });
+    }
+
+    livegraphAc();
+
+    document
+      .getElementById("start_date")
+      .addEventListener("change", updateGraph);
+    document
+      .getElementById("end_date")
+      .addEventListener("change", updateGraph);
+
+    function updateGraph() {
+      const startDate = document.getElementById("start_date").value;
+      const endDate = document.getElementById("end_date").value;
+      livegraphAc(startDate, endDate);
+    }
+
+    // Optionally, you can keep refreshing the graph data every second
+    // setInterval(() => {
+    //    livegraphAc();
+    // }, 1000);
+  </script>
+
+  <!-- logout -->
+  <script>
+    document
+      .getElementById("logout-btn")
+      .addEventListener("click", function (event) {
+        function logout() {
+          fetch("/logout", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => {
+              if (response.ok) {
+                window.location.href = "/";
+              } else {
+                window.location.href = "/";
+              }
+            })
+            .catch((error) => {
+              console.error("Logout failed:", error);
+              window.location.href = "/";
+            });
+        }
+
+        function preventBack() {
           window.history.replaceState(null, null, window.location.href);
-          window.location.href = "/";
-        };
-      }
-  
-      if (window.location.pathname === "/") {
+          window.onpopstate = function () {
+            window.history.replaceState(null, null, window.location.href);
+            window.location.href = "/";
+          };
+        }
+        logout();
         preventBack();
-      }
-    </script>
-  
-    <!-- script for disable futue dates -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const today = new Date().toISOString().split("T")[0];
-  
-        document.getElementById("start_date").setAttribute("max", today);
-        document.getElementById("end_date").setAttribute("max", today);
       });
-    </script>
-  
+  </script>
+
+  <!-- for automatically logout -->
+  <script>
+    var timeout;
+    var logoutTime = 20 * 60 * 1000; // 20 minutes
+
+    function resetTimer() {
+      clearTimeout(timeout);
+      timeout = setTimeout(logout, logoutTime);
+    }
+
+    function logout() {
+      fetch("/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            window.location.href = "/";
+          } else {
+            window.location.href = "/";
+          }
+        })
+        .catch((error) => {
+          console.error("Logout failed:", error);
+          window.location.href = "/";
+        });
+    }
+
+    document.onload = resetTimer;
+    document.onmousemove = resetTimer;
+    document.onkeypress = resetTimer;
+
+    resetTimer();
+
+    function preventBack() {
+      window.history.replaceState(null, null, window.location.href);
+      window.onpopstate = function () {
+        window.history.replaceState(null, null, window.location.href);
+        window.location.href = "/";
+      };
+    }
+
+    if (window.location.pathname === "/") {
+      preventBack();
+    }
+  </script>
+
+  <!-- script for disable futue dates -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const today = new Date().toISOString().split("T")[0];
+
+      document.getElementById("start_date").setAttribute("max", today);
+      document.getElementById("end_date").setAttribute("max", today);
+    });
+  </script>
+
 </body>
 
 </html>

@@ -232,7 +232,8 @@ def summary(device):
                 WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(Accurrent_query, (device,))
                 Accurrentdata = cursor.fetchone()
-                
+                value = round(Accurrentdata[2] / currentdata[2], 4)   
+
                 #AC KWH 1 hour
                 ac_total_kwh_query = """
                 SELECT 
@@ -289,7 +290,6 @@ def summary(device):
                 else: #24V Lithium
                     battery_percentage = math.trunc(((currentdata[4]-19.8)/(26-19.8))*100)
                 battery_percentage = max(0, min(100, battery_percentage))
-               
                 return render_template(
                     'summary copy.html',
                     battery_chargefull=int(battery_percentage),
@@ -298,7 +298,7 @@ def summary(device):
                     dc_kwh=dc_kwh,
                     dc_total_unit=dc_total_unit,
                     ac_total_kwh=ac_total_kwh,
-                    total_unit=total_unit,today_date=today_date,man_date=man_date
+                    total_unit=total_unit,today_date=today_date,man_date=man_date,value=value
                 )    
     except Exception as e:
                  return str(e), 500
