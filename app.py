@@ -71,28 +71,25 @@ def dash():
     try:
         connection = get_db_connection()  
         with connection.cursor(buffered=True) as cursor:
-            alldata = """
-            WITH LatestData AS (
-                SELECT dc.Device_id, 
-                    dc.timestamp,
-                    ROW_NUMBER() OVER (PARTITION BY dc.Device_id ORDER BY dc.timestamp DESC) AS rn
-                FROM dc_data dc
-            )
-            SELECT distinct(dc.Device_id),t_generated.total_generated,t_consumed.total_consumed,
-                CASE 
-                    WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
-                    ELSE 'Inactive'
-                END AS status
-            FROM LatestData dc
-            JOIN ac_data ac ON dc.Device_id = ac.Device_id
-			LEFT JOIN (select device_id,sum(avg_kwh) as total_generated from dc_kwh group by device_id) t_generated ON t_generated.device_id = dc.Device_id     
-            LEFT JOIN (select device_id,sum(avg_kwh) as total_consumed from ac_kwh group by device_id) t_consumed ON t_consumed.device_id = dc.Device_id     
-            WHERE dc.rn = 1
-            """
-            cursor.execute(alldata)
-            alldataprint = cursor.fetchall()
-            
-        return render_template('maindashboard.html')
+          
+               # unit generated
+            Generated="""
+                    SELECT sum(avg_kwh) from dc_kwh;
+
+                    """
+            cursor.execute(Generated)
+            dcGenerated=cursor.fetchone()[0]
+
+            # unit consumed
+            acconsumed="""
+                    SELECT sum(avg_kwh) from ac_kwh;
+
+                    """
+            cursor.execute(acconsumed)
+            acconsumedunit=cursor.fetchone()[0]
+
+            return render_template('maindashboard.html',dcGenerated=dcGenerated,
+                                  acconsumedunit=acconsumedunit )
     
     except Exception as e:
         return str(e), 500
@@ -128,8 +125,32 @@ def alldevices():
             """
             cursor.execute(alldata)
             alldataprint = cursor.fetchall()
+            devicecount="""
+                    SELECT count(distinct(Device_id)) from dc_data;
+
+                """
+            cursor.execute(devicecount)
+            dcdevicecount=cursor.fetchone()[0]
             
-        return render_template('all_devices.html', alldataprint=alldataprint)
+               # unit generated
+            Generated="""
+                    SELECT sum(avg_kwh) from dc_kwh;
+
+                    """
+            cursor.execute(Generated)
+            dcGenerated=cursor.fetchone()[0]
+
+            # unit consumed
+            acconsumed="""
+                    SELECT sum(avg_kwh) from ac_kwh;
+
+                    """
+            cursor.execute(acconsumed)
+            acconsumedunit=cursor.fetchone()[0]
+
+        return render_template('all_devices.html', alldataprint=alldataprint,
+                               dcdevicecount=dcdevicecount,acconsumedunit=acconsumedunit
+                               ,dcGenerated=dcGenerated)
     
     except Exception as e:
         return str(e), 500
@@ -270,7 +291,7 @@ def summary(device):
                 battery_percentage = max(0, min(100, battery_percentage))
                
                 return render_template(
-                    'summary.html',
+                    'summary copy.html',
                     battery_chargefull=int(battery_percentage),
                     Dccurrent=currentdata,
                     Accurrent=Accurrentdata,
