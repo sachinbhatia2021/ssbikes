@@ -172,7 +172,7 @@ def summary(device):
                 FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(current_query, (device,))
                 currentdata = cursor.fetchone()
-                
+                print(currentdata)
                 #DC KWH 1 hour
                 dc_total_kwh_query = """
                 SELECT 
@@ -400,6 +400,54 @@ def livegraphac(id):
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
+########################################################################################################
+#DC avg  GRAPH
+@app.route('/bargraphac/<string:id>')
+def bargraphac(id):
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(dictionary=True) as cursor:
+                query = """
+               SELECT start_hour, avg_kWh 
+                    FROM dc_kwh 
+                    WHERE Device_id = %s
+                    ORDER BY start_hour ASC
+                """
+                params = [id]
+
+                if start_date and end_date:
+                    query += """
+                      SELECT start_hour, avg_kWh 
+                    FROM dc_kwh 
+                    WHERE Device_id = %s
+                    AND start_hour BETWEEN %s AND %s 
+                     ORDER BY start_hour ASC """
+                    params.append(start_date)
+                    params.append(end_date)
+                else:
+                    query += """
+                        SELECT start_hour, avg_kWh 
+                    FROM dc_kwh 
+                    WHERE Device_id = %s
+                   
+                       AND start_hour >= NOW() - INTERVAL 24 HOUR 
+                        ORDER BY start_hour ASC
+                       """  
+
+                cursor.execute(query, params)
+                bar_graph_data = cursor.fetchall()
+                
+                for item in bar_graph_data:
+                    item['start_hour'] = item['start_hour'].strftime('%Y-%m-%d %H:%M:%S')
+        return jsonify(bar_graph_data)
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while fetching graph data."}), 500
+    
 ########################################################################################################
 # Function for logout and clear it sessions
 @app.route('/logout', methods=['POST'])

@@ -5,11 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel to Battery Connection</title>
   <style>
-  
-    .container1 {
-      text-align: center;
-    }
-
     .row {
       display: flex;
       align-items: center;
@@ -17,7 +12,8 @@
       margin: 20px 0;
     }
 
-    .panel, .battery {
+    .panel,
+    .battery {
       width: 120px;
       height: 120px;
       border: 3px solid black;
@@ -26,17 +22,15 @@
       justify-content: center;
       align-items: center;
       position: relative;
-    }
-
-    .panel {
-      background-color: #f5d142;
-      animation: pulse 2s infinite;
+      transform: rotate(270deg);
     }
 
     .battery {
       background-color: white;
-      width: 200px;
-      height: 100px;
+      width: 80px;
+      height: 120px;
+      position: relative;
+      overflow: hidden;
     }
 
     .battery::before {
@@ -67,24 +61,20 @@
     }
 
     .charge {
-      width: 0%;
-      height: 100%;
+      width: 0%;  /* Initially set to 0% width */
+      height: 100%;  /* Full height */
       background-color: green;
-      border-radius: 5px;
-      box-shadow: 0 0 15px green;
+      position: absolute;
+      left: 0; /* Start from left */
       display: flex;
       align-items: center;
       justify-content: center;
-      position: absolute;
-      bottom: 0;
-      margin-left: 0;
       color: white;
       font-weight: bold;
-      font-size: 16px;
-      text-shadow: 0 0 5px black;
-      overflow: hidden;
+      font-size: 18px;
+      box-shadow: 0 0 15px green;
+      transition: width 0.3s ease-in-out;
     }
-
 
     .status {
       font-size: 20px;
@@ -111,7 +101,6 @@
       background-color: #0056b3;
     }
 
-    /* Animations */
     @keyframes electric-flow {
       0% {
         background-position: 0 0;
@@ -121,71 +110,70 @@
       }
     }
 
-   
-
-    
   </style>
 </head>
 <body>
-  <div class="container1" style="background-color: white;">
-    <h1>Panel to Battery Connection</h1>
-    <div class="row">
-      <div class="panl">
-        <img src="../static/solar.jpg" height="158px" alt="">
-      </div>
-      <div class="wire"></div>
-      <div class="battery">
-        <div class="charge" id="charge">
-          <div class="sparkle" id="sparkle"></div>
-          0%
+  <div class="acdiv">
+    <div class="panelimg p-3 text-center" style="background-color: white;">
+      <div class="container1" style="background-color: white;">
+        
+        <div class="row">
+          <div class="">
+            <div class="">
+              <div class="status" id="status">Panel: Not Connected</div>
+            </div>
+            <img src="../static/solar.jpg" height="120px" alt="">
+          </div>
+          <div class="wire mt-5"></div>
+          <div class="battery mt-5">
+            <div class="charge" id="charge">
+              0%
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="status" id="status">Status: Not Connected</div>
-    <div class="button-container">
-      <input type="number" id="currentInput" placeholder="Enter Current (A)" style="padding: 5px; font-size: 16px;">
-      <button onclick="checkConnection()">Check Connection</button>
+
+      <script>
+        checkConnection();
+        function checkConnection() {
+          const currentInput = 2;  // Update the value here as needed
+          const status = document.getElementById('status');
+          const wire = document.querySelector('.wire');
+          const charge = document.getElementById('charge');
+          
+          if (currentInput > 1) { // Connected state
+            status.textContent = "Panel: Connected";
+            status.style.color = "green";
+            wire.classList.add('active');
+            charge.style.width = "0%";  // Reset the width to 0 initially
+            charge.textContent = "0%";
+            animateCharge(charge);
+          } else {
+            status.textContent = "Panel: Not Connected";
+            status.style.color = "red";
+            wire.classList.remove('active');
+            wire.style.backgroundColor = "gray";
+            charge.style.width = "0%"; // Reset to 0% if not connected
+            charge.textContent = "0%";
+          }
+        }
+
+        function animateCharge(charge) {
+          let chargeLevel = 0;
+          const targetCharge = 100;  // Example full charge, change as needed
+
+          const interval = setInterval(() => {
+            if (chargeLevel >= targetCharge) {
+              clearInterval(interval);
+            } else {
+              chargeLevel++;
+              charge.style.width = chargeLevel + "%";  // Animate the width (left to right)
+              charge.textContent = chargeLevel + "%";
+            }
+          }, 100);
+        }
+      </script>
     </div>
   </div>
-
-  <script>
-    function checkConnection() {
-      const currentInput = document.getElementById('currentInput').value;
-      const status = document.getElementById('status');
-      const wire = document.querySelector('.wire');
-      const charge = document.getElementById('charge');
-
-      if (currentInput > 1) {
-        // Connected state
-        status.textContent = "Status: Connected";
-        status.style.color = "green";
-        wire.classList.add('active');
-        charge.style.width = "0%"; // Reset the charge level
-        charge.textContent = "0%";
-        animateCharge(charge); // Animate charging to 100%
-      } else {
-        // Not connected state
-        status.textContent = "Status: Not Connected";
-        status.style.color = "red";
-        wire.classList.remove('active');
-        wire.style.backgroundColor = "gray";
-        charge.style.width = "0%"; // Reset charge level
-        charge.textContent = "0%";
-      }
-    }
-
-    function animateCharge(charge) {
-      let chargeLevel = 0;
-      const interval = setInterval(() => {
-        if (chargeLevel >= 100) {
-          clearInterval(interval); // Stop animation when fully charged
-        } else {
-          chargeLevel++;
-          charge.style.width = chargeLevel + "%";
-          charge.textContent = chargeLevel + "%"; // Update charge percentage
-        }
-      }, 100); // 0.10 seconds per increment
-    }
-  </script>
 </body>
 </html>
