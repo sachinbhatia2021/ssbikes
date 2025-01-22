@@ -663,7 +663,6 @@
             const currentEpoch = currentDate.getTime();
 const dcCurrentEpoch = dcCurrentDate.getTime();
 const timeDifference = currentEpoch - dcCurrentEpoch;
-                console.log(timeDifference)
             if (currentInput > 1 && timeDifference  < 3600000) {
                  // Connected state
                 status.textContent = "Panel: Connected";
@@ -1098,7 +1097,6 @@ document.addEventListener('DOMContentLoaded', function () {
       })
       .then(data => {
         if (!data || data.length === 0) {
-          alert('No data found for the selected dates. Displaying empty graph.');
           data = [{ date: startDate, dc_avg: 0 }];  // Placeholder data for empty graph
         }
 
@@ -1223,8 +1221,7 @@ document.addEventListener('DOMContentLoaded', function () {
           })
           .then(data => {
             if (!data || data.length === 0) {
-              alert('No data found for the selected dates. Displaying empty graph.');
-              data = [{ date: startDate, ac_avg: 0 }];  // Placeholder data for empty graph
+              data = [{ date: startDate, ac_avg: 0 }];  
             }
     
             let dates = data.map(item => item.date || 'N/A');

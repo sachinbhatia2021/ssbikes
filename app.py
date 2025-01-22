@@ -180,7 +180,6 @@ def dckwh_graph():
             select start_hour as start_time,avg_kwh from dc_kwh where Device_id=%s and start_hour>=%s and end_hour<=%s order by start_hour asc;
         """
         query_params = (robot_id, start_date, end_date)
-        print(query_params)
     else:
         seven_days_ago = (datetime.now() - timedelta(days=2)
                           ).strftime('%Y-%m-%d')
@@ -197,10 +196,8 @@ def dckwh_graph():
         with connection.cursor(buffered=True) as cursor:
             cursor.execute(query, query_params)
             dc_avg_kwh = cursor.fetchall()
-            print(dc_avg_kwh)
 
-            if not dc_avg_kwh:
-                return jsonify({'message': 'No data available for the given dates'}), 404
+        
             graph_data = [
                 {
                     "date": start_time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -209,7 +206,6 @@ def dckwh_graph():
                 for start_time,dc_avg in dc_avg_kwh
             ]
 
-            print(graph_data)
                 
     except Error as db_err:
         print(f"Database error: {db_err}")
@@ -243,7 +239,6 @@ def ackwh_graph():
             select start_hour as start_time,avg_kwh from ac_kwh where Device_id=%s and start_hour>=%s and end_hour<=%s order by start_hour asc;
         """
         query_params = (robot_id, start_date, end_date)
-        print(query_params)
     else:
         seven_days_ago = (datetime.now() - timedelta(days=2)
                           ).strftime('%Y-%m-%d')
@@ -261,8 +256,7 @@ def ackwh_graph():
             cursor.execute(query, query_params)
             ac_avg_kwh = cursor.fetchall()
 
-            if not ac_avg_kwh:
-                return jsonify({'message': 'No data available for the given dates'}), 404
+           
             graph_data = [
                 {
                     "date": start_time.strftime('%Y-%m-%d %H:%M:%S'),
