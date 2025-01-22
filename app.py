@@ -159,6 +159,131 @@ def alldevices():
         if connection:
             connection.close() 
 ########################################################################################################
+# bar graph for dc kwh
+@app.route('/dckwh_graph')
+def dckwh_graph():
+    robot_id = request.args.get('robot_id', type=int)
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    if not robot_id:
+        return jsonify({'message': 'Missing robot_id parameter'}), 400
+
+    if start_date and end_date:
+    #     try:
+    #         # start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    #         # end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+    #     except ValueError:
+    #         return jsonify({'message': 'Invalid date format. Use YYYY-MM-DD.'}), 400
+
+        query = """
+            select start_hour as start_time,avg_kwh from dc_kwh where Device_id=%s and start_hour>=%s and end_hour<=%s order by start_hour asc;
+        """
+        query_params = (robot_id, start_date, end_date)
+        print(query_params)
+    else:
+        seven_days_ago = (datetime.now() - timedelta(days=2)
+                          ).strftime('%Y-%m-%d')
+        query = """
+                select start_hour as start_time,avg_kwh from dc_kwh where Device_id=%s and start_hour>=%s order by start_hour asc;
+
+        """
+        query_params = (robot_id, seven_days_ago)
+
+
+    graph_data = []
+    try:
+        connection = get_db_connection()  
+        with connection.cursor(buffered=True) as cursor:
+            cursor.execute(query, query_params)
+            dc_avg_kwh = cursor.fetchall()
+            print(dc_avg_kwh)
+
+            if not dc_avg_kwh:
+                return jsonify({'message': 'No data available for the given dates'}), 404
+            graph_data = [
+                {
+                    "date": start_time.strftime('%Y-%m-%d %H:%M:%S'),
+                    "dc_avg": dc_avg
+                }
+                for start_time,dc_avg in dc_avg_kwh
+            ]
+
+            print(graph_data)
+                
+    except Error as db_err:
+        print(f"Database error: {db_err}")
+        return jsonify({'message': 'Database error occurred. Please try again later.'}), 500
+    except Exception as e:
+        print(f"Error fetching graph data: {e}")
+        return jsonify({'message': 'Error fetching graph data. Please try again later.'}), 500
+    finally:
+        if connection.is_connected():
+            connection.close()
+    return jsonify(graph_data)
+###################################################################################################################
+# bar graph for ac kwh
+@app.route('/ackwh_graph')
+def ackwh_graph():
+    robot_id = request.args.get('robot_id', type=int)
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    if not robot_id:
+        return jsonify({'message': 'Missing robot_id parameter'}), 400
+
+    if start_date and end_date:
+    #     try:
+    #         # start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    #         # end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+    #     except ValueError:
+    #         return jsonify({'message': 'Invalid date format. Use YYYY-MM-DD.'}), 400
+
+        query = """
+            select start_hour as start_time,avg_kwh from ac_kwh where Device_id=%s and start_hour>=%s and end_hour<=%s order by start_hour asc;
+        """
+        query_params = (robot_id, start_date, end_date)
+        print(query_params)
+    else:
+        seven_days_ago = (datetime.now() - timedelta(days=2)
+                          ).strftime('%Y-%m-%d')
+        query = """
+                select start_hour as start_time,avg_kwh from ac_kwh where Device_id=%s and start_hour>=%s order by start_hour asc;
+
+        """
+        query_params = (robot_id, seven_days_ago)
+
+
+    graph_data = []
+    try:
+        connection = get_db_connection()  
+        with connection.cursor(buffered=True) as cursor:
+            cursor.execute(query, query_params)
+            ac_avg_kwh = cursor.fetchall()
+
+            if not ac_avg_kwh:
+                return jsonify({'message': 'No data available for the given dates'}), 404
+            graph_data = [
+                {
+                    "date": start_time.strftime('%Y-%m-%d %H:%M:%S'),
+                    "dc_avg": dc_avg
+                }
+                for start_time,dc_avg in ac_avg_kwh
+            ]
+
+        
+                
+    except Error as db_err:
+        print(f"Database error: {db_err}")
+        return jsonify({'message': 'Database error occurred. Please try again later.'}), 500
+    except Exception as e:
+        print(f"Error fetching graph data: {e}")
+        return jsonify({'message': 'Error fetching graph data. Please try again later.'}), 500
+    finally:
+        if connection.is_connected():
+            connection.close()
+    return jsonify(graph_data)
+########################################################################################################
 # Summary page
 @app.route('/summary/<device>')
 def summary(device):
@@ -172,7 +297,6 @@ def summary(device):
                 FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(current_query, (device,))
                 currentdata = cursor.fetchone()
-                print(currentdata)
                 #DC KWH 1 hour
                 dc_total_kwh_query = """
                 SELECT 
@@ -232,7 +356,13 @@ def summary(device):
                 WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
                 cursor.execute(Accurrent_query, (device,))
                 Accurrentdata = cursor.fetchone()
-                value = round(Accurrentdata[2] / currentdata[2], 4)   
+                try:
+                    if Accurrentdata and currentdata and currentdata[2] != 0:
+                        value = round(Accurrentdata[2] / currentdata[2], 4)
+                    else:
+                        value = "N/A"
+                except ZeroDivisionError:
+                    value = "N/A"     
 
                 #AC KWH 1 hour
                 ac_total_kwh_query = """
@@ -400,54 +530,6 @@ def livegraphac(id):
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
-########################################################################################################
-#DC avg  GRAPH
-@app.route('/bargraphac/<string:id>')
-def bargraphac(id):
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
-
-    try:
-        with get_db_connection() as connection:
-            with connection.cursor(dictionary=True) as cursor:
-                query = """
-               SELECT start_hour, avg_kWh 
-                    FROM dc_kwh 
-                    WHERE Device_id = %s
-                    ORDER BY start_hour ASC
-                """
-                params = [id]
-
-                if start_date and end_date:
-                    query += """
-                      SELECT start_hour, avg_kWh 
-                    FROM dc_kwh 
-                    WHERE Device_id = %s
-                    AND start_hour BETWEEN %s AND %s 
-                     ORDER BY start_hour ASC """
-                    params.append(start_date)
-                    params.append(end_date)
-                else:
-                    query += """
-                        SELECT start_hour, avg_kWh 
-                    FROM dc_kwh 
-                    WHERE Device_id = %s
-                   
-                       AND start_hour >= NOW() - INTERVAL 24 HOUR 
-                        ORDER BY start_hour ASC
-                       """  
-
-                cursor.execute(query, params)
-                bar_graph_data = cursor.fetchall()
-                
-                for item in bar_graph_data:
-                    item['start_hour'] = item['start_hour'].strftime('%Y-%m-%d %H:%M:%S')
-        return jsonify(bar_graph_data)
-
-    except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({"error": "An error occurred while fetching graph data."}), 500
-    
 ########################################################################################################
 # Function for logout and clear it sessions
 @app.route('/logout', methods=['POST'])

@@ -259,7 +259,6 @@
         }
 
         .acdcgraph {
-          background-color: #4D6DE3;
           height: 370px;
           width: 47%;
           margin-top: 20px;
@@ -759,14 +758,21 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
         <div class="acdcgraph">
           <div class="chart2">
             <h4 class="headinggraph" style="text-align: center">
-              DC avg
+              DC Kwh hour intervals
             </h4>
-            <canvas id="barchart1"  width="500" height="200"></canvas>
+            <canvas id="myChart1" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
 
           </div>
         </div>
-        <div class="acdcgraph"> <img src="https://www150.statcan.gc.ca/edu/power-pouvoir/c-g/c-g05-2-1-eng.png"
-            height="350px" width="100%" alt=""></div>
+        <div class="acdcgraph"> 
+          <div class="chart2">
+            <h4 class="headinggraph" style="text-align: center">
+              AC Kwh hour intervals
+            </h4>
+            <canvas id="myChart2" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
+
+          </div>
+        </div>
       </div>
 
 
@@ -1074,122 +1080,256 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
 </script>
 
   <!--Graph for DC avg Data -->
-<script>
-      const id2 = "{{Accurrent[5]}}";
-    let chart6 = null;
-    function bargraphdc(startDate, endDate) {
-      const url =
-        startDate && endDate
-          ? `/bargraphdc/${id2}?start_date=${startDate}&end_date=${endDate}`
-          : `/bargraphdc/${id2}`;
+  <script>
 
-      fetch(url)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (!Array.isArray(data)) {
-            throw new Error("Data is not an array.");
-          }
+document.addEventListener('DOMContentLoaded', function () {
+  const ctx = document.getElementById('myChart1').getContext('2d');
+  let chart = null;
 
-          const labels = data.map((item) => new Date(item.timestamp));
-          const voltageValues = data.map((item) => item.Voltage);
-          const currentValues = data.map((item) => item.Current);
-          const powerValues = data.map((item) => item.Voltage * item.Current);
+  function fetchAndUpdateChart(startDate, endDate) {
+    fetch(`/dckwh_graph?robot_id={{ Accurrent[5] }}&start_date=${startDate}&end_date=${endDate}`)
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(err => {
+            throw new Error(err.message || 'No data available for the selected dates');
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (!data || data.length === 0) {
+          alert('No data found for the selected dates. Displaying empty graph.');
+          data = [{ date: startDate, dc_avg: 0 }];  // Placeholder data for empty graph
+        }
 
-          if (chart6) {
-            chart6.destroy();
-          }
+        let dates = data.map(item => item.date || 'N/A');
+        let dc_kwh = data.map(item => item.dc_avg !== null ? item.dc_avg : 0);
 
-          const ctx = document.getElementById("barchart1").getContext("2d");
-          chart6 = new Chart(ctx, {
-            type: "line",
+        if (!chart) {
+          chart = new Chart(ctx, {
+            type: 'bar',
             data: {
-              labels: labels,
-              datasets: [
-                {
-                  label: "AC Voltage (V)",
-                  data: voltageValues,
-                  borderColor: "#207bff",
-                  backgroundColor: "rgba(0, 0, 0, 0)",
-                  borderWidth: 2,
-                  fill: false,
-                  tension: 0.3,
-                  yAxisID: "y1",
-                },
-                {
-                  label: "AC Current (A)",
-                  data: currentValues,
-                  borderColor: "#db2b39",
-                  backgroundColor: "rgba(0, 0, 0, 0)",
-                  borderWidth: 2,
-                  fill: false,
-                  tension: 0.3,
-                  yAxisID: "y2",
-                },
-                
-              ],
+              labels: dates,
+              datasets: [{
+                label: 'Kwh Dc',
+                data: dc_kwh,
+                backgroundColor: '#FF4191',
+                yAxisID: 'y-left',
+              }]
+            },
+            options: {
+              interaction: { mode: 'index', intersect: false },
+              plugins: {
+                tooltip: {
+                  callbacks: {
+                    label: function (tooltipItem) {
+                      return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                    }
+                  }
+                }
+              },
+              scales: {
+                'y-left': {
+                  type: 'linear',
+                  position: 'left',
+                  beginAtZero: true,
+                  title: { display: true, text: 'Dc Kwh', color: '#FF4191' },
+                  ticks: { color: '#FF4191' },
+                  grid: { color: 'rgba(0,0,0,0.1)' }
+                }
+              }
+            }
+          });
+        } else {
+          chart.data.labels = dates;
+          chart.data.datasets[0].data = dc_kwh;
+          chart.update();
+        }
+      })
+      .catch(error => {
+       
+        if (!chart) {
+          chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['N/A'],
+              datasets: [{
+                label: 'Kwh Dc',
+                data: [0],
+                backgroundColor: '#FF4191',
+                yAxisID: 'y-left',
+              }]
             },
             options: {
               scales: {
-                x: {
-                  type: "time",
-                  time: {
-                    unit: "hour",
-                    tooltipFormat: "MMM d, h:mm a",
-                  },
-                  grid: {
-                    display: false,
-                  },
-                },
-                y1: {
+                'y-left': {
+                  type: 'linear',
+                  position: 'left',
                   beginAtZero: true,
-                  grid: {
-                    display: false,
-                  },
-                  title: {
-                    display: true,
-                    text: "Voltage & Power (V/W)",
-                  },
-                },
-                y2: {
-                  beginAtZero: true,
-                  position: "right",
-                  grid: {
-                    drawOnChartArea: true,
-                  },
-                  title: {
-                    display: true,
-                    text: "Current (A)",
-                  },
-                },
-              },
-            },
+                  title: { display: true, text: 'Dc Kwh', color: '#FF4191' }
+                }
+              }
+            }
           });
-        })
-        .catch((error) => {
-          console.error("Error fetching graph data:", error);
-        });
+        }
+      });
+  }
+
+  // Default date range setup
+  const today = new Date().toISOString().split('T')[0];
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+
+  // Set default values for input fields if empty
+  const startDateInput = document.getElementById('start_date');
+  const endDateInput = document.getElementById('end_date');
+
+  startDateInput.value = startDateInput.value || sevenDaysAgoStr;
+  endDateInput.value = endDateInput.value || today;
+
+  fetchAndUpdateChart(startDateInput.value, endDateInput.value);
+
+  // Listen for date input changes and update chart dynamically
+  function updateChartOnDateChange() {
+    const startDate = startDateInput.value;
+    const endDate = endDateInput.value;
+    if (startDate && endDate) {
+      fetchAndUpdateChart(startDate, endDate);
     }
+  }
 
-    // bargraphdc();
+  startDateInput.addEventListener('change', updateChartOnDateChange);
+  endDateInput.addEventListener('change', updateChartOnDateChange);
+});
 
-    document
-      .getElementById("start_date")
-      .addEventListener("change", updateGraph);
-    document
-      .getElementById("end_date")
-      .addEventListener("change", updateGraph);
+    </script>
+  <!--Graph for AC avg Data -->
+  <script>
 
-    function updateGraph() {
-      const startDate = document.getElementById("start_date").value;
-      const endDate = document.getElementById("end_date").value;
-      bargraphdc(startDate, endDate);
-    }
-</script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const ctx = document.getElementById('myChart2').getContext('2d');
+      let chart = null;
+    
+      function fetchAndUpdateChart(startDate, endDate) {
+        fetch(`/ackwh_graph?robot_id={{ Accurrent[5] }}&start_date=${startDate}&end_date=${endDate}`)
+          .then(response => {
+            if (!response.ok) {
+              return response.json().then(err => {
+                throw new Error(err.message || 'No data available for the selected dates');
+              });
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (!data || data.length === 0) {
+              alert('No data found for the selected dates. Displaying empty graph.');
+              data = [{ date: startDate, ac_avg: 0 }];  // Placeholder data for empty graph
+            }
+    
+            let dates = data.map(item => item.date || 'N/A');
+            let ac_kwh = data.map(item => item.ac_avg !== null ? item.ac_avg : 0);
+    
+            if (!chart) {
+              chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: dates,
+                  datasets: [{
+                    label: 'Kwh Ac',
+                    data: dc_kwh,
+                    backgroundColor: '#FF4191',
+                    yAxisID: 'y-left',
+                  }]
+                },
+                options: {
+                  interaction: { mode: 'index', intersect: false },
+                  plugins: {
+                    tooltip: {
+                      callbacks: {
+                        label: function (tooltipItem) {
+                          return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                        }
+                      }
+                    }
+                  },
+                  scales: {
+                    'y-left': {
+                      type: 'linear',
+                      position: 'left',
+                      beginAtZero: true,
+                      title: { display: true, text: 'Ac Kwh', color: '#FF4191' },
+                      ticks: { color: '#FF4191' },
+                      grid: { color: 'rgba(0,0,0,0.1)' }
+                    }
+                  }
+                }
+              });
+            } else {
+              chart.data.labels = dates;
+              chart.data.datasets[0].data = ac_kwh;
+              chart.update();
+            }
+          })
+          .catch(error => {
+           
+            if (!chart) {
+              chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: ['N/A'],
+                  datasets: [{
+                    label: 'Kwh Ac',
+                    data: [0],
+                    backgroundColor: '#FF4191',
+                    yAxisID: 'y-left',
+                  }]
+                },
+                options: {
+                  scales: {
+                    'y-left': {
+                      type: 'linear',
+                      position: 'left',
+                      beginAtZero: true,
+                      title: { display: true, text: 'Ac Kwh', color: '#FF4191' }
+                    }
+                  }
+                }
+              });
+            }
+          });
+      }
+    
+      // Default date range setup
+      const today = new Date().toISOString().split('T')[0];
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+    
+      // Set default values for input fields if empty
+      const startDateInput = document.getElementById('start_date');
+      const endDateInput = document.getElementById('end_date');
+    
+      startDateInput.value = startDateInput.value || sevenDaysAgoStr;
+      endDateInput.value = endDateInput.value || today;
+    
+      fetchAndUpdateChart(startDateInput.value, endDateInput.value);
+    
+      // Listen for date input changes and update chart dynamically
+      function updateChartOnDateChange() {
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+        if (startDate && endDate) {
+          fetchAndUpdateChart(startDate, endDate);
+        }
+      }
+    
+      startDateInput.addEventListener('change', updateChartOnDateChange);
+      endDateInput.addEventListener('change', updateChartOnDateChange);
+    });
+    
+        </script>
+    
 
   <!-- logout -->
   <script>
