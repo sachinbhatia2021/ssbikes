@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <link rel="icon" type="image/x-icon" href="/static/logo.jpeg" />
   <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../static/nav_foot.css">
   <link
     href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nanum+Brush+Script&family=Open+Sans:wght@600&family=Poppins:wght@200;400;500;600;700;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500&display=swap"
     rel="stylesheet" />
@@ -636,7 +637,13 @@
                 <div class="status "  id="status">Panel: Not Connected</div>
               </div>
                 <img src="../static/solar.jpg" height="120px" alt="">
-              </div>
+             <div class="d-flex justify-content-around ">
+              <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[6]}}</b> V</p>
+              <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[7]}}</b> A</p>
+              <p  style="font-size: 14px;" ><b style="font-size: 15px;" >{{Dccurrent[8]}}</b> i</p>
+            </div>
+               
+            </div>
               <div class="wire mt-5"></div>
               <div class="battery mt-5">
                 <div class="charge" id="charge">
@@ -791,7 +798,13 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
       <br><br><br>
     </div>
     <!--  -->
-
+ <!-- Footer -->
+ <!-- <div class="footer  d-flex justify-content-between ">
+  <p> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> .
+    All rights reserved.</p>
+  <p class="version">Version 1.0.1</p>
+</div>
+ -->
 
     <!--end div  -->
   </div>
