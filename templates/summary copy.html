@@ -636,6 +636,11 @@
                 <div class="status "  id="status">Panel: Not Connected</div>
               </div>
                 <img src="../static/solar.jpg" height="120px" alt="">
+                <div class="d-flex justify-content-around ">
+                  <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[6]}}</b> V</p>
+                  <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[7]}}</b> A</p>
+                  <p  style="font-size: 14px;" ><b style="font-size: 15px;" >{{Dccurrent[8]}}</b> W</p>
+              </div>
               </div>
               <div class="wire mt-5"></div>
               <div class="battery mt-5">
@@ -696,7 +701,7 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
             }
           </script>
         </div>
-        <div class="d-flex justify-content-between mt-5">
+        <div class="d-flex justify-content-between mt-2">
           <div class="half-width" style="text-align: center">
             <br />
             <span style="font-size: 17px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
