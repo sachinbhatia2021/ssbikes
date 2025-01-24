@@ -27,7 +27,7 @@
     crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-  <link rel="stylesheet" href="../static/nav_foot.css" />
+  
 
   <title>Inverter Analytics</title>
 </head>
@@ -418,6 +418,22 @@
       background-position: 100px 0;
     }
   }
+  
+/* footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  width: 107.6%;
+  background-color: rgb(234, 238, 245);
+  padding: 10px;
+  bottom: 0;
+margin-left: -90px;
+right: 0;
+}
+
+
+
+
 </style>
 <!--  -->
 <body>
@@ -640,7 +656,7 @@
              <div class="d-flex justify-content-around ">
               <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[6]}}</b> V</p>
               <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[7]}}</b> A</p>
-              <p  style="font-size: 14px;" ><b style="font-size: 15px;" >{{Dccurrent[8]}}</b> i</p>
+              <p  style="font-size: 14px;" ><b style="font-size: 15px;" >{{Dccurrent[8]}}</b> W</p>
             </div>
                
             </div>
@@ -703,7 +719,7 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
             }
           </script>
         </div>
-        <div class="d-flex justify-content-between mt-5">
+        <div class="d-flex justify-content-between mt-2">
           <div class="half-width" style="text-align: center">
             <br />
             <span style="font-size: 17px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
@@ -742,6 +758,7 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
 
 
     </div>
+   
     <!-- date -->
     <div class="full-width4">
       <label><b>Date Range For Analysis</b></label>
@@ -778,7 +795,9 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
             <canvas id="myChart2" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
 
           </div>
+          
         </div>
+        
       </div>
 
 
@@ -794,18 +813,14 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
           AC Current, Ac Voltage & Power vs. Time
         </h4>
         <canvas id="live2" width="1400" height="430"></canvas>
-      </div>
-      <br><br><br>
-    </div>
-    <!--  -->
- <!-- Footer -->
- <!-- <div class="footer  d-flex justify-content-between ">
-  <p> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> .
-    All rights reserved.</p>
-  <p class="version">Version 1.0.1</p>
-</div>
- -->
-
+      </div> 
+    <br><br>
+   <!-- Footer -->
+ 
+   <div class="footer">
+    <p class="ms-5" style="margin-left: 35px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>
+    <p style="margin-right: 20px;" class="version">Version 1.0.1</p>
+  </div>
     <!--end div  -->
   </div>
 

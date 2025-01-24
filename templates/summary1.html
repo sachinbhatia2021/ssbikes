@@ -3,177 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel to Battery Connection</title>
-  <style>
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 20px 0;
-    }
-
-    .panel,
-    .battery {
-      width: 120px;
-      height: 120px;
-      border: 3px solid black;
-      border-radius: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      transform: rotate(270deg);
-    }
-
-    .battery {
-      background-color: white;
-      width: 80px;
-      height: 120px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .battery::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      right: -15px;
-      width: 10px;
-      height: 20px;
-      background-color: black;
-      transform: translateY(-50%);
-      border-radius: 2px;
-    }
-
-    .wire {
-      width: 100px;
-      height: 5px;
-      background-color: gray;
-      margin: 0 10px;
-      transition: background-color 0.3s, box-shadow 0.3s;
-      position: relative;
-    }
-
-    .wire.active {
-      background: linear-gradient(to right, rgb(68, 0, 255), rgb(21, 0, 255), red);
-      animation: electric-flow 1s linear infinite;
-      box-shadow: 0 0 10px rgb(43, 0, 255);
-    }
-
-    .charge {
-      width: 0%;  /* Initially set to 0% width */
-      height: 100%;  /* Full height */
-      background-color: green;
-      position: absolute;
-      left: 0; /* Start from left */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 18px;
-      box-shadow: 0 0 15px green;
-      transition: width 0.3s ease-in-out;
-    }
-
-    .status {
-      font-size: 20px;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .button-container {
-      margin-top: 20px;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    @keyframes electric-flow {
-      0% {
-        background-position: 0 0;
-      }
-      100% {
-        background-position: 100px 0;
-      }
-    }
-
-  </style>
+  <title>Website Footer</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+<style>
+  * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.content {
+  flex: 1; 
+  padding: 20px;
+}
+
+.footer {
+  background-color: #222;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.footer-links {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.footer-links li {
+  display: inline;
+  margin: 0 10px;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #00bcd4;
+}
+</style>
 <body>
-  <div class="acdiv">
-    <div class="panelimg p-3 text-center" style="background-color: white;">
-      <div class="container1" style="background-color: white;">
-        
-        <div class="row">
-          <div class="">
-            <div class="">
-              <div class="status" id="status">Panel: Not Connected</div>
-            </div>
-            <img src="../static/solar.jpg" height="120px" alt="">
-          </div>
-          <div class="wire mt-5"></div>
-          <div class="battery mt-5">
-            <div class="charge" id="charge">
-              0%
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <script>
-        checkConnection();
-        function checkConnection() {
-          const currentInput = 2;  // Update the value here as needed
-          const status = document.getElementById('status');
-          const wire = document.querySelector('.wire');
-          const charge = document.getElementById('charge');
-          
-          if (currentInput > 1) { // Connected state
-            status.textContent = "Panel: Connected";
-            status.style.color = "green";
-            wire.classList.add('active');
-            charge.style.width = "0%";  // Reset the width to 0 initially
-            charge.textContent = "0%";
-            animateCharge(charge);
-          } else {
-            status.textContent = "Panel: Not Connected";
-            status.style.color = "red";
-            wire.classList.remove('active');
-            wire.style.backgroundColor = "gray";
-            charge.style.width = "0%"; // Reset to 0% if not connected
-            charge.textContent = "0%";
-          }
-        }
-
-        function animateCharge(charge) {
-          let chargeLevel = 0;
-          const targetCharge = 100;  // Example full charge, change as needed
-
-          const interval = setInterval(() => {
-            if (chargeLevel >= targetCharge) {
-              clearInterval(interval);
-            } else {
-              chargeLevel++;
-              charge.style.width = chargeLevel + "%";  // Animate the width (left to right)
-              charge.textContent = chargeLevel + "%";
-            }
-          }, 100);
-        }
-      </script>
-    </div>
+  <div class="content">
+    <!-- Main content of your website goes here -->
+    <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>
+    <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>  <h1>Welcome to My Website</h1>
+    <p>Here is some content.</p>v
   </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <p>&copy; 2025 Your Website Name. All Rights Reserved.</p>
+      <ul class="footer-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#privacy">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </footer>
 </body>
 </html>

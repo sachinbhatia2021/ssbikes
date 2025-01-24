@@ -1,3 +1,15 @@
+
+
+html, body {
+  height: 100%; 
+  margin: 0;
+}
+
+/* Set up the body as a flex container to push footer to the bottom */
+body {
+  display: flex;
+  flex-direction: column;
+}
 .navbg {
   background-color: rgb(21, 22, 84);
   width: 60px; /* Initial collapsed width */
@@ -32,22 +44,13 @@
 .content {
   margin-left: 100px; /* Adjust for collapsed sidebar */
   transition: margin-left 0.5s ease;
+
 }
 
 .navbg:hover ~ .content {
-  margin-left: 230px;
+  margin-left: 220px;
 }
 
-  .footer{
-    margin-left: 230px;
-
-    background-color: rgb(10, 63, 187);
-    margin-left: -40px;
-    padding: 10px;
-  }
-  .navbg:hover~.footer{
-    margin-left: -40px;
-  }
   @media (max-width: 576px) {
     .navbg {
       display: none;
@@ -61,7 +64,13 @@
     .content {
       margin-left: 0;
     }
-
+    .footer{
+      margin-left: 0px;
+  bottom: 0;
+      background-color: rgb(234, 238, 245);
+      padding: 10px;
+    }
+  
   }
 
   @media (max-width: 768px) {
@@ -148,7 +157,23 @@
     margin-top: 30px;
     justify-content: space-between;
   }
+/* footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  background-color: rgb(234, 238, 245);
+  padding: 10px;
+  bottom: 0;
+}
 
+
+
+
+
+
+
+/*  */
   .half-width {
     width: calc(50% - 10px);
     height: 150px;
