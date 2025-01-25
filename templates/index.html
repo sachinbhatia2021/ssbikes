@@ -15,7 +15,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <link rel="stylesheet" href="./html.css">
-  <link rel="icon" type="image/x-icon" href="/static/logo.jpeg">
+  <link rel="icon" type="image/x-icon" href="/static/solset logo.png">
   <title> Inverter Analytics</title>
 </head>
 
@@ -126,7 +126,7 @@
 
     .btn {
       width: 150px;
-      background-color: #0303f8;
+      background-color: #aa28d5;
       border: none;
       outline: none;
       height: 49px;
@@ -161,7 +161,7 @@
       top: -10%;
       right: 48%;
       transform: translateY(-50%);
-      background-image: linear-gradient(-45deg, #5c64ed 100%, #501bff 0%);
+      background-image: linear-gradient(-45deg, #8d4fd8 100%, #501bff 0%);
       transition: 1.8s ease-in-out;
       border-radius: 50%;
       z-index: 6;
@@ -398,7 +398,6 @@
     <div class="forms-container">
       <div class="signin-signup">
         <form action="{{ url_for('index')}}" class="sign-in-form" method="POST">
-          <h1 class="title">Inverter</h1>
           <h2 class="title">Login</h2>
           {% if error %}
           <p style="color: red">{{ error }}</p>
@@ -413,7 +412,7 @@
             <i class="fas fa-lock" style="cursor: pointer;" id="togglePassword"></i>
             <input type="password" placeholder="Password" name="password" id="password" required>
           </div>
-          <button type="submit" class="btn solid">Login</button>
+          <button type="submit" class="btn">Login</button>
         </form>
       </div>
     </div>
@@ -421,8 +420,9 @@
     <div class="panels-container">
       <div class="panel left-panel">
         <div class="content">
-          <div class="logo"> <img src="./static/logo.jpeg" height="50" alt="">
-            <h2>Skilancer Solar</h2>
+          <div class="logo" style="line-height: 0.3px;">    <span>  <img src="../static/solset logo.png" height="150" alt="">
+                 <h1>  Solset</h1>
+            </span>
           </div>
           <img src="https://i.ibb.co/6HXL6q1/Privacy-policy-rafiki.png" class="image" alt="" />
         </div>
