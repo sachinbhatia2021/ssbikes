@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <link rel="icon" type="image/x-icon" href="/static/logo.jpeg" />
   <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../static/nav_foot.css">
   <link
     href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nanum+Brush+Script&family=Open+Sans:wght@600&family=Poppins:wght@200;400;500;600;700;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500&display=swap"
     rel="stylesheet" />
@@ -26,7 +27,7 @@
     crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-  <link rel="stylesheet" href="../static/nav_foot.css" />
+  
 
   <title>Inverter Analytics</title>
 </head>
@@ -417,6 +418,22 @@
       background-position: 100px 0;
     }
   }
+  
+/* footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  width: 107.6%;
+  background-color: rgb(234, 238, 245);
+  padding: 10px;
+  bottom: 0;
+margin-left: -90px;
+right: 0;
+}
+
+
+
+
 </style>
 <!--  -->
 <body>
@@ -636,12 +653,22 @@
                 <div class="status "  id="status">Panel: Not Connected</div>
               </div>
                 <img src="../static/solar.jpg" height="120px" alt="">
+<<<<<<< HEAD
+             <div class="d-flex justify-content-around ">
+              <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[6]}}</b> V</p>
+              <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[7]}}</b> A</p>
+              <p  style="font-size: 14px;" ><b style="font-size: 15px;" >{{Dccurrent[8]}}</b> W</p>
+            </div>
+               
+            </div>
+=======
                 <div class="d-flex justify-content-around ">
                   <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[6]}}</b> V</p>
                   <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[7]}}</b> A</p>
                   <p  style="font-size: 14px;" ><b style="font-size: 15px;" >{{Dccurrent[8]}}</b> W</p>
               </div>
               </div>
+>>>>>>> 39deb770bd22b07e613f4b02cfcfe54089254454
               <div class="wire mt-5"></div>
               <div class="battery mt-5">
                 <div class="charge" id="charge">
@@ -740,6 +767,7 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
 
 
     </div>
+   
     <!-- date -->
     <div class="full-width4">
       <label><b>Date Range For Analysis</b></label>
@@ -776,7 +804,9 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
             <canvas id="myChart2" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
 
           </div>
+          
         </div>
+        
       </div>
 
 
@@ -792,12 +822,14 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
           AC Current, Ac Voltage & Power vs. Time
         </h4>
         <canvas id="live2" width="1400" height="430"></canvas>
-      </div>
-      <br><br><br>
-    </div>
-    <!--  -->
-
-
+      </div> 
+    <br><br>
+   <!-- Footer -->
+ 
+   <div class="footer">
+    <p class="ms-5" style="margin-left: 35px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>
+    <p style="margin-right: 20px;" class="version">Version 1.0.1</p>
+  </div>
     <!--end div  -->
   </div>
 
