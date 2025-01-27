@@ -38,9 +38,9 @@ body {
 }
 
 .navbg a:hover {
-  color: #e41b1b;
-}
-
+ 
+  color: rgb(98, 65, 231);
+ }
 .content {
   margin-left: 100px; /* Adjust for collapsed sidebar */
   transition: margin-left 0.5s ease;

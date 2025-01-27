@@ -10,11 +10,12 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <meta http-equiv="X-UA-Compatible" content="IE edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+ 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-  <link rel="icon" type="image/x-icon" href="/static/solset logo.png">
+  <link rel="icon" type="image/x-icon" href="../static/logo.jpeg">
   <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../static/nav_foot.css">
   <link
@@ -462,7 +463,7 @@ right: 0;
         <a href="{{ url_for('data_table') }}" class="ex2">
           <h3><i class="fa-solid fa-table"></i></h3>
         </a>
-        <a href="#" id="logout-btn">
+        <a  onclick="logout()" href="#" id="logout-btn">
           <h3><i class="fa-solid fa-arrow-right-from-bracket"></i></h3>
         </a>
       </div>
@@ -471,7 +472,7 @@ right: 0;
         <h4 class="text-light mt-3">Analytics</h4>
         <a href="{{url_for('alldevices')}}" class="ex2 mt-4">Devices</a>
         <a href="{{ url_for('data_table') }}" class="ex2 mt-3">Table</a>
-        <a class="mt-2" href="#" id="logout-btn" class="ex2 mt-5">Log Out</a>
+        <a  onclick="logout()" class="mt-2" href="#" id="logout-btn" class="ex2 mt-5">Log Out</a>
       </div>
     </div>
   </div>
@@ -653,7 +654,6 @@ right: 0;
                 <div class="status "  id="status">Panel: Not Connected</div>
               </div>
                 <img src="../static/solar.jpg" height="120px" alt="">
-<<<<<<< HEAD
              <div class="d-flex justify-content-around ">
               <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[6]}}</b> V</p>
               <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[7]}}</b> A</p>
@@ -661,14 +661,6 @@ right: 0;
             </div>
                
             </div>
-=======
-                <div class="d-flex justify-content-around ">
-                  <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[6]}}</b> V</p>
-                  <p  style="font-size: 12px;" ><b style="font-size: 15px;" >{{Dccurrent[7]}}</b> A</p>
-                  <p  style="font-size: 14px;" ><b style="font-size: 15px;" >{{Dccurrent[8]}}</b> W</p>
-              </div>
-              </div>
->>>>>>> 39deb770bd22b07e613f4b02cfcfe54089254454
               <div class="wire mt-5"></div>
               <div class="battery mt-5">
                 <div class="charge" id="charge">
@@ -1367,9 +1359,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   <!-- logout -->
   <script>
-    document
-      .getElementById("logout-btn")
-      .addEventListener("click", function (event) {
+   
         function logout() {
           fetch("/logout", {
             method: "POST",
@@ -1397,9 +1387,7 @@ document.addEventListener('DOMContentLoaded', function () {
             window.location.href = "/";
           };
         }
-        logout();
         preventBack();
-      });
   </script>
 
   <!-- for automatically logout -->
