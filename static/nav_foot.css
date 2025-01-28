@@ -40,6 +40,7 @@ body {
 .navbg a:hover {
  
   color: rgb(98, 65, 231);
+  text-decoration: underline;
  }
 .content {
   margin-left: 100px; /* Adjust for collapsed sidebar */
