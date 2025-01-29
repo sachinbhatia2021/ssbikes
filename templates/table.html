@@ -687,7 +687,13 @@
       preventBack();
     }
   </script>
-
+<script>
+  function preventBack(){
+    window.history.forward()
+  }
+  setTimeout(preventBack())
+  window.onunload=function (){null};
+</script>
 </body>
 
 </html>

@@ -54,7 +54,10 @@ def index():
         try:
             u_email = request.form['username']
             u_password = request.form['password']
-            if u_email == 'test' and u_password == 'test':
+              
+            session['u_email'] = u_email
+          
+            if session :
                 return redirect(url_for('dash'))
             else:
                 error = "Invalid Email or password"
@@ -529,8 +532,11 @@ def livegraphac(id):
 # Function for logout and clear it sessions
 @app.route('/logout', methods=['POST'])
 def logout():
-    session.clear()  # Clear session data
+    
+    session.clear() 
     response = make_response(redirect(url_for('index')))  # Redirect to index
+    response.set_cookie('sessionID', expires=0)
+
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
