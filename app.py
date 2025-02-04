@@ -4,7 +4,10 @@ import mysql.connector.pooling
 from mysql.connector import Error
 from datetime import datetime,date,timedelta
 import math
+from flask_cors import CORS
 import os
+import boto3
+
 load_dotenv()
 ########################################################################################################
 # load the values
@@ -12,6 +15,16 @@ Host = os.getenv("Host")
 user = os.getenv("User")
 db_password = os.getenv("db_password")
 db_name = os.getenv("db_name") 
+
+aws_acess = os.getenv("aws_access_key_id")
+aws_secret = os.getenv("aws_secret")
+region_name = os.getenv("region_name")
+bucket_name = os.getenv("BUCKET_NAME")
+
+
+# Bucket details
+BUCKET_NAME = bucket_name
+region_name = region_name
 ########################################################################################################
 app = Flask(__name__)
 ########################################################################################################
@@ -37,7 +50,13 @@ app.secret_key='neeraj'
 # database connection
 def get_db_connection():
     return mydb_pool.get_connection()
-
+CORS(app)
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=aws_acess,
+    aws_secret_access_key=aws_secret,
+    region_name=region_name
+)
 utc_now = datetime.utcnow()
 india_time = utc_now + timedelta(hours=5, minutes=30)
 timestamp = india_time.strftime("%Y-%m-%d %H:%M:%S") 
@@ -221,6 +240,57 @@ def dckwh_graph():
             connection.close()
     return jsonify(graph_data)
 ###################################################################################################################
+# Upload Bin file for OTA
+@app.route('/upload/<mac_id>', methods=['POST'])
+def upload(mac_id):
+    try:
+        connection = get_db_connection()
+        if not connection:
+            return jsonify({'message': 'Database connection failed'}), 500
+
+        with connection.cursor(buffered=True) as cursor:
+            file = request.files['file']
+            if file.filename == '':
+                return jsonify({'message': 'No selected file'}), 400
+
+            if file:
+                s3_key = f"{mac_id}"
+                s3_client.upload_fileobj(
+                    file,
+                    BUCKET_NAME,
+                    s3_key
+                )
+                s3_url = f"https://{BUCKET_NAME}.s3.{region_name}.amazonaws.com/{s3_key}"
+                
+        return jsonify({'message': 'File uploaded successfully'}), 200
+
+    except Exception as e:
+        print(f"Error during login process: {e}")
+        return "An error occurred during login. Please try again later.", 500
+    finally:
+        if connection:
+            connection.close() 
+#########################################################################################################
+#OTA 
+@app.route('/ota/<device>')
+def ota_page(device):
+    try:
+        connection = get_db_connection()
+        if not connection:
+            return jsonify({'message': 'Database connection failed'}), 500
+
+        with connection.cursor(buffered=True) as cursor:
+            query = "SELECT ip_address FROM dc_data WHERE Device_id = %s order by timestamp desc limit 1"
+            cursor.execute(query, (device,))
+            mac_id = cursor.fetchone()[0]
+            return render_template('ota.html',mac_id=mac_id) 
+    except Exception as e:
+        print(f"Error during login process: {e}")
+        return "An error occurred during login. Please try again later.", 500
+    finally:
+        if connection:
+            connection.close()  
+######################################################################################
 # bar graph for ac kwh
 @app.route('/ackwh_graph')
 def ackwh_graph():
