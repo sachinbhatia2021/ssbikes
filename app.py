@@ -240,6 +240,25 @@ def dckwh_graph():
             connection.close()
     return jsonify(graph_data)
 ###################################################################################################################
+#OTA 
+@app.route('/ota/<device>')
+def ota_page(device):
+    try:
+        connection = get_db_connection()
+        if not connection:
+            return jsonify({'message': 'Database connection failed'}), 500
+        with connection.cursor(buffered=True) as cursor:
+            query = "SELECT mac_address FROM dc_data WHERE Device_id = %s order by timestamp desc limit 1"
+            cursor.execute(query, (device,))
+            mac_id = cursor.fetchone()[0]
+            return render_template('ota.html',mac_id=mac_id) 
+    except Exception as e:
+        print(f"Error during login process: {e}")
+        return "An error occurred during login. Please try again later.", 500
+    finally:
+        if connection:
+            connection.close()  
+################################################################################################################
 # Upload Bin file for OTA
 @app.route('/upload/<mac_id>', methods=['POST'])
 def upload(mac_id):
@@ -269,27 +288,9 @@ def upload(mac_id):
         return "An error occurred during login. Please try again later.", 500
     finally:
         if connection:
-            connection.close() 
+            connection.close()
 #########################################################################################################
-#OTA 
-@app.route('/ota/<device>')
-def ota_page(device):
-    try:
-        connection = get_db_connection()
-        if not connection:
-            return jsonify({'message': 'Database connection failed'}), 500
 
-        with connection.cursor(buffered=True) as cursor:
-            query = "SELECT ip_address FROM dc_data WHERE Device_id = %s order by timestamp desc limit 1"
-            cursor.execute(query, (device,))
-            mac_id = cursor.fetchone()[0]
-            return render_template('ota.html',mac_id=mac_id) 
-    except Exception as e:
-        print(f"Error during login process: {e}")
-        return "An error occurred during login. Please try again later.", 500
-    finally:
-        if connection:
-            connection.close()  
 ######################################################################################
 # bar graph for ac kwh
 @app.route('/ackwh_graph')
