@@ -37,14 +37,21 @@
 .footer {
   display: flex;
   justify-content: space-between;
-  width: 104.6%;
+  width: 100%;
   background-color: rgb(234, 238, 245);
   padding: 10px;
   bottom: 0;
-margin-left: -90px;
 right: 0;
-}
 
+}
+@media(max-width:576px){
+  .footer{
+   
+    background-color: rgb(234, 238, 245);
+  font-size: 10px;
+
+  }
+}
 
 
 
@@ -55,9 +62,8 @@ right: 0;
       <a href="{{ url_for('dash') }}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
       <ul>
         <li><a href="{{ url_for('data_table') }}" class="ex2">Table</a></li>
-        <a href="{{url_for('alldevices')}}">Devices</a>
-
-        <a href="#" id="logout-btn">Log Out</a>
+       <li> <a href="{{url_for('alldevices')}}">Devices</a></li>
+        <li> <a href="#" id="logout-btn">Log Out</a></li>
       </ul>
     </div>
   </div>
@@ -186,8 +192,8 @@ right: 0;
     <br><br>
      <!-- Footer -->
      <div class="footer">
-      <p class="ms-5" style="margin-left: 70px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>
-      <p style="margin-right: 80px;" class="version">Version 1.0.1</p>
+      <p class="" style="margin-left: 10px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>
+      <p style="margin-right: 30px;" class="version">Version 1.0.1</p>
     </div>
   </div>
 

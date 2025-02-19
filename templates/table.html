@@ -43,6 +43,15 @@
   bottom: 0;
   margin-left: -40px;
 }
+@media(max-width:576px){
+  .footer{
+   
+    background-color: rgb(234, 238, 245);
+  font-size: 10px;
+  margin-left: -10px;
+
+  }
+}
 
 </style>
 <body>
@@ -52,10 +61,10 @@
       <a href="{{ url_for('dash') }}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
       <ul>
         <li><a href="{{ url_for('data_table') }}" class="ex2">Table</a></li>
-        <a href="{{url_for('alldevices')}}">Devices</a>
-
-        <a onclick="logout()" href="javascript:void(0);" id="logout-btn">Log Out</a>
-      </ul>
+<li>        <a href="{{url_for('alldevices')}}">Devices</a>
+</li>
+<li>        <a onclick="logout()" href="javascript:void(0);" id="logout-btn">Log Out</a>
+</li>      </ul>
     </div>
   </div>
 
@@ -297,8 +306,8 @@
 
     <!-- Footer -->
     <div class="footer">
-      <p class="ms-5" style="margin-left: 35px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>
-      <p style="margin-right: 20px;" class="version">Version 1.0.1</p>
+      <p class="" style="margin-left: 30px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>
+      <p style="margin-right: 15px;" class="version">Version 1.0.1</p>
     </div>
   </div>
 
