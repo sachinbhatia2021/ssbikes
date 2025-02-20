@@ -50,12 +50,12 @@
   <!-- navbar for mobileview -->
   <div class="mobileshow">
     <div class="nav">
-      <a href="{{ url_for('dash') }}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
+      <a class="" href="{{ url_for('dash') }}"><img  src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
       <ul>
         <li><a href="{{ url_for('data_table') }}" class="ex2">Table</a></li>
-        <a href="{{url_for('alldevices')}}">dvs</a>
+       <li> <a href="{{url_for('alldevices')}}">Devices</a></li>
 
-        <a href="#" id="logout-btn">Log Out</a>
+       <li> <a href="#" id="logout-btn">Log Out</a></li>
       </ul>
     </div>
   </div>
