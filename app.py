@@ -253,7 +253,7 @@ def ota_page(device):
             mac_id = cursor.fetchone()[0]
             return render_template('ota.html',mac_id=mac_id) 
     except Exception as e:
-        print(f"Error during login process: {e}")
+        print(f"Error during ota process: {e}")
         return "An error occurred during login. Please try again later.", 500
     finally:
         if connection:
@@ -284,7 +284,7 @@ def upload(mac_id):
         return jsonify({'message': 'File uploaded successfully'}), 200
 
     except Exception as e:
-        print(f"Error during login process: {e}")
+        print(f"Error during upload: {e}")
         return "An error occurred during login. Please try again later.", 500
     finally:
         if connection:
