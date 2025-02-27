@@ -21,7 +21,6 @@ aws_secret = os.getenv("aws_secret")
 region_name = os.getenv("region_name")
 bucket_name = os.getenv("BUCKET_NAME")
 
-
 # Bucket details
 BUCKET_NAME = bucket_name
 region_name = region_name
@@ -29,7 +28,6 @@ region_name = region_name
 app = Flask(__name__)
 ########################################################################################################
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
-
 ########################################################################################################
 # Database connection pool for AWS database
 dbconfig = {
@@ -75,9 +73,10 @@ def index():
             u_password = request.form['password']
               
             session['u_email'] = u_email
-          
-            if session :
+            if u_email=='test' and u_password=='test' :
                 return redirect(url_for('dash'))
+            # if session :
+            #     return redirect(url_for('dash'))
             else:
                 error = "Invalid Email or password"
                 return render_template('index.html', error=error)
