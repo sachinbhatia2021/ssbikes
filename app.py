@@ -479,14 +479,20 @@ def summary(device):
                 # Determine Device Type and Battery Voltage Range
                 device2 = int(device)
                 if 1000 <= device2 < 2000: #12V LEAD Battery
-                    battery_percentage = ((currentdata[4]-10.5)/(13.5-10.5))*100
+                    battery_percentage = ((currentdata[4]-10.5)/(13.8-10.5))*100
                 elif 2000 <= device2 < 3000: #24V LEAD Battery
-                    battery_percentage = ((currentdata[4]-22)/(27-22))*100
+                    battery_percentage = ((currentdata[4]-21)/(27.6-21))*100
                 elif 3000 <= device2 < 4000: #12V Lithium Battery
                     battery_percentage = ((currentdata[4]-10.5)/(14.6-10.5))*100
-                else: #24V Lithium Battery
+                elif 4000 <= device2 < 5000: #24V Lithium Battery
                     battery_percentage = math.trunc(((currentdata[4]-19.8)/(26-19.8))*100)
+                elif 5000 <= device2 < 6000:  # 48V Lead Battery
+                    battery_percentage = math.trunc(((currentdata[4] - 42) / (58 - 42)) * 100)
+                else:  # 48V Lithium Battery
+                    battery_percentage = math.trunc(((currentdata[4] - 40) / (54.6 - 40)) * 100)
                 battery_percentage = max(0, min(100, battery_percentage))
+
+
                 
                 return render_template(
                     'summary copy.html',
