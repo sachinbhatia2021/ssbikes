@@ -663,7 +663,7 @@ right: 0;
                 <div class="">
                 <div class="status "  id="status">Panel: Not Connected</div>
               </div>
-                <img src="../static/solar.jpg" height="120px" alt="">
+                <img src="../static/solar.jpg" height="120px"  alt="">
              <div class="d-flex justify-content-around">
               <p  style="font-size: 12px; padding-right: 10px;" ><b style="font-size: 15px;" >{{Dccurrent[6]}} V</b></p>
               <p  style="font-size: 12px; padding-right: 10px" ><b style="font-size: 15px;" >{{Dccurrent[7]}} A</b></p>
@@ -817,13 +817,15 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
         <h4 class="headinggraph" style="text-align: center">
           DC Current, Dc Voltage & Power vs. Time
         </h4>
-        <canvas id="live1" width="1400" height="450"></canvas>
+        <canvas id="live1" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
+        </canvas>
       </div>
       <div class="chart1">
         <h4 class="headinggraph" style="text-align: center">
           AC Current, Ac Voltage & Power vs. Time
         </h4>
-        <canvas id="live2" width="1400" height="430"></canvas>
+        <canvas id="live2" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
+        ></canvas>
       </div> 
     <br><br>
    <!-- Footer -->
