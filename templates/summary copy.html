@@ -389,6 +389,25 @@
     color: #333;
   }
 
+  .paneldata{
+            display: flex;
+            justify-content: space-around;
+          }
+          .boxpanel{
+            background-color:#FFFFFF;
+            padding: 9px;
+            height: 40px;
+            width: 100px;
+            box-shadow: 5px 5px 10px 8px rgba(12, 12, 12, 0.1);
+
+          }
+          .boxpanel:hover{
+            background-color: #F2F4F8;
+            transform: scale(1.1);
+            transition: all 1s;
+
+          }
+
   .button-container {
     margin-top: 20px;
   }
@@ -664,13 +683,7 @@ right: 0;
                 <div class="status "  id="status">Panel: Not Connected</div>
               </div>
                 <img src="../static/solar.jpg" height="120px"  alt="">
-             <div class="d-flex justify-content-around">
-              <p  style="font-size: 12px; padding-right: 10px;" ><b style="font-size: 15px;" >{{Dccurrent[6]}} V</b></p>
-              <p  style="font-size: 12px; padding-right: 10px" ><b style="font-size: 15px;" >{{Dccurrent[7]}} A</b></p>
-              <p  style="font-size: 14px;" ><b style="font-size: 15px;" >{{Dccurrent[8]}} W</b></p>
-            </div>
-               
-            </div>
+                 </div>
               <div class="wire mt-5"></div>
               <div class="battery mt-5">
                 <div class="charge" id="charge">
@@ -679,10 +692,6 @@ right: 0;
                 </div>
               </div>
             </div>
-            <!-- <div class="button-container">
-      <input type="number" id="currentInput" placeholder="Enter Current (A)" style="padding: 5px; font-size: 16px;">
-      <button onclick="checkConnection()">Check Connection</button>
-    </div> -->
           </div>
 
           <script>
@@ -730,6 +739,14 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
             }
           </script>
         </div>
+       
+        <div class="paneldata">
+          <div class="boxpanel" >{{Dccurrent[6]}} <span  style="font-weight: 700;">V</span></div>
+          <div class="boxpanel" >{{Dccurrent[7]}} <span  style="font-weight: 700;">A</span></div>
+          <div class="boxpanel">{{Dccurrent[8]}} <span  style="font-weight: 700;">W</span></div>
+
+        </div>
+
         <div class="d-flex justify-content-between mt-2">
           <div class="half-width" style="text-align: center">
             <br />
