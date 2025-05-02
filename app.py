@@ -147,7 +147,7 @@ JOIN (
     GROUP BY Device_id
 ) latest ON dc.Device_id = latest.Device_id AND dc.timestamp = latest.latest_timestamp
 
-JOIN ac_data ac ON dc.Device_id = ac.Device_id
+LEFT JOIN ac_data ac ON dc.Device_id = ac.Device_id  -- Changed from JOIN to LEFT JOIN
 
 LEFT JOIN (
     SELECT device_id, SUM(avg_kwh) AS total_generated
@@ -162,8 +162,8 @@ LEFT JOIN (
 ) t_consumed ON t_consumed.device_id = dc.Device_id
 
 JOIN sa_users u ON dc.company_id = u.company_id
-WHERE u.u_email = 'sachin@gmail.com';
-;
+WHERE u.u_email = 'abc';
+
 
   """
             cursor.execute(alldata)
@@ -244,21 +244,32 @@ def alldevices():
         with connection.cursor(buffered=True) as cursor:
             alldata = """
             WITH LatestData AS (
-                SELECT dc.Device_id, 
-                    dc.timestamp,
-                    ROW_NUMBER() OVER (PARTITION BY dc.Device_id ORDER BY dc.timestamp DESC) AS rn
-                FROM dc_data dc
-            )
-            SELECT distinct(dc.Device_id),t_generated.total_generated,t_consumed.total_consumed,
-                CASE 
-                    WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
-                    ELSE 'Inactive'
-                END AS status
-            FROM LatestData dc
-            JOIN ac_data ac ON dc.Device_id = ac.Device_id
-			LEFT JOIN (select device_id,sum(avg_kwh) as total_generated from dc_kwh group by device_id) t_generated ON t_generated.device_id = dc.Device_id     
-            LEFT JOIN (select device_id,sum(avg_kwh) as total_consumed from ac_kwh group by device_id) t_consumed ON t_consumed.device_id = dc.Device_id     
-            WHERE dc.rn = 1
+    SELECT dc.Device_id, 
+           dc.timestamp,
+           ROW_NUMBER() OVER (PARTITION BY dc.Device_id ORDER BY dc.timestamp DESC) AS rn
+    FROM dc_data dc
+)
+SELECT DISTINCT dc.Device_id,
+       t_generated.total_generated,
+       t_consumed.total_consumed,
+       CASE 
+           WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
+           ELSE 'Inactive'
+       END AS status
+FROM LatestData dc
+LEFT JOIN ac_data ac ON dc.Device_id = ac.Device_id
+LEFT JOIN (
+    SELECT device_id, SUM(avg_kwh) AS total_generated 
+    FROM dc_kwh 
+    GROUP BY device_id
+) t_generated ON t_generated.device_id = dc.Device_id
+LEFT JOIN (
+    SELECT device_id, SUM(avg_kwh) AS total_consumed 
+    FROM ac_kwh 
+    GROUP BY device_id
+) t_consumed ON t_consumed.device_id = dc.Device_id
+WHERE dc.rn = 1;
+
             """
             cursor.execute(alldata)
             alldataprint = cursor.fetchall()
