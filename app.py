@@ -2,6 +2,7 @@ from flask import render_template, Flask, redirect, request, url_for, jsonify,se
 from dotenv import load_dotenv
 import mysql.connector.pooling
 from mysql.connector import Error
+from flask import session
 from datetime import datetime,date,timedelta
 import math
 from flask_cors import CORS
@@ -49,6 +50,7 @@ app.secret_key='neeraj'
 def get_db_connection():
     return mydb_pool.get_connection()
 CORS(app)
+
 s3_client = boto3.client(
     's3',
     aws_access_key_id=aws_acess,
@@ -64,6 +66,31 @@ hour_start = hour_end - timedelta(hours=1)
 last_day = start_of_day - timedelta(days=1)
 
 ########################################################################################################
+def user(u_email,u_password):
+    print(u_email,u_password,"dhh")
+    connection =None
+    user_data =None
+    try:
+        connection =get_db_connection()
+        with connection.cursor(buffered=True) as cursor:
+            query_user = "SELECT * FROM sa_users WHERE u_email = %s AND u_password = %s AND u_status = 'active'"
+            cursor.execute(query_user, (u_email, u_password))
+
+            user_data = cursor.fetchone()
+            if user_data:
+                return user_data
+            else:
+                return "Invalid credentials or account is inactive."
+    except Exception as e:
+        print(f"Error fetching user data: {e}")
+        user_data = None
+    finally:
+        if connection:
+            connection.close()
+
+    return user_data
+########################################################################################################
+
 # login / index page
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -72,11 +99,15 @@ def index():
             u_email = request.form['username']
             u_password = request.form['password']
               
+
             session['u_email'] = u_email
-            if u_email=='test' and u_password=='test' :
+            session['u_password'] = u_password
+            user_data = user(u_email, u_password)
+            user_type=user_data[5]
+            if user_type == 1:
                 return redirect(url_for('dash'))
-            # if session :
-            #     return redirect(url_for('dash'))
+            elif user_type == 2:
+                    return redirect(url_for('client_dash'))
             else:
                 error = "Invalid Email or password"
                 return render_template('index.html', error=error)
@@ -85,6 +116,83 @@ def index():
             return "An error occurred during login. Please try again later.", 500
     return render_template('index.html', error="")
 ########################################################################################################
+# frontpage / homepage
+@app.route('/client_dash')
+def client_dash():
+    connection = None
+    try:
+        connection = get_db_connection()  
+        with connection.cursor(buffered=True) as cursor:
+            alldata = """
+    SELECT DISTINCT 
+    dc.Device_id,
+    t_generated.total_generated,
+    t_consumed.total_consumed,
+    CASE 
+        WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
+        ELSE 'Inactive'
+    END AS status
+FROM dc_data dc
+JOIN (
+    SELECT Device_id, MAX(timestamp) AS latest_timestamp
+    FROM dc_data
+    GROUP BY Device_id
+) latest ON dc.Device_id = latest.Device_id AND dc.timestamp = latest.latest_timestamp
+
+JOIN ac_data ac ON dc.Device_id = ac.Device_id
+
+LEFT JOIN (
+    SELECT device_id, SUM(avg_kwh) AS total_generated
+    FROM dc_kwh
+    GROUP BY device_id
+) t_generated ON t_generated.device_id = dc.Device_id
+
+LEFT JOIN (
+    SELECT device_id, SUM(avg_kwh) AS total_consumed
+    FROM ac_kwh
+    GROUP BY device_id
+) t_consumed ON t_consumed.device_id = dc.Device_id
+
+JOIN sa_users u ON dc.company_id = u.company_id
+WHERE u.u_email = 'sachin@gmail.com';
+;
+
+  """
+            cursor.execute(alldata)
+            alldataprint = cursor.fetchall()
+            devicecount="""
+                    SELECT count(distinct(Device_id)) from dc_data;
+
+                """
+            cursor.execute(devicecount)
+            dcdevicecount=cursor.fetchone()[0]
+            
+               # unit generated
+            Generated="""
+                    SELECT sum(avg_kwh) from dc_kwh;
+
+                    """
+            cursor.execute(Generated)
+            dcGenerated=cursor.fetchone()[0]
+
+            # unit consumed
+            acconsumed="""
+                    SELECT sum(avg_kwh) from ac_kwh;
+
+                    """
+            cursor.execute(acconsumed)
+            acconsumedunit=cursor.fetchone()[0]
+        return render_template('/client/client_dash.html',alldataprint=alldataprint,dcGenerated=dcGenerated,
+                                  acconsumedunit=acconsumedunit )
+    
+    except Exception as e:
+        return str(e), 500
+
+    finally:
+        if connection:
+            connection.close() 
+##########################################################################################################
+
 # frontpage / homepage
 @app.route('/dashboard')
 def dash():
@@ -475,6 +583,23 @@ def summary(device):
               """
                 cursor.execute(inst_date,(device,))
                 man_date=cursor.fetchone()
+   # Fetch DC data
+                alldata = "SELECT * FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 700"
+                cursor.execute(alldata,(device,))
+                alldataprint = cursor.fetchall()
+                # Fetch AC data
+                Acdata = "SELECT * FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 700"
+                cursor.execute(Acdata,(device,))
+                allAcdataprint = cursor.fetchall()
+                print("hdu",allAcdataprint)
+                # Fetch DC KWH data
+                dc_kwh_data = "select * from dc_kwh WHERE Device_id = %s order by start_hour desc LIMIT 700"
+                cursor.execute(dc_kwh_data,(device,))
+                dc_kwh_dataprint = cursor.fetchall()
+                # Fetch AC KWH data
+                ac_kwh_data = "SELECT * FROM ac_kwh WHERE Device_id = %s order by start_hour desc LIMIT 700"
+                cursor.execute(ac_kwh_data,(device,))
+                ac_kwh_dataprint = cursor.fetchall()
 
                 # Determine Device Type and Battery Voltage Range
                 device2 = int(device)
@@ -502,11 +627,24 @@ def summary(device):
                     dc_kwh=dc_kwh,
                     dc_total_unit=dc_total_unit,
                     ac_total_kwh=ac_total_kwh,
-                    total_unit=total_unit,today_date=today_date,man_date=man_date,value=value
+                    total_unit=total_unit,today_date=today_date,man_date=man_date,value=value,
+                    alldataprint=alldataprint,allAcdataprint=allAcdataprint,dc_kwh_dataprint=dc_kwh_dataprint,
+                    ac_kwh_dataprint=ac_kwh_dataprint
                 )    
     except Exception as e:
                  return str(e), 500
 ########################################################################################################
+# create new user and admin
+@app.route('/user_form', methods=['GET'])
+def user_form():
+    try:
+        return render_template('create_users.html')
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while fetching graph data."}), 500
+
+########################################################################################################
+
 # Table data
 @app.route('/data')
 def data_table():    
