@@ -73,10 +73,11 @@ def user(u_email,u_password):
     try:
         connection =get_db_connection()
         with connection.cursor(buffered=True) as cursor:
-            query_user = "SELECT * FROM sa_users WHERE u_email = %s AND u_password = %s AND u_status = 'active'"
+            query_user = "SELECT * FROM sa_users WHERE u_email = %s AND u_password = %s "
             cursor.execute(query_user, (u_email, u_password))
 
             user_data = cursor.fetchone()
+            print(user_data,"ppps")
             if user_data:
                 return user_data
             else:
@@ -94,27 +95,34 @@ def user(u_email,u_password):
 # login / index page
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    connection = None
+    error = ""
+
     if request.method == 'POST':
         try:
             u_email = request.form['username']
             u_password = request.form['password']
-              
 
             session['u_email'] = u_email
             session['u_password'] = u_password
+
             user_data = user(u_email, u_password)
-            user_type=user_data[5]
+            user_type = user_data[5]
+
             if user_type == 1:
                 return redirect(url_for('dash'))
             elif user_type == 2:
-                    return redirect(url_for('client_dash'))
+                return redirect(url_for('client_dash'))
             else:
                 error = "Invalid Email or password"
-                return render_template('index.html', error=error)
         except Exception as e:
             print(f"Error during login process: {e}")
             return "An error occurred during login. Please try again later.", 500
-    return render_template('index.html', error="")
+        finally:
+            if connection:
+                connection.close()
+    
+    return render_template('index.html', error=error)
 ########################################################################################################
 # frontpage / homepage
 @app.route('/client_dash')
@@ -194,7 +202,7 @@ WHERE u.u_email = 'sachin@gmail.com';
 ##########################################################################################################
 
 # frontpage / homepage
-@app.route('/dashboard')
+@app.route('/dash')
 def dash():
     connection = None
     try:
