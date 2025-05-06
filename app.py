@@ -67,7 +67,6 @@ last_day = start_of_day - timedelta(days=1)
 
 ########################################################################################################
 def user(u_email,u_password):
-    print(u_email,u_password,"dhh")
     connection =None
     user_data =None
     try:
@@ -77,7 +76,6 @@ def user(u_email,u_password):
             cursor.execute(query_user, (u_email, u_password))
 
             user_data = cursor.fetchone()
-            print(user_data,"ppps")
             if user_data:
                 return user_data
             else:
@@ -129,50 +127,53 @@ def index():
 def client_dash():
     connection = None
     try:
+        u_email = session.get('u_email')
         connection = get_db_connection()  
         with connection.cursor(buffered=True) as cursor:
             alldata = """
-    SELECT DISTINCT 
-    dc.Device_id,
-    t_generated.total_generated,
-    t_consumed.total_consumed,
-    CASE 
-        WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
-        ELSE 'Inactive'
-    END AS status
-FROM dc_data dc
-JOIN (
-    SELECT Device_id, MAX(timestamp) AS latest_timestamp
-    FROM dc_data
-    GROUP BY Device_id
-) latest ON dc.Device_id = latest.Device_id AND dc.timestamp = latest.latest_timestamp
+            SELECT DISTINCT 
+            dc.Device_id,
+            t_generated.total_generated,
+            t_consumed.total_consumed,
+            CASE 
+                WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
+                ELSE 'Inactive'
+            END AS status
+        FROM dc_data dc
+        JOIN (
+            SELECT Device_id, MAX(timestamp) AS latest_timestamp
+            FROM dc_data
+            GROUP BY Device_id
+        ) latest ON dc.Device_id = latest.Device_id AND dc.timestamp = latest.latest_timestamp
 
-LEFT JOIN ac_data ac ON dc.Device_id = ac.Device_id  -- Changed from JOIN to LEFT JOIN
+        LEFT JOIN ac_data ac ON dc.Device_id = ac.Device_id  -- Changed from JOIN to LEFT JOIN
 
-LEFT JOIN (
-    SELECT device_id, SUM(avg_kwh) AS total_generated
-    FROM dc_kwh
-    GROUP BY device_id
-) t_generated ON t_generated.device_id = dc.Device_id
+        LEFT JOIN (
+            SELECT device_id, SUM(avg_kwh) AS total_generated
+            FROM dc_kwh
+            GROUP BY device_id
+        ) t_generated ON t_generated.device_id = dc.Device_id
 
-LEFT JOIN (
-    SELECT device_id, SUM(avg_kwh) AS total_consumed
-    FROM ac_kwh
-    GROUP BY device_id
-) t_consumed ON t_consumed.device_id = dc.Device_id
+        LEFT JOIN (
+            SELECT device_id, SUM(avg_kwh) AS total_consumed
+            FROM ac_kwh
+            GROUP BY device_id
+        ) t_consumed ON t_consumed.device_id = dc.Device_id
 
-JOIN sa_users u ON dc.company_id = u.company_id
-WHERE u.u_email = 'abc';
+        JOIN sa_users u ON dc.company_id = u.company_id
+        WHERE u.u_email =%s;
 
-
-  """
-            cursor.execute(alldata)
+                                      """
+            cursor.execute(alldata,(u_email,))
             alldataprint = cursor.fetchall()
             devicecount="""
-                    SELECT count(distinct(Device_id)) from dc_data;
-
+                  
+                    SELECT COUNT(DISTINCT dc.Device_id)
+                    FROM dc_data dc
+                    JOIN sa_users su ON dc.company_id = su.company_id
+                    WHERE su.u_email = %s;
                 """
-            cursor.execute(devicecount)
+            cursor.execute(devicecount,(u_email,))
             dcdevicecount=cursor.fetchone()[0]
             
                # unit generated
@@ -191,7 +192,7 @@ WHERE u.u_email = 'abc';
             cursor.execute(acconsumed)
             acconsumedunit=cursor.fetchone()[0]
         return render_template('/client/client_dash.html',alldataprint=alldataprint,dcGenerated=dcGenerated,
-                                  acconsumedunit=acconsumedunit )
+                                  acconsumedunit=acconsumedunit ,dcdevicecount=dcdevicecount,detail_user1='dd')
     
     except Exception as e:
         return str(e), 500
@@ -306,6 +307,65 @@ WHERE dc.rn = 1;
     finally:
         if connection:
             connection.close() 
+            
+###############################################################################################################
+@app.route('/create_new_user', methods=['POST'])
+def create_new_user():
+    connection = None
+    cursor = None
+    try:
+        data = request.form
+        required_fields = ['u_firstname', 'u_lastname',
+                           'u_email', 'u_password','user_type']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'message': f'Missing required field: {field}'}), 400
+        connection = get_db_connection()
+        if connection is None:
+            return jsonify({'message': 'Database connection error'}), 500
+        cursor = connection.cursor(buffered=True)
+        query_check_email = 'SELECT * FROM sa_users WHERE u_email = %s'
+        email = data['u_email']
+        cursor.execute(query_check_email, (email,))
+        user_email = cursor.fetchone()
+        if user_email:
+            return jsonify({'message': 'User already exists'}), 200
+        query_count_users = "SELECT max(u_id) FROM sa_users"
+        cursor.execute(query_count_users)
+        count_company_id = cursor.fetchone()
+        count = count_company_id[0] if count_company_id[0] else 0
+        company_id = int(count) + 1
+        
+        insert_query = """
+            INSERT INTO sa_users
+            (u_firstname, u_lastname, u_email,
+             u_password, user_type, company_id,u_status,u_created_at,admin_id,cmd_status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        u_firstname = data["u_firstname"]
+        u_lastname = data["u_lastname"]
+        u_email = data['u_email']
+        u_password = data['u_password']
+        user_type=data['user_type']
+        u_status='Active'
+        u_created_at = datetime.now()
+        admin_id=1
+        cmd_status=1
+        values = (u_firstname, u_lastname, u_email,
+                  u_password, user_type, company_id,u_status,u_created_at,admin_id,cmd_status)
+        cursor.execute(insert_query, values)
+        connection.commit()
+        cursor.close()
+        return jsonify({'message': 'User created successfully'}), 200
+
+    except Exception as e:
+        print(f"Error in adding user: {e}")
+        return "An error occurred during processing. Please try again later.", 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 ########################################################################################################
 # bar graph for dc kwh
 @app.route('/dckwh_graph')
@@ -610,7 +670,6 @@ def summary(device):
                 Acdata = "SELECT * FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 700"
                 cursor.execute(Acdata,(device,))
                 allAcdataprint = cursor.fetchall()
-                print("hdu",allAcdataprint)
                 # Fetch DC KWH data
                 dc_kwh_data = "select * from dc_kwh WHERE Device_id = %s order by start_hour desc LIMIT 700"
                 cursor.execute(dc_kwh_data,(device,))
@@ -639,7 +698,181 @@ def summary(device):
 
                 
                 return render_template(
-                    'summary copy.html',
+                    'summary.html',
+                    battery_chargefull=int(battery_percentage),
+                    Dccurrent=currentdata,
+                    Accurrent=Accurrentdata,
+                    dc_kwh=dc_kwh,
+                    dc_total_unit=dc_total_unit,
+                    ac_total_kwh=ac_total_kwh,
+                    total_unit=total_unit,today_date=today_date,man_date=man_date,value=value,
+                    alldataprint=alldataprint,allAcdataprint=allAcdataprint,dc_kwh_dataprint=dc_kwh_dataprint,
+                    ac_kwh_dataprint=ac_kwh_dataprint
+                )    
+    except Exception as e:
+                 return str(e), 500
+########################################################################################################
+# Summary page
+@app.route('/client_summary/<device>')
+def client_summary(device):
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(buffered=True) as cursor:
+                # Fetch DC data
+                current_query = """
+                SELECT TRUNCATE(Dc_Current, 5) AS Current, timestamp,Dc_Power, Temperature, 
+                TRUNCATE(Dc_Voltage, 5) AS Voltage,Device_id,panel_voltage,panel_current,Panel_Power 
+                FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
+                cursor.execute(current_query, (device,))
+                currentdata = cursor.fetchone()
+                #DC KWH 1 hour
+                dc_total_kwh_query = """
+                SELECT 
+                    * FROM dc_kwh where Device_id = %s
+                ORDER BY start_hour DESC
+                LIMIT 1
+                """
+                # dc_total_kwh_query = """
+                # SELECT 
+                # CAST(AVG(Dc_KWH) AS DECIMAL(10, 5)) AS avg_kWh,
+                # DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS start_time,
+                # DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS end_time
+                # FROM dc_data 
+                # WHERE Device_id = %s
+                # AND timestamp >= DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') 
+                # AND timestamp < DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00')
+                # """
+                cursor.execute(dc_total_kwh_query, (device,))
+                dc_kwh = cursor.fetchone()
+
+                today_date = date.today()
+                
+                #DC KWH 24-hours
+                # dc_total_kwh_query = """
+                # SELECT 
+                # CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
+                # FROM (
+                #     SELECT 
+                #         DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
+                #         AVG(Dc_KWH) AS avg_kWh
+                #     FROM dc_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
+                # ) AS hourly
+                # """
+                # cursor.execute(dc_total_kwh_query, (device,today_date))
+                # dc_total_kwh = cursor.fetchone()
+                # dc_total_kwh_value = dc_total_kwh[0] if dc_total_kwh and dc_total_kwh[0] is not None else 0
+
+                #DC Units
+                # dc_total_unit_query = """
+                # SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
+                # AVG(Dc_KWH) AS avg_kWh FROM dc_data WHERE Device_id = %s GROUP BY hour
+                # ) AS hourly """
+                # dc_total_unit_query = """
+                # SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM dc_kwh where device_id= %s"""
+                dc_total_unit_query = """
+                SELECT SUM(avg_kWh) AS total_avg_kWh_24h
+                FROM dc_kwh where device_id= %s"""
+                cursor.execute(dc_total_unit_query, (device,))
+                dc_total_unit = cursor.fetchone()
+
+                # Fetch AC data
+                Accurrent_query = """
+                SELECT TRUNCATE(Current, 5) AS Current, timestamp,Power, Temperature, TRUNCATE(Voltage, 5) AS Voltage, 
+                Device_id FROM ac_data 
+                WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 1"""
+                cursor.execute(Accurrent_query, (device,))
+                Accurrentdata = cursor.fetchone()
+                try:
+                    if Accurrentdata and currentdata and currentdata[2] != 0:
+                        value = round(Accurrentdata[2] / currentdata[2], 4)
+                    else:
+                        value = "N/A"
+                except ZeroDivisionError:
+                    value = "N/A"     
+
+                #AC KWH 1 hour
+                ac_total_kwh_query = """
+                SELECT 
+                    * FROM ac_kwh where Device_id = %s
+                ORDER BY start_hour DESC
+                LIMIT 1
+                """
+                cursor.execute(ac_total_kwh_query, (device,))
+                ac_total_kwh = cursor.fetchone()
+
+                today_date = date.today()
+                
+                #AC KWH 24-hours
+                # total_kwh_query = """
+                # SELECT CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
+                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
+                # AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
+                # ) AS hourly
+                # """
+                # cursor.execute(total_kwh_query, (device,today_date))
+                # total_kwh = cursor.fetchone()
+
+                # total_kwh_value = total_kwh[0] if total_kwh and total_kwh[0] is not None else 0
+                
+                # AC Units Calculation
+                # total_unit_query = """
+                # SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
+                # AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s 
+                # GROUP BY hour) AS hourly """
+                # total_unit_query = """
+                # SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
+                # FROM ac_kwh where Device_id = %s """
+                total_unit_query = """
+                SELECT SUM(avg_kWh) AS total_avg_kWh_24h
+                FROM ac_kwh where Device_id = %s """
+                cursor.execute(total_unit_query, (device,))
+                total_unit = cursor.fetchone()
+
+                inst_date="""
+                select * from dc_data where Device_id = %s order by timestamp  asc
+              """
+                cursor.execute(inst_date,(device,))
+                man_date=cursor.fetchone()
+   # Fetch DC data
+                alldata = "SELECT * FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 700"
+                cursor.execute(alldata,(device,))
+                alldataprint = cursor.fetchall()
+                # Fetch AC data
+                Acdata = "SELECT * FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 700"
+                cursor.execute(Acdata,(device,))
+                allAcdataprint = cursor.fetchall()
+                # Fetch DC KWH data
+                dc_kwh_data = "select * from dc_kwh WHERE Device_id = %s order by start_hour desc LIMIT 700"
+                cursor.execute(dc_kwh_data,(device,))
+                dc_kwh_dataprint = cursor.fetchall()
+                # Fetch AC KWH data
+                ac_kwh_data = "SELECT * FROM ac_kwh WHERE Device_id = %s order by start_hour desc LIMIT 700"
+                cursor.execute(ac_kwh_data,(device,))
+                ac_kwh_dataprint = cursor.fetchall()
+
+                # Determine Device Type and Battery Voltage Range
+                device2 = int(device)
+                if 1000 <= device2 < 2000: #12V LEAD Battery
+                    battery_percentage = ((currentdata[4]-10.5)/(13.8-10.5))*100
+                elif 2000 <= device2 < 3000: #24V LEAD Battery
+                    battery_percentage = ((currentdata[4]-21)/(27.6-21))*100
+                elif 3000 <= device2 < 4000: #12V Lithium Battery
+                    battery_percentage = ((currentdata[4]-10.5)/(14.6-10.5))*100
+                elif 4000 <= device2 < 5000: #24V Lithium Battery
+                    battery_percentage = math.trunc(((currentdata[4]-19.8)/(26-19.8))*100)
+                elif 5000 <= device2 < 6000:  # 48V Lead Battery
+                    battery_percentage = math.trunc(((currentdata[4] - 42) / (58 - 42)) * 100)
+                else:  # 48V Lithium Battery
+                    battery_percentage = math.trunc(((currentdata[4] - 40) / (54.6 - 40)) * 100)
+                battery_percentage = max(0, min(100, battery_percentage))
+
+
+                
+                return render_template(
+                    'client/client_summary.html',
                     battery_chargefull=int(battery_percentage),
                     Dccurrent=currentdata,
                     Accurrent=Accurrentdata,

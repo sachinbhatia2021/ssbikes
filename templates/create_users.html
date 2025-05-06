@@ -26,11 +26,10 @@
     crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-<link rel="stylesheet" href="../../static/style.css">
   <title>Model-E Analytics</title>
   <style>
     body {
-      background-image: url("");
+      background-image: url("https://www.shutterstock.com/image-vector/solar-panel-pattern-background-banner-600nw-2434109149.jpg");
       background-repeat: no-repeat;
       background-size: cover;
       overflow: hidden;
@@ -270,7 +269,7 @@
         formData.append("user_type", userSelect);
 
 
-        fetch("/superuserlogin", {
+        fetch("/create_new_user", {
           method: "POST",
           body: formData,
         })
