@@ -236,6 +236,100 @@ def dash():
         if connection:
             connection.close() 
 ##########################################################################################################
+@app.route('/user_profile')
+def user_profile():
+    connection = None
+    try:
+        connection = get_db_connection()  
+        with connection.cursor(buffered=True) as cursor:
+      
+
+            return render_template('client/profile.html',detail_user1='bb')
+    
+    except Exception as e:
+        return str(e), 500
+
+    finally:
+        if connection:
+            connection.close() 
+# Function to insert Clientdetails data
+@app.route('/clientinsert', methods=['POST'])
+def clientinsert():
+    connection = None
+    try:
+        data = request.form
+        u_email = session.get('u_email')
+        u_password = session.get('u_password')
+        cd = user(u_email, u_password)
+        company_id = cd[6] if cd else None
+
+        if not company_id:
+            return jsonify({'message': 'Please Login again'}), 400
+
+        required_fields = ['fullName', 'email', 'mobileNo', 'address',
+                           'district', 'pincode', 'State']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'message': f'Missing required field: {field}'}), 400
+
+        if 'profile_image' not in request.files:
+            return jsonify({'message': 'No file part'}), 400
+
+        file = request.files['profile_image']
+        if file.filename == '':
+            return jsonify({'message': 'No selected file'}), 400
+
+        FOLDER_NAME = 'ImagesSolset'
+        s3_key = f"{FOLDER_NAME}/{u_email}_{file.filename}"
+        s3_client.upload_fileobj(
+            file,
+            BUCKET_NAME,
+            s3_key,
+            ExtraArgs={'ACL': 'public-read'}
+        )
+        s3_url = f"https://{BUCKET_NAME}.s3.{region_name}.amazonaws.com/{s3_key}"
+
+        connection = get_db_connection()
+        if connection is None:
+            return jsonify({'message': 'Database connection error'}), 500
+
+        with connection.cursor(buffered=True) as cursor:
+            update_query = """
+                UPDATE clientdetails SET profile_image = %s WHERE company_id = %s
+            """
+            cursor.execute(update_query, (s3_url, company_id))
+            connection.commit()
+
+            created_at = datetime.now()
+            insert_query = """
+                INSERT INTO clientdetails (company_id, full_Name, email, phone, address, district, State, pincode, created_at, profile_image)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            values = (
+                company_id,
+                data['fullName'],
+                data['email'],
+                data['mobileNo'],
+                data['address'],
+                data['district'],
+                data['State'],
+                data['pincode'],
+                created_at,
+                s3_url
+            )
+            cursor.execute(insert_query, values)
+            connection.commit()
+
+        return jsonify({'message': 'Data inserted successfully'}), 200
+
+    except mysql.connector.Error as e:
+        print(f"Error with MySQL: {e}")
+        return jsonify({'message': 'Error with MySQL: ' + str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+##########################################################################################################
 #  inverter
 @app.route('/alldevices')
 def alldevices():
@@ -707,7 +801,7 @@ def summary(device):
                     ac_total_kwh=ac_total_kwh,
                     total_unit=total_unit,today_date=today_date,man_date=man_date,value=value,
                     alldataprint=alldataprint,allAcdataprint=allAcdataprint,dc_kwh_dataprint=dc_kwh_dataprint,
-                    ac_kwh_dataprint=ac_kwh_dataprint
+                    ac_kwh_dataprint=ac_kwh_dataprint,deviceid=device
                 )    
     except Exception as e:
                  return str(e), 500

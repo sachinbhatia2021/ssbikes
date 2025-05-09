@@ -29,7 +29,6 @@ body {
   /*  */
 
   .con_small {
-    padding: 10px;
     display: flex;
     flex-direction: row;
     margin-top: 30px;
@@ -146,7 +145,10 @@ body {
   a {
     text-decoration: none;
   }
-  
+  .contentclient {
+
+     flex: 1;
+  }
   @media (max-width: 576px) {
     .content {
       margin-left: 0;
@@ -180,9 +182,10 @@ table{
   }
   .Inverter1{
     box-shadow: 2px 2px 12px 2px rgb(37, 36, 36);
-margin-right: 10px;
+margin-right: 20px;
 padding: 10px;
 margin-top: 20px;
+margin-left: 20px;
 }   
 .scroll{
            overflow-x: scroll; 

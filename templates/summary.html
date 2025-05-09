@@ -472,7 +472,7 @@ right: 0;
     <div class="nav">
       <a href="{{ url_for('dash') }}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
       <ul>
-        <li><a href="{{ url_for('data_table') }}" class="ex2">Table</a></li>
+        <!-- <li><a href="{{ url_for('data_table') }}" class="ex2">Table</a></li> -->
         <li><a href="{{url_for('alldevices')}}">Devices</a></li>
         <li><a href="#" id="logout-btn">Log Out</a></li>
       </ul>
@@ -484,14 +484,14 @@ right: 0;
     <div class="text d-flex">
       <div class="hideicon">
         <a href="{{ url_for('dash') }}" class="ex2 me-2">
-          <img class="ms-" src="/static/logo.jpeg" height="50px" style="margin-left: -10px;" alt="">
+          <img class="ms-" src="/static/logo.jpeg" height="50px" style="margin-left: -12px;" alt="">
         </a>
         <a href="{{url_for('alldevices')}}">
           <h3><i class="bi bi-projector"></i></h3>
         </a>
-        <a href="{{ url_for('data_table') }}" class="ex2">
+        <!-- <a href="{{ url_for('data_table') }}" class="ex2">
           <h3><i class="fa-solid fa-table"></i></h3>
-        </a>
+        </a> -->
         <a  onclick="logout()" href="#" id="logout-btn">
           <h3><i class="fa-solid fa-arrow-right-from-bracket"></i></h3>
         </a>
@@ -500,7 +500,7 @@ right: 0;
       <div class="mt-2" style="font-size: 25px;">
         <h4 class="text-light mt-4">Analytics</h4>
         <a href="{{url_for('alldevices')}}" class="ex2 mt-4">Devices</a>
-        <a href="{{ url_for('data_table') }}" class="ex2 mt-3">Table</a>
+        <!-- <a href="{{ url_for('data_table') }}" class="ex2 mt-3">Table</a> -->
         <a  onclick="logout()" href="#" id="logout-btn" class="ex2 mt-3">Log Out</a>
       </div>
     </div>
@@ -508,7 +508,34 @@ right: 0;
 
   <!-- Dashboard -->
   <div class="content">
-<div class="" style="text-align: end; margin-right: 15px;"><p> LAST PACKET : {{Dccurrent[1]}}</p></div>
+<div  style="text-align: end; margin-right: 15px;"><p > LAST PACKET : {{Dccurrent[1]}}</p>
+<style>
+  .usersmainbox{
+    display: flex;
+    justify-content: right;
+    gap: 20px;
+  }
+.userscss{
+height: 80px;
+width: 200px;
+background-color: white;
+box-shadow: 5px 5px 10px 8px rgba(12, 12, 12, 0.1);align-content: center;
+text-align: center;
+}
+
+</style>
+<div class="usersmainbox">
+<div class="userscss">
+  <a href="{{ url_for('user_form') }}" class="hover-link">
+    <img class="company-logo mt-1" src="https://gcs.ac.in/admin/images/user_icon.png" height="50px" width="50px">
+    <div class="hover-text">Create User</div>
+  </a>
+</div>
+<div class="userscss">
+<a class="btn btn-outline-primary" href="{{ url_for('ota_page', device=deviceid) }}">OTA</a>
+</div>
+</div>
+</div>
     <div class="con_small">
       <div class="half-width" style="text-align: center">
         <br />

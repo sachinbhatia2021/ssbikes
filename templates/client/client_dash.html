@@ -28,15 +28,15 @@
   <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
   <title>Inverter Analytics</title>
   <link rel="stylesheet" href="../../static/nav_foot.css">
-  <link rel="stylesheet" href="../../static/style.css">
+  
   
 </head>
 
 <body>
 <style>
-  
+ 
 /* footer */
-.footer {
+.footer1 {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -56,223 +56,43 @@ right: 0;
 }
 
 
+.header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px;
+      background-color: #EAEEF5;
+    }
 
 </style>
-  <!-- navbar for mobileview -->
-  <div class="mobileshow">
-    <div class="nav">
-      <a href="{{ url_for('client_dash') }}"><img src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
-      <ul>
-        <li> <a href="#" id="logout-btn">Log Out</a></li>
-      </ul>
-    </div>
+<!--  -->
+<body>
+ <!-- navbar -->
+  <div class="header-bar ">
+  <div>
+      <a class="" href="{{ url_for('client_dash') }}"><img  src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
   </div>
 
-  <!-- side navbar -->
-  <div class="navbg text-center ">
-    <div class="text d-flex">
-      <div class="hideicon">
-        <a href="{{ url_for('client_dash') }}" class="ex2 me-2">
-          <img class="ms-1" src="/static/logo.jpeg" height="60px" style="margin-left: -19px;" alt="">
-        </a>
-
-      
-        <a href="#"  onclick="logout()" id="logout-btn">
-          <h3 class="mt-3"><i class="fa-solid fa-arrow-right-from-bracket"></i></h3>
-        </a>
-      </div>
-
-      <!-- next txtdiv link -->
-      <div class="mt-2" style="font-size: 25px;">
-        <h4 class="text-light mt-4">Analytics</h4>
-
-
-        <a  onclick="logout()"  href="#" id="logout-btn" class="ex2 mt-5">Log Out</a>
-      </div>
-    </div>
+  <!-- Right Profile Icon -->
+  <div>
+    <a href="{{url_for('user_profile')}}" class="btn btn-outline-primary rounded-circle">
+      <i class="bi bi-person"></i>
+    </a>
+    <a href="#" onclick="logout()" id="logout-btn" class="btn btn-outline-danger rounded-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+        <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+      </svg>
+    </a>
   </div>
-<!-- SA_CLIENTDETAILS -->
+</div>
 
-  <!-- maindashboard -->
-  <div class="content">
-
-    <div class="box full-width">
-      <div class="d-flex justify-content-between ">
-        <h3 class="mt-4"> detail_user1[2] </h3>
-        <div class="company-logo-container" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-          <div class="company-logo1"><img class="company-logo mt-4" src="https://gcs.ac.in/admin/images/user_icon.png" height="150px" width="150px"></div>
-        </div>
-      </div>
-      <p class="add"><i class='bx bxs-business'></i> Address : detail_user1[3],  detail_user1[4] , 
-        detail_user1[5] <br> Pincode:  detail_user1[6]  </p>
-      <p class="add"><i class='bx bxs-phone'></i> Phone No : +91-detail_user1[8]</p>
-      <p class="gst">GST : #  detail_user1[7] </p>
-    
-   
-    
-      <!-- Pop up for Edit/Add details form -->
-      <div class="d-flex">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" {% if not
-         detail_user1[2] %}hidden{% endif %}>
-          Edit details
-        </button>
-    
-        <!-- EDIT DETAILS (CLIENTDETAILS) -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content" style="width: 700px;">
-              <div class="modal-header">
-                <h3 class="card-title">
-                  <i class='bx bx-copy-alt'></i>Edit Details
-                </h3>
-                <button type="button" class="btn-close btn btn-danger" data-bs-dismiss="modal"
-                  aria-label="Close">X</button>
-              </div>
-              <div class="modal-body">
-                <div class="card d-flex">
-                  <div class="card-header">
-                    <div>
-                      <div>
-                        <form id="editForm" onsubmit="event.preventDefault(); editClient();">
-                          <div class="container">
-                            <div class="form-section">
-                              <div class="form-group">
-                                <label for="companyupdate">Company <span class="required-asterisk"
-                                    style="color:red;">*</span></label>
-                                <input class="input" type="text" id="companyupdate" value="detail_user1[2]"
-                                  name="company" placeholder="Enter Company Name" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="addressupdate">Address <span class="required-asterisk"
-                                    style="color:red;">*</span></label>
-                                <input class="input" value="detail_user1[3]" type="text" id="addressupdate"
-                                  name="address" placeholder="Enter Company Address" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="stateupdate">State <span class="required-asterisk"
-                                    style="color:red;">*</span></label>
-                                <input required type="text" id="stateupdate" placeholder="Enter State"
-                                  oninput="filterStates('stateupdate', 'autocomplete-list')" value="detail_user1[4]">
-                                <div id="autocomplete-list" class="autocomplete-list"></div>
-                              </div>
-                            </div>
-                            <div class="form-section">
-                              <div class="form-group">
-                                <label for="districtcupdate">District <span class="required-asterisk"
-                                    style="color:red;">*</span></label>
-                                <input class="input" value="detail_user1[5]" type="text" id="districtcupdate"
-                                  name="district" placeholder="Enter District"
-                                  oninput="filterDistrict('districtcupdate', 'autocomplete-list5')" required>
-                                <div id="autocomplete-list5" class="autocomplete-list"></div>
-                              </div>
-                              <div class="form-group">
-                                <label for="pincodeupdate">Pincode <span class="required-asterisk"
-                                    style="color:red;">*</span></label>
-                                <input class="input" value="detail_user1[6]" type="number" id="pincodeupdate"
-                                  name="pincode" min="0" placeholder="Enter Pincode" required>
-                              </div>
-                              <div class="form-group">
-                                <label for="phoneNoupdate">Phone No. <span class="required-asterisk"
-                                    style="color:red;">*</span></label>
-                                <input required class="input" value="detail_user1[8]" type="number" id="phoneNoupdate"
-                                  name="phoneNo" placeholder="Enter Phone No">
-                              </div>
-                              <div class="form-group">
-                                <label for="gst_edit">GST <span class="required-asterisk"
-                                    style="color:red;">*</span></label>
-                                <input required class="input" value="detail_user1[7]" type="text" id="gst_edit"
-                                  name="gst" placeholder="Enter GST">
-                              </div>
-                            </div>
-                          </div>
-                          <div class="text-center mt-2">
-                            <button type="submit" class="btn btn-primary ms-5">Save</button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-    
-        <!-- ADD DETAILS POPUP (CLIENTDETAILS) -->
-        <!-- Button trigger -->
-        <div style="margin-left: 3px;">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModals" {% if
-             detail_user1[2] %}hidden{% endif %}>
-            Add details
-          </button>
-        </div>
-    
-        <!-- Add Details ClientDetails -->
-        <div class="modal fade" id="exampleModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content" style="width: 700px;">
-              <div class="modal-header">
-                <h3 class="modal-title fs-5" id="exampleModalLabel"><i class='bx bx-copy-alt'></i> Add Details</h3>
-                <button type="button" class="btn-close btn btn-danger" data-bs-dismiss="modal"
-                  aria-label="Close">X</button>
-              </div>
-              <div class="modal-body">
-                <form id="uploadForm" onsubmit="event.preventDefault(); upload();">
-                  <div class="container">
-                    <div class="form-section">
-                      <div class="form-group">
-                        <label for="company">Company <span class="required-asterisk" style="color:red;">*</span></label>
-                        <input required class="input" type="text" id="company" name="company"
-                          placeholder="Enter Company Name">
-                      </div>
-                      <div class="form-group">
-                        <label for="address">Address <span class="required-asterisk" style="color:red;">*</span></label>
-                        <input required class="input" type="text" id="address" name="address"
-                          placeholder="Enter Company Address">
-                      </div>
-                      <div class="form-group">
-                        <label for="stateupdate">State <span class="required-asterisk" style="color:red;">*</span></label>
-                        <input type="text" id="stateupdate1" placeholder="Enter State"
-                          oninput="filterStates('stateupdate1', 'autocomplete-listupdate6')" required>
-                        <div id="autocomplete-listupdate6" class="autocomplete-list"></div>
-                      </div>
-                      <div class="form-group">
-                        <label for="file_logo">Company logo <span class="required-asterisk"
-                            style="color:red;">*</span></label>
-                        <input class="input" type="file" id="file_logo" name="file_logo" required>
-                      </div>
-                    </div>
-                    <div class="form-section">
-                      <div class="form-group">
-                        <label for="districtcin">District <span class="required-asterisk"
-                            style="color:red;">*</span></label>
-                        <input required class="input" type="text" id="districtcin" name="district"
-                          placeholder="Enter District" oninput="filterDistrict('districtcin', 'autocomplete-list1')">
-                        <div id="autocomplete-list1" class="autocomplete-list"></div>
-                      </div>
-                      <div class="form-group">
-                        <label for="pincode">Pincode <span class="required-asterisk" style="color:red;">*</span></label>
-                        <input required class="input" type="number" id="pincode" name="pincode" min="0"
-                          placeholder="Enter Pincode">
-                      </div>
-                      <div class="form-group">
-                        <label for="phoneNo">Phone No. <span class="required-asterisk" style="color:red;">*</span></label>
-                        <input required class="input" type="number" id="phoneNo" name="phoneNo"
-                          placeholder="Enter Phone No.">
-                      </div>
-                      
-                    </div>
-                  </div>
-              
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<!--  -->
+ <div class="contentclient">
 
     <!--  -->
+    {% if dcdevicecount > 1 %}
+
     <div class="con_small">
       <div class="half-width" style="text-align: center">
         <br />
@@ -306,6 +126,7 @@ right: 0;
       </div>
      
     </div>
+    {% endif %}
 
     <br><br>
     <!-- table for devices -->
@@ -356,8 +177,9 @@ right: 0;
       </section>
     </div>
     <br><br>
+  </div>
      <!-- Footer -->
-     <div class="footer">
+     <div class="footer1">
       <p class="" style="margin-left: 10px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>
       <p style="margin-right: 30px;" class="version">Version 1.0.1</p>
     </div>
@@ -503,6 +325,8 @@ right: 0;
     }
   </script>
 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>

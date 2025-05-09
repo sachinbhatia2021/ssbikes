@@ -55,7 +55,7 @@ position: relative;
     <div class="nav">
       <a class="" href="{{ url_for('dash') }}"><img  src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
       <ul>
-        <li><a href="{{ url_for('data_table') }}" class="ex2">Table</a></li>
+        <!-- <li><a href="{{ url_for('data_table') }}" class="ex2">Table</a></li> -->
        <li> <a href="{{url_for('alldevices')}}">Devices</a></li>
 
        <li> <a href="#" id="logout-btn">Log Out</a></li>
@@ -68,7 +68,7 @@ position: relative;
     <div class="text d-flex">
       <div class="hideicon">
         <a href="{{ url_for('dash') }}" class="ex2 me-2">
-          <img class="ms-1" src="/static/logo.jpeg" height="50px" style="margin-left: -10px;" alt="">
+          <img class="ms-1" src="/static/logo.jpeg" height="50px" style="margin-left: -12px;" alt="">
 
         </a>
 
@@ -76,9 +76,9 @@ position: relative;
           <h3><i class="bi bi-projector"></i></h3>
         </a>
 
-        <a href="{{ url_for('data_table') }}" class="ex2">
+        <!-- <a href="{{ url_for('data_table') }}" class="ex2">
           <h3><i class="fa-solid fa-table"></i></h3>
-        </a>
+        </a> -->
         <a href="#"  onclick="logout()" id="logout-btn">
           <h3><i class="fa-solid fa-arrow-right-from-bracket"></i></h3>
         </a>
@@ -90,7 +90,7 @@ position: relative;
         <h4 class="text-light mt-4">Analytics</h4>
         <a href="{{url_for('alldevices')}}" class="ex2 mt-4">Devices</a>
 
-        <a href="{{ url_for('data_table') }}" class="ex2 mt-3">Table</a>
+        <!-- <a href="{{ url_for('data_table') }}" class="ex2 mt-3">Table</a> -->
 
         <a class="mt-3" onclick="logout()" href="#" id="logout-btn">Log Out</a>
       </div>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="icon" type="image/x-icon" href="../static/logo.jpeg">
+  <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nanum+Brush+Script&family=Open+Sans:wght@600&family=Poppins:wght@200;400;500;600;700;900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500&display=swap"
+    rel="stylesheet" />
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+  <title>Inverter Analytics</title>
+  <link rel="stylesheet" href="../../static/nav_foot.css">
+  <link rel="stylesheet" href="../../static/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  
+</head>
+
+<body>
+<style>
+  
+/* footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  background-color: rgb(234, 238, 245);
+  padding: 10px;
+  bottom: 0;
+right: 0;
+
+}
+@media(max-width:576px){
+  .footer{
+   
+    background-color: rgb(234, 238, 245);
+  font-size: 10px;
+
+  }
+}
+
+
+.header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px;
+      background-color: #EAEEF5;
+    }
+
+</style>
+
+<!--  -->
+<!-- navbar -->
+<div class="header-bar ">
+    <div>
+        <a class="" href="{{ url_for('client_dash') }}"><img  src="/static/logo.jpeg" class="logo" alt="LOGO" /></a>
+    </div>
+  
+    <!-- Right Profile Icon -->
+    <div>
+    
+      <a href="#" onclick="logout()" id="logout-btn" class="btn btn-outline-danger rounded-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+          <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+  <!-- maindashboard -->
+<div class="contentclient">
+    <div class="box full-width">
+      <div class="d-flex justify-content-between ">
+        <h3 class="mt-4"> detail_user1[2] </h3>
+        <div class="company-logo-container" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+          <div class="company-logo1"><img class="company-logo mt-4" src="https://gcs.ac.in/admin/images/user_icon.png" height="150px" width="150px"></div>
+        </div>
+      </div>
+      <p class="add"><i class='bx bxs-business'></i> Address : detail_user1[3],  detail_user1[4] , 
+        detail_user1[5] <br> Pincode:  detail_user1[6]  </p>
+      <p class="add"><i class='bx bxs-phone'></i> Phone No : +91-detail_user1[8]</p>
+      <p class="gst">GST : #  detail_user1[7] </p>
+    
+   
+    
+      <!-- Pop up for Edit/Add details form -->
+      <div class="d-flex">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" {% if not
+         detail_user1[2] %}hidden{% endif %}>
+          Edit details
+        </button>
+    
+        <!-- EDIT DETAILS (CLIENTDETAILS) -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content" style="width: 700px;">
+              <div class="modal-header">
+                <h3 class="card-title">
+                  <i class='bx bx-copy-alt'></i>Edit Details
+                </h3>
+                <button type="button" class="btn-close btn btn-danger" data-bs-dismiss="modal"
+                  aria-label="Close">X</button>
+              </div>
+              <div class="modal-body">
+                <div class="card d-flex">
+                  <div class="card-header">
+                    <div>
+                      <div>
+                        <form id="editForm" onsubmit="event.preventDefault(); editClient();">
+                          <div class="container">
+                            <div class="form-section">
+                              <div class="form-group">
+                                <label for="companyupdate">Company <span class="required-asterisk"
+                                    style="color:red;">*</span></label>
+                                <input class="input" type="text" id="companyupdate" value="detail_user1[2]"
+                                  name="company" placeholder="Enter Company Name" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="addressupdate">Address <span class="required-asterisk"
+                                    style="color:red;">*</span></label>
+                                <input class="input" value="detail_user1[3]" type="text" id="addressupdate"
+                                  name="address" placeholder="Enter Company Address" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="stateupdate">State <span class="required-asterisk"
+                                    style="color:red;">*</span></label>
+                                <input required type="text" id="stateupdate" placeholder="Enter State"
+                                  oninput="filterStates('stateupdate', 'autocomplete-list')" value="detail_user1[4]">
+                                <div id="autocomplete-list" class="autocomplete-list"></div>
+                              </div>
+                            </div>
+                            <div class="form-section">
+                              <div class="form-group">
+                                <label for="districtcupdate">District <span class="required-asterisk"
+                                    style="color:red;">*</span></label>
+                                <input class="input" value="detail_user1[5]" type="text" id="districtcupdate"
+                                  name="district" placeholder="Enter District"
+                                  oninput="filterDistrict('districtcupdate', 'autocomplete-list5')" required>
+                                <div id="autocomplete-list5" class="autocomplete-list"></div>
+                              </div>
+                              <div class="form-group">
+                                <label for="pincodeupdate">Pincode <span class="required-asterisk"
+                                    style="color:red;">*</span></label>
+                                <input class="input" value="detail_user1[6]" type="number" id="pincodeupdate"
+                                  name="pincode" min="0" placeholder="Enter Pincode" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="phoneNoupdate">Phone No. <span class="required-asterisk"
+                                    style="color:red;">*</span></label>
+                                <input required class="input" value="detail_user1[8]" type="number" id="phoneNoupdate"
+                                  name="phoneNo" placeholder="Enter Phone No">
+                              </div>
+                              <div class="form-group">
+                                <label for="gst_edit">GST <span class="required-asterisk"
+                                    style="color:red;">*</span></label>
+                                <input required class="input" value="detail_user1[7]" type="text" id="gst_edit"
+                                  name="gst" placeholder="Enter GST">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="text-center mt-2">
+                            <button type="submit" class="btn btn-primary ms-5">Save</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <!-- ADD DETAILS POPUP (CLIENTDETAILS) -->
+        <!-- Button trigger -->
+        <div style="margin-left: 3px;">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModals" {% if
+             detail_user1[2] %}hidden{% endif %}>
+            Add details
+          </button>
+        </div>
+    
+        <!-- Add Details ClientDetails -->
+        <div class="modal fade" id="exampleModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content" style="width: 700px;">
+              <div class="modal-header">
+                <h3 class="modal-title fs-5" id="exampleModalLabel"><i class='bx bx-copy-alt'></i> Add Details</h3>
+                <button type="button" class=" btn btn-danger" data-bs-dismiss="modal"
+                  aria-label="Close">X</button>
+              </div>
+              <div class="modal-body">
+                <form id="uploadForm" onsubmit="event.preventDefault(); upload();">
+                  <div class="container">
+                    <div class="form-section">
+                      <div class="form-group">
+                        <label for="fullName">Full Name<span class="required-asterisk" style="color:red;">*</span></label>
+                        <input required class="input" type="text" id="fullName" name="fullName"
+                          placeholder="Full Name">
+                      </div>
+                      <div class="form-group">
+                        <label for="email">Email <span class="required-asterisk" style="color:red;">*</span></label>
+                        <input required class="input" type="email" id="email" name="email"
+                          placeholder="Enter your email">
+                      </div>
+                      <div class="form-group">
+                        <label for="mobileNo">Mobile No. <span class="required-asterisk" style="color:red;">*</span></label>
+                        <input type="number" id="mobileNo" placeholder="Mobile number">
+
+                        <div id="autocomplete-listupdate6" class="autocomplete-list"></div>
+                      </div>
+                      <div class="form-group">
+                        <label for="profile_image">Profile image<span class="required-asterisk"
+                            style="color:red;">*</span></label>
+                        <input class="input" type="file" id="profile_image" name="profile_image" required>
+                      </div>
+                    </div>
+                    <div class="form-section">
+                       <div class="form-group">
+                        <label for="address">Address <span class="required-asterisk"
+                            style="color:red;">*</span></label>
+                        <input required class="input" type="text" id="address" name="address"
+                          placeholder="Enter your address" >
+                    
+                      </div>
+                      <div class="form-group">
+                        <label for="district">District <span class="required-asterisk"
+                            style="color:red;">*</span></label>
+                        <input required class="input" type="text" id="district" name="district"
+                          placeholder="Enter District" >
+                    
+                      </div>
+                      <div class="form-group">
+                        <label for="pincode">Pincode <span class="required-asterisk" style="color:red;">*</span></label>
+                        <input required class="input" type="number" id="pincode" name="pincode" min="0"
+                          placeholder="Enter Pincode">
+                      </div>
+                      <div class="form-group">
+                        <label for="State">State <span class="required-asterisk" style="color:red;">*</span></label>
+                        <input required class="input" type="text" id="State" name="State"
+                          placeholder="Enter state">
+                      </div>
+                      <button type="submit">Upload</button>
+                    </div>
+                  </div>
+              
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+     <!-- Footer -->
+     <div class="footer">
+      <p class="" style="margin-left: 10px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>
+      <p style="margin-right: 30px;" class="version">Version 1.0.1</p>
+    </div>
+  <!--  -->
+<!-- Add client details popup script -->
+<script>
+  function upload() {
+    const fullName = document.getElementById("fullName").value;
+    const email = document.getElementById("email").value;
+    const mobileNo= document.getElementById("mobileNo").value;
+    const address = document.getElementById("address").value;
+    const district = document.getElementById("district").value;
+    const profile_image = document.getElementById("profile_image").files[0];
+    const pincode = document.getElementById("pincode").value;
+    const State = document.getElementById("State").value;
+
+
+    const formData = new FormData();
+    formData.append("fullName", fullName);
+    formData.append("email", email);
+    formData.append("mobileNo", mobileNo);
+    formData.append("address", address);
+    formData.append("district", district);
+    formData.append("profile_image", profile_image);
+    formData.append("pincode", pincode);
+    formData.append("State", State);
+    fetch('/clientinsert', {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+</script>
+
+<!-- Edit Client Details popup script -->
+<script>
+  function editClient() {
+    if (validateForm()) {
+      const company = document.getElementById("companyupdate").value;
+      const address = document.getElementById("addressupdate").value;
+      const state = document.getElementById("stateupdate").value;
+      const district = document.getElementById("districtcupdate").value;
+      const pincode = document.getElementById("pincodeupdate").value;
+      const phoneNo = document.getElementById("phoneNoupdate").value;
+      const gst = document.getElementById("gst_edit").value;
+
+      const formData = new FormData();
+      formData.append('company', company);
+      formData.append('address', address);
+      formData.append('state', state);
+      formData.append('district', district);
+      formData.append('pincode', pincode);
+      formData.append('phoneNo', phoneNo);
+      formData.append('gst', gst);
+
+      fetch('/clientupdate', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message);
+          window.location.reload();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+  }
+
+  function validateForm() {
+    const company = document.getElementById("companyupdate").value;
+    const address = document.getElementById("addressupdate").value;
+    const state = document.getElementById("stateupdate").value;
+    const district = document.getElementById("districtcupdate").value;
+    const pincode = document.getElementById("pincodeupdate").value;
+    const phoneNo = document.getElementById("phoneNoupdate").value;
+    const gst = document.getElementById("gst_edit").value;
+
+    if (!company || !address || !state || !district || !pincode || !phoneNo || !gst) {
+      alert("All fields are required!");
+      return false;
+    }
+    return true;
+  }
+</script>
+
+<!-- Script for add details pop up of clientdetails logo validation -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var fileInput = document.getElementById('file_logo');
+    fileInput.addEventListener('change', function () {
+      var file = fileInput.files[0];
+      var allowedExtensions = /(\.png|\.jpg|\.jpeg)$/i;
+      if (!allowedExtensions.exec(file.name)) {
+        alert('Invalid file type. Please upload a file with a valid extension: .png, .jpg, .jpeg');
+        fileInput.value = '';
+        return false;
+      }
+    });
+  });
+</script>
+
+<!-- Image Change Script  -->
+<script>
+  function image_upload_logo() {
+    const company__logo = document.getElementById("image_upload").files[0];
+    if (company__logo) {
+      const formData = new FormData();
+      formData.append("file", company__logo);
+      const fileType = company__logo.type;
+      if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/jpg') {
+        fetch("/image_upload", {
+          method: "POST",
+          body: formData
+        })
+          .then(response => response.json())
+          .then(data => {
+            alert(data.message);
+            window.location.reload();
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      } else {
+        alert("Please upload a PNG or JPEG or jpg File");
+      }
+    } else {
+      alert("No file selected.");
+    }
+  }
+</script>
+
+ 
+  <!-- logout -->
+  <script>
+ 
+        function logout() {
+          fetch("/logout", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => {
+              if (response.ok) {
+                window.location.href = "/";
+              } else {
+                window.location.href = "/";
+              }
+            })
+            .catch((error) => {
+              console.error("Logout failed:", error);
+              window.location.href = "/";
+            });
+        }
+
+    
+  </script>
+
+  <!-- for automatically logout -->
+  <script>
+    var timeout;
+    var logoutTime = 20 * 60 * 1000; // 20 minutes
+
+    function resetTimer() {
+      clearTimeout(timeout);
+      timeout = setTimeout(logout, logoutTime);
+    }
+
+    function logout() {
+      fetch("/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            window.location.href = "/";
+          } else {
+            window.location.href = "/";
+          }
+        })
+        .catch((error) => {
+          console.error("Logout failed:", error);
+          window.location.href = "/";
+        });
+    }
+
+    document.onload = resetTimer;
+    document.onmousemove = resetTimer;
+    document.onkeypress = resetTimer;
+
+    resetTimer();
+
+    function preventBack() {
+      window.history.replaceState(null, null, window.location.href);
+      window.onpopstate = function () {
+        window.history.replaceState(null, null, window.location.href);
+        window.location.href = "/";
+      };
+    }
+
+  </script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
