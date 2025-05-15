@@ -48,6 +48,7 @@
       border: none;
     }
     input[type="text"],
+   textarea,
     input[type="number"] {
       width: 100%;
       padding: 8px;

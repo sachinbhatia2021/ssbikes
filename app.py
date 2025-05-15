@@ -192,7 +192,7 @@ def client_dash():
             cursor.execute(acconsumed)
             acconsumedunit=cursor.fetchone()[0]
         return render_template('/client/client_dash.html',alldataprint=alldataprint,dcGenerated=dcGenerated,
-                                  acconsumedunit=acconsumedunit ,dcdevicecount=dcdevicecount,detail_user1='dd')
+                                  acconsumedunit=acconsumedunit ,dcdevicecount=dcdevicecount)
     
     except Exception as e:
         return str(e), 500
@@ -240,23 +240,40 @@ def dash():
 def user_profile():
     connection = None
     try:
+        u_email = session.get('u_email')
         connection = get_db_connection()  
         with connection.cursor(buffered=True) as cursor:
-      
+            clientdetails = """
+                SELECT * FROM clientdetails
+                WHERE company_id = (
+                    SELECT company_id FROM sa_users WHERE u_email = %s
+                )
+            """
+            cursor.execute(clientdetails, (u_email,))
+            result = cursor.fetchall()
+            
+            if not result:
+                detail_clients = None
+            else:
+                detail_clients = result[0]
 
-            return render_template('client/profile.html',detail_user1='bb')
-    
+            return render_template('client/profile.html', detail_clients=detail_clients)
+
     except Exception as e:
         return str(e), 500
 
     finally:
         if connection:
-            connection.close() 
+            connection.close()
+
+
 # Function to insert Clientdetails data
+###################################################################################
 @app.route('/clientinsert', methods=['POST'])
 def clientinsert():
     connection = None
     try:
+        # Get form data and session details
         data = request.form
         u_email = session.get('u_email')
         u_password = session.get('u_password')
@@ -264,14 +281,15 @@ def clientinsert():
         company_id = cd[6] if cd else None
 
         if not company_id:
-            return jsonify({'message': 'Please Login again'}), 400
+            return jsonify({'message': 'Please login again'}), 400
 
-        required_fields = ['fullName', 'email', 'mobileNo', 'address',
-                           'district', 'pincode', 'State']
+        # Validate required form fields
+        required_fields = ['fullName', 'email', 'mobileNo', 'address', 'district', 'pincode', 'State']
         for field in required_fields:
             if field not in data:
                 return jsonify({'message': f'Missing required field: {field}'}), 400
 
+        # Check for profile image in uploaded files
         if 'profile_image' not in request.files:
             return jsonify({'message': 'No file part'}), 400
 
@@ -279,33 +297,44 @@ def clientinsert():
         if file.filename == '':
             return jsonify({'message': 'No selected file'}), 400
 
-        FOLDER_NAME = 'ImagesSolset'
-        s3_key = f"{FOLDER_NAME}/{u_email}_{file.filename}"
-        s3_client.upload_fileobj(
-            file,
-            BUCKET_NAME,
-            s3_key,
-            ExtraArgs={'ACL': 'public-read'}
-        )
-        s3_url = f"https://{BUCKET_NAME}.s3.{region_name}.amazonaws.com/{s3_key}"
+        # Upload profile image to S3
+        try:
+            FOLDER_NAME = 'ImagesSolset'
+            s3_key = f"{FOLDER_NAME}/{u_email}_{file.filename}"
+            s3_client.upload_fileobj(
+                file,
+                BUCKET_NAME,
+                s3_key,
+                ExtraArgs={'ACL': 'public-read'}
+            )
+            s3_url = f"https://{BUCKET_NAME}.s3.{region_name}.amazonaws.com/{s3_key}"
+            print(f"File successfully uploaded to {s3_url}")
+        except Exception as e:
+            print(f"S3 upload failed: {e}")
+            return jsonify({'message': 'S3 upload failed', 'error': str(e)}), 500
 
+        # Connect to database
         connection = get_db_connection()
         if connection is None:
             return jsonify({'message': 'Database connection error'}), 500
 
         with connection.cursor(buffered=True) as cursor:
+            # Update existing record with new profile image
             update_query = """
                 UPDATE clientdetails SET profile_image = %s WHERE company_id = %s
             """
             cursor.execute(update_query, (s3_url, company_id))
             connection.commit()
 
+            # Insert new client details
             created_at = datetime.now()
             insert_query = """
-                INSERT INTO clientdetails (company_id, full_Name, email, phone, address, district, State, pincode, created_at, profile_image)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO clientdetails (
+                    company_id, full_Name, email, phone, address,
+                    district, State, pincode, created_at, profile_image
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
-            values = (
+            insert_values = (
                 company_id,
                 data['fullName'],
                 data['email'],
@@ -317,19 +346,73 @@ def clientinsert():
                 created_at,
                 s3_url
             )
-            cursor.execute(insert_query, values)
+            cursor.execute(insert_query, insert_values)
             connection.commit()
 
         return jsonify({'message': 'Data inserted successfully'}), 200
 
     except mysql.connector.Error as e:
-        print(f"Error with MySQL: {e}")
-        return jsonify({'message': 'Error with MySQL: ' + str(e)}), 500
+        print(f"MySQL Error: {e}")
+        return jsonify({'message': 'MySQL Error', 'error': str(e)}), 500
+
+    except Exception as e:
+        print(f"Unexpected Error: {e}")
+        return jsonify({'message': 'Unexpected server error', 'error': str(e)}), 500
 
     finally:
         if connection:
             connection.close()
 ##########################################################################################################
+# Function to update client details
+@app.route('/clientupdate', methods=['POST'])
+def clientupdate():
+    connection = None
+    try:        
+        data = request.form
+        fullName = data.get('fullName')
+        mobileNo = data.get('phoneNo')
+        address = data.get('address')
+        district = data.get('district')
+        pincode = data.get('pincode')
+        state = data.get('state')
+        u_email = session.get('u_email')
+        print("mobileNo:", data.get('mobileNo'))
+        print("state:", data.get('State'))       
+        if not u_email:
+            return jsonify({'message': 'Please Login again'}), 400
+
+        connection = get_db_connection()
+        if connection is None:
+            return jsonify({'message': 'Database connection error'}), 500
+
+        query = """
+            UPDATE clientdetails
+            SET full_name = %s,phone = %s,address = %s,district = %s,state=%s,pincode = %s
+            WHERE company_id = (SELECT company_id FROM sa_users WHERE u_email = %s)
+        """
+        values =(
+            fullName,
+            mobileNo,
+            address,
+            district,
+            state,
+            pincode,
+            u_email
+        )
+        with connection.cursor(buffered=True) as cursor:
+            cursor.execute(query, values)
+            connection.commit()
+
+        return jsonify({'message': 'Data updated successfully'}), 200
+
+    except mysql.connector.Error as e:
+        print(f"Error with MySQL: {e}")
+        return jsonify({'message': 'Error with MySQL: ' + str(e)}), 500
+    
+    finally:
+        if connection:
+            connection.close()
+#################################################################################################
 #  inverter
 @app.route('/alldevices')
 def alldevices():
@@ -338,33 +421,32 @@ def alldevices():
         connection = get_db_connection()  
         with connection.cursor(buffered=True) as cursor:
             alldata = """
-            WITH LatestData AS (
-    SELECT dc.Device_id, 
-           dc.timestamp,
-           ROW_NUMBER() OVER (PARTITION BY dc.Device_id ORDER BY dc.timestamp DESC) AS rn
-    FROM dc_data dc
-)
-SELECT DISTINCT dc.Device_id,
-       t_generated.total_generated,
-       t_consumed.total_consumed,
-       CASE 
-           WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
-           ELSE 'Inactive'
-       END AS status
-FROM LatestData dc
-LEFT JOIN ac_data ac ON dc.Device_id = ac.Device_id
-LEFT JOIN (
-    SELECT device_id, SUM(avg_kwh) AS total_generated 
-    FROM dc_kwh 
-    GROUP BY device_id
-) t_generated ON t_generated.device_id = dc.Device_id
-LEFT JOIN (
-    SELECT device_id, SUM(avg_kwh) AS total_consumed 
-    FROM ac_kwh 
-    GROUP BY device_id
-) t_consumed ON t_consumed.device_id = dc.Device_id
-WHERE dc.rn = 1;
-
+                        WITH LatestData AS (
+                SELECT dc.Device_id, 
+                    dc.timestamp,
+                    ROW_NUMBER() OVER (PARTITION BY dc.Device_id ORDER BY dc.timestamp DESC) AS rn
+                FROM dc_data dc
+            )
+            SELECT DISTINCT dc.Device_id,
+                t_generated.total_generated,
+                t_consumed.total_consumed,
+                CASE 
+                    WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
+                    ELSE 'Inactive'
+                END AS status
+            FROM LatestData dc
+            LEFT JOIN ac_data ac ON dc.Device_id = ac.Device_id
+            LEFT JOIN (
+                SELECT device_id, SUM(avg_kwh) AS total_generated 
+                FROM dc_kwh 
+                GROUP BY device_id
+            ) t_generated ON t_generated.device_id = dc.Device_id
+            LEFT JOIN (
+                SELECT device_id, SUM(avg_kwh) AS total_consumed 
+                FROM ac_kwh 
+                GROUP BY device_id
+            ) t_consumed ON t_consumed.device_id = dc.Device_id
+            WHERE dc.rn = 1;
             """
             cursor.execute(alldata)
             alldataprint = cursor.fetchall()
