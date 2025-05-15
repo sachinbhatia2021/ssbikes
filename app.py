@@ -252,7 +252,7 @@ def user_profile():
     finally:
         if connection:
             connection.close() 
-# Function to insert Clientdetails data
+## Function to insert Clientdetails data
 @app.route('/clientinsert', methods=['POST'])
 def clientinsert():
     connection = None
