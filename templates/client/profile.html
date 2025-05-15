@@ -90,22 +90,21 @@ right: 0;
 <div class="contentclient">
     <div class="box full-width">
       <div class="d-flex justify-content-between ">
-        <h3 class="mt-4"> detail_user1[2] </h3>
+        <h3 class="mt-4"> {{detail_clients[2]}} </h3>
+       
         <div class="company-logo-container" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-          <div class="company-logo1"><img class="company-logo mt-4" src="https://gcs.ac.in/admin/images/user_icon.png" height="150px" width="150px"></div>
+          <div class="company-logo1"><img class="company-logo mt-4" src="{{detail_clients[10]}}" height="150px" width="150px"></div>
         </div>
       </div>
-      <p class="add"><i class='bx bxs-business'></i> Address : detail_user1[3],  detail_user1[4] , 
-        detail_user1[5] <br> Pincode:  detail_user1[6]  </p>
-      <p class="add"><i class='bx bxs-phone'></i> Phone No : +91-detail_user1[8]</p>
-      <p class="gst">GST : #  detail_user1[7] </p>
-    
+      <p class="add"><i class='bx bxs-business'></i> Address : {{detail_clients[5]}},  {{detail_clients[6]}} , {{detail_clients[7]}}
+       <br> Pincode:  {{detail_clients[8]}}  </p>
+      <p class="add"><i class='bx bxs-phone'></i> Phone No : +91-{{detail_clients[4]}}</p>
    
     
       <!-- Pop up for Edit/Add details form -->
       <div class="d-flex">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" {% if not
-         detail_user1[2] %}hidden{% endif %}>
+         detail_clients[2] %}hidden{% endif %}>
           Edit details
         </button>
     
@@ -117,7 +116,7 @@ right: 0;
                 <h3 class="card-title">
                   <i class='bx bx-copy-alt'></i>Edit Details
                 </h3>
-                <button type="button" class="btn-close btn btn-danger" data-bs-dismiss="modal"
+                <button type="button" class=" btn btn-danger" data-bs-dismiss="modal"
                   aria-label="Close">X</button>
               </div>
               <div class="modal-body">
@@ -129,52 +128,47 @@ right: 0;
                           <div class="container">
                             <div class="form-section">
                               <div class="form-group">
-                                <label for="companyupdate">Company <span class="required-asterisk"
+                               <label for="companyupdate">full Name <span class="required-asterisk"
                                     style="color:red;">*</span></label>
-                                <input class="input" type="text" id="companyupdate" value="detail_user1[2]"
+                                <input class="input" type="text" id="fullNameUpdate" value=" {{detail_clients[2]}}"
                                   name="company" placeholder="Enter Company Name" required>
                               </div>
                               <div class="form-group">
                                 <label for="addressupdate">Address <span class="required-asterisk"
                                     style="color:red;">*</span></label>
-                                <input class="input" value="detail_user1[3]" type="text" id="addressupdate"
-                                  name="address" placeholder="Enter Company Address" required>
+                                   
+                                <textarea class="input" id="addressUpdate"
+                                placeholder="Enter Company Address" required>{{ detail_clients[5] }}</textarea>
                               </div>
                               <div class="form-group">
-                                <label for="stateupdate">State <span class="required-asterisk"
+                                <label for="stateUpdate">State <span class="required-asterisk"
                                     style="color:red;">*</span></label>
-                                <input required type="text" id="stateupdate" placeholder="Enter State"
-                                  oninput="filterStates('stateupdate', 'autocomplete-list')" value="detail_user1[4]">
-                                <div id="autocomplete-list" class="autocomplete-list"></div>
+                                <input required type="text" id="stateUpdate" value=" {{detail_clients[7]}}" placeholder="Enter State"
+                                 >
                               </div>
                             </div>
                             <div class="form-section">
                               <div class="form-group">
                                 <label for="districtcupdate">District <span class="required-asterisk"
                                     style="color:red;">*</span></label>
-                                <input class="input" value="detail_user1[5]" type="text" id="districtcupdate"
+                                <input class="input" value="{{detail_clients[6]}}" type="text" id="districtUpdate"
                                   name="district" placeholder="Enter District"
-                                  oninput="filterDistrict('districtcupdate', 'autocomplete-list5')" required>
+                                 >
                                 <div id="autocomplete-list5" class="autocomplete-list"></div>
                               </div>
                               <div class="form-group">
                                 <label for="pincodeupdate">Pincode <span class="required-asterisk"
                                     style="color:red;">*</span></label>
-                                <input class="input" value="detail_user1[6]" type="number" id="pincodeupdate"
-                                  name="pincode" min="0" placeholder="Enter Pincode" required>
+                                <input class="input" value="{{detail_clients[8]}}" type="number" id="pincodeUpdate"
+                                  name="pincodeUpdate" min="0" placeholder="Enter Pincode" required>
                               </div>
                               <div class="form-group">
                                 <label for="phoneNoupdate">Phone No. <span class="required-asterisk"
                                     style="color:red;">*</span></label>
-                                <input required class="input" value="detail_user1[8]" type="number" id="phoneNoupdate"
+                                <input required class="input" value="{{detail_clients[4]}}" type="number" id="phoneNoUpdate"
                                   name="phoneNo" placeholder="Enter Phone No">
                               </div>
-                              <div class="form-group">
-                                <label for="gst_edit">GST <span class="required-asterisk"
-                                    style="color:red;">*</span></label>
-                                <input required class="input" value="detail_user1[7]" type="text" id="gst_edit"
-                                  name="gst" placeholder="Enter GST">
-                              </div>
+                              
                             </div>
                           </div>
                           <div class="text-center mt-2">
@@ -194,7 +188,7 @@ right: 0;
         <!-- Button trigger -->
         <div style="margin-left: 3px;">
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModals" {% if
-             detail_user1[2] %}hidden{% endif %}>
+             detail_clients[2] %}hidden{% endif %}>
             Add details
           </button>
         </div>
@@ -290,7 +284,7 @@ right: 0;
     const pincode = document.getElementById("pincode").value;
     const State = document.getElementById("State").value;
 
-
+console.log(profile_image,'ff')
     const formData = new FormData();
     formData.append("fullName", fullName);
     formData.append("email", email);
@@ -318,24 +312,22 @@ right: 0;
 <!-- Edit Client Details popup script -->
 <script>
   function editClient() {
-    if (validateForm()) {
-      const company = document.getElementById("companyupdate").value;
-      const address = document.getElementById("addressupdate").value;
-      const state = document.getElementById("stateupdate").value;
-      const district = document.getElementById("districtcupdate").value;
-      const pincode = document.getElementById("pincodeupdate").value;
-      const phoneNo = document.getElementById("phoneNoupdate").value;
-      const gst = document.getElementById("gst_edit").value;
-
+     const fullName = document.getElementById("fullNameUpdate").value;
+      const phoneNo = document.getElementById("phoneNoUpdate").value;
+      const address = document.getElementById("addressUpdate").value;
+      const state = document.getElementById("stateUpdate").value;
+      const district = document.getElementById("districtUpdate").value;
+      const pincode = document.getElementById("pincodeUpdate").value;
+console.log(fullName,email,phoneNo,address,state,district,pincode)
       const formData = new FormData();
-      formData.append('company', company);
+      formData.append('fullName', fullName);
+      formData.append('phoneNo', phoneNo);
+      formData.append('email', email);
       formData.append('address', address);
       formData.append('state', state);
       formData.append('district', district);
       formData.append('pincode', pincode);
-      formData.append('phoneNo', phoneNo);
-      formData.append('gst', gst);
-
+    
       fetch('/clientupdate', {
         method: 'POST',
         body: formData
@@ -349,29 +341,14 @@ right: 0;
           console.error('Error:', error);
         });
     }
-  }
+  
 
-  function validateForm() {
-    const company = document.getElementById("companyupdate").value;
-    const address = document.getElementById("addressupdate").value;
-    const state = document.getElementById("stateupdate").value;
-    const district = document.getElementById("districtcupdate").value;
-    const pincode = document.getElementById("pincodeupdate").value;
-    const phoneNo = document.getElementById("phoneNoupdate").value;
-    const gst = document.getElementById("gst_edit").value;
-
-    if (!company || !address || !state || !district || !pincode || !phoneNo || !gst) {
-      alert("All fields are required!");
-      return false;
-    }
-    return true;
-  }
 </script>
 
 <!-- Script for add details pop up of clientdetails logo validation -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    var fileInput = document.getElementById('file_logo');
+    var fileInput = document.getElementById('profile_image');
     fileInput.addEventListener('change', function () {
       var file = fileInput.files[0];
       var allowedExtensions = /(\.png|\.jpg|\.jpeg)$/i;
