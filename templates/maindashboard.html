@@ -75,10 +75,10 @@ position: relative;
         <a href="{{url_for('alldevices')}}">
           <h3><i class="bi bi-projector"></i></h3>
         </a>
-
-        <!-- <a href="{{ url_for('data_table') }}" class="ex2">
-          <h3><i class="fa-solid fa-table"></i></h3>
-        </a> -->
+         <a href="{{url_for('users')}}">
+          <h3><i class="fa-solid fa-user"></i> </h3>
+        </a>
+          
         <a href="#"  onclick="logout()" id="logout-btn">
           <h3><i class="fa-solid fa-arrow-right-from-bracket"></i></h3>
         </a>
@@ -89,6 +89,9 @@ position: relative;
       <div class="mt-2" style="font-size: 25px;">
         <h4 class="text-light mt-4">Analytics</h4>
         <a href="{{url_for('alldevices')}}" class="ex2 mt-4">Devices</a>
+        <a href="{{url_for('users')}}" class="ex2 mt-3">Users</a>
+
+
 
         <!-- <a href="{{ url_for('data_table') }}" class="ex2 mt-3">Table</a> -->
 
@@ -148,13 +151,61 @@ position: relative;
 
       <!--  -->
     </div>
-   
-    <!-- Footer -->
-    <!-- <div class="footer">
-      <p class="" style="margin-left: 30px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>
-      <p style="margin-right: 15px;" class="version">Version 1.0.1</p>
-    </div> -->
-  </div> <!-- logout -->
+   <!-- next card -->
+  <div class="con_small">
+        <div class="half-width" style="text-align: center">
+        <br />
+        <span style="font-size: 40px; display: flex; justify-content: center" class="text-center mt-2 sizebox">{{dcdevicecount}}
+        </span>
+        <br />
+         <div class="d-flex justify-content-center " style="margin-bottom: 13px">
+          <a href="{{url_for('alldevices')}}" >
+          <h3 ><i class="bi bi-projector"></i></h3>  
+                 <a href="{{url_for('alldevices')}}"  style="margin-left: 30px; margin-top: 5px;">No. of devices</a>
+        </div>
+      </div>
+      <div class="half-width" style="text-align: center">
+        <br />
+        <span style="font-size: 40px; display: flex; justify-content: center " class="text-center mt-2 sizebox">{{users_count}}
+          <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
+        </span>
+        <br />
+          <div class="d-flex justify-content-center " style="margin-bottom: 13px">
+          <a href="{{url_for('users')}}">
+          <h4 ><i class="fa-solid fa-user"></i></h4> </a>
+          <a style="margin-left: 30px; margin-top:8px;" href="{{url_for('users')}}">Users</a>
+     
+        </div>
+      </div>
+      <div class="half-width">
+        <br />
+        <span style="font-size: 40px; display: flex; justify-content: center " class="text-center sizebox mt-2">{{devices_count}}
+          <!-- <span class="mt-4 ms-2" style="font-size: 15px">V</span> -->
+        </span>
+        <br />
+        <div class="d-flex justify-content-center " style="margin-bottom: 13px">
+          <a href="{{url_for('assigned_devices')}}">
+          <h3 ><i class="bi bi-projector"></i></h3> </a>
+         <a href="{{url_for('assigned_devices')}}" style="margin-left: 30px; margin-top:5px;" >Assigned Devices</a> 
+        </div>
+      </div>
+      <div class="half-width" style="text-align: center">
+        <br />
+        <span style="font-size: 40px; display: flex; justify-content: center" class="text-center mt-2 sizebox">{{unassignedcountdata}}
+          <!-- <span class="ms-2 mt-4" style="font-size: 18px">W</span> -->
+        </span>
+        <br />
+         <div class="d-flex justify-content-center " style="margin-bottom: 13px">
+          <a href="{{url_for('unassigned_devices')}}">
+          <h3 ><i class="bi bi-projector"></i></h3> </a><span style="color: red;" >X</span> 
+         <a href="{{url_for('unassigned_devices')}}"  style="margin-left: 30px; margin-top: 5px;">Unassigned Devices</a>
+         
+        </div>
+      </div>
+    
+    </div>
+   </div> 
+    
     <script>
       document
      

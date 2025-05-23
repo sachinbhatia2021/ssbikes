@@ -1,9 +1,12 @@
-from flask import render_template, Flask, redirect, request, url_for, jsonify,session,make_response
+from flask import render_template, Flask, redirect, request, url_for, jsonify,session,make_response,send_file
+import pandas as pd
+import pymysql
 from dotenv import load_dotenv
 import mysql.connector.pooling
 from mysql.connector import Error
 from flask import session
 from datetime import datetime,date,timedelta
+from io import BytesIO
 import math
 from flask_cors import CORS
 import os
@@ -131,37 +134,48 @@ def client_dash():
         connection = get_db_connection()  
         with connection.cursor(buffered=True) as cursor:
             alldata = """
-            SELECT DISTINCT 
-            dc.Device_id,
-            t_generated.total_generated,
-            t_consumed.total_consumed,
-            CASE 
-                WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
-                ELSE 'Inactive'
-            END AS status
-        FROM dc_data dc
-        JOIN (
-            SELECT Device_id, MAX(timestamp) AS latest_timestamp
-            FROM dc_data
-            GROUP BY Device_id
-        ) latest ON dc.Device_id = latest.Device_id AND dc.timestamp = latest.latest_timestamp
+SELECT DISTINCT 
+    dc.Device_id,
+    t_generated.total_generated,
+    t_consumed.total_consumed,
+    CASE 
+        WHEN TIMESTAMPDIFF(HOUR, dc.timestamp, NOW()) <= 1 THEN 'Active'
+        ELSE 'Inactive'
+    END AS status
+FROM dc_data dc
 
-        LEFT JOIN ac_data ac ON dc.Device_id = ac.Device_id  -- Changed from JOIN to LEFT JOIN
+JOIN (
+    SELECT Device_id, MAX(timestamp) AS latest_timestamp
+    FROM dc_data
+    GROUP BY Device_id
+) latest 
+    ON dc.Device_id = latest.Device_id AND dc.timestamp = latest.latest_timestamp
 
-        LEFT JOIN (
-            SELECT device_id, SUM(avg_kwh) AS total_generated
-            FROM dc_kwh
-            GROUP BY device_id
-        ) t_generated ON t_generated.device_id = dc.Device_id
+LEFT JOIN ac_data ac 
+    ON dc.Device_id = ac.Device_id
 
-        LEFT JOIN (
-            SELECT device_id, SUM(avg_kwh) AS total_consumed
-            FROM ac_kwh
-            GROUP BY device_id
-        ) t_consumed ON t_consumed.device_id = dc.Device_id
+LEFT JOIN (
+    SELECT device_id, SUM(avg_kwh) AS total_generated
+    FROM dc_kwh
+    GROUP BY device_id
+) t_generated 
+    ON t_generated.device_id = dc.Device_id
 
-        JOIN sa_users u ON dc.company_id = u.company_id
-        WHERE u.u_email =%s;
+LEFT JOIN (
+    SELECT device_id, SUM(avg_kwh) AS total_consumed
+    FROM ac_kwh
+    GROUP BY device_id
+) t_consumed 
+    ON t_consumed.device_id = dc.Device_id
+
+JOIN clientdevices cd 
+    ON dc.Device_id = cd.Device_id 
+
+JOIN sa_users u 
+    ON cd.company_id = u.company_id
+
+WHERE u.u_email = %s;
+
 
                                       """
             cursor.execute(alldata,(u_email,))
@@ -207,6 +221,8 @@ def client_dash():
 def dash():
     connection = None
     try:
+        users_count, devices_count,dcdevicecount,unassignedcountdata = countdata()
+
         connection = get_db_connection()  
         with connection.cursor(buffered=True) as cursor:
           
@@ -226,7 +242,8 @@ def dash():
             cursor.execute(acconsumed)
             acconsumedunit=cursor.fetchone()[0]
 
-            return render_template('maindashboard.html',dcGenerated=dcGenerated,
+            return render_template('maindashboard.html',users_count=users_count,devices_count=devices_count,dcdevicecount=dcdevicecount,unassignedcountdata=unassignedcountdata,
+                                   dcGenerated=dcGenerated,
                                   acconsumedunit=acconsumedunit )
     
     except Exception as e:
@@ -413,11 +430,72 @@ def clientupdate():
         if connection:
             connection.close()
 #################################################################################################
+# client Company logo insert and their path
+@app.route('/image_upload', methods=['POST'])
+def image_upload():
+    try:
+        connection = get_db_connection()
+        if not connection:
+            return jsonify({'message': 'Database connection failed'}), 500
+
+        u_email = session.get('u_email')
+        u_password = session.get('u_password')
+        cd = user(u_email, u_password)
+        cd_id = cd[6] if cd else None
+
+        if cd_id is None:
+            return jsonify({'message': 'Please Login again'}), 400
+
+        with connection.cursor(buffered=True) as cursor:
+            query = "SELECT * FROM clientdetails WHERE company_id = %s"
+            cursor.execute(query, (cd_id,))
+            detail_id = cursor.fetchone()
+
+            if not detail_id:
+                return jsonify({'message': 'First add the details'}), 404
+
+            if 'file' not in request.files:
+                return jsonify({'message': 'No file part'}), 400
+
+            file = request.files['file']
+            if file.filename == '':
+                return jsonify({'message': 'No selected file'}), 400
+
+            if file:
+                FOLDER_NAME = 'Client_logos'
+                s3_key = f"{FOLDER_NAME}/{u_email}_{file.filename}"
+                s3_client.upload_fileobj(
+                    file,
+                    BUCKET_NAME,
+                    s3_key,
+                    ExtraArgs={'ACL': 'public-read'}
+                )
+                s3_url = f"https://{BUCKET_NAME}.s3.{region_name}.amazonaws.com/{s3_key}"
+                print(f'File successfully uploaded to {s3_url}')
+
+                update_query = """
+                    UPDATE clientdetails SET profile_image = %s WHERE company_id = %s
+                """
+                update_values = (s3_url, cd_id)
+                cursor.execute(update_query, update_values)
+                connection.commit()
+
+        return jsonify({'message': 'Logo Updated successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'message': 'Error updating data: ' + str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+###################################################################################################################
+
 #  inverter
 @app.route('/alldevices')
 def alldevices():
     connection = None
     try:
+        users_count, devices_count,dcdevicecount,unassignedcountdata = countdata()
         connection = get_db_connection()  
         with connection.cursor(buffered=True) as cursor:
             alldata = """
@@ -473,9 +551,10 @@ def alldevices():
             cursor.execute(acconsumed)
             acconsumedunit=cursor.fetchone()[0]
 
-        return render_template('all_devices.html', alldataprint=alldataprint,
-                               dcdevicecount=dcdevicecount,acconsumedunit=acconsumedunit
-                               ,dcGenerated=dcGenerated)
+        return render_template('all_devices.html',users_count=users_count,devices_count=devices_count,dcdevicecount=dcdevicecount,unassignedcountdata=unassignedcountdata,
+                                alldataprint=alldataprint,
+                               acconsumedunit=acconsumedunit
+                               ,dcGenerated=dcGenerated,)
     
     except Exception as e:
         return str(e), 500
@@ -485,6 +564,157 @@ def alldevices():
             connection.close() 
             
 ###############################################################################################################
+#  assigned_devices
+@app.route('/assigned_devices')
+def assigned_devices():
+    connection = None
+    try:
+        users_count, devices_count,dcdevicecount,unassignedcountdata = countdata()
+
+        connection = get_db_connection()  
+        with connection.cursor(buffered=True) as cursor:
+           
+            acconsumed="""
+                   
+          SELECT 
+    clr.Device_id,
+    clr.install_date,
+    clr.location,
+    cld.full_name AS company,
+    cld.address,
+    cld.district,
+    cld.state,
+    cld.pincode
+FROM 
+    clientdevices AS clr
+LEFT JOIN 
+    clientdetails AS cld ON clr.company_id = cld.company_id
+ORDER BY 
+    clr.Device_id;
+
+            """
+            cursor.execute(acconsumed)
+            acconsumedunit=cursor.fetchall()
+            print(acconsumedunit)
+        return render_template('assigneddevices.html',users_count=users_count,devices_count=devices_count,dcdevicecount=dcdevicecount,unassignedcountdata=unassignedcountdata
+                               )
+    
+    except Exception as e:
+        return str(e), 500
+
+    finally:
+        if connection:
+            connection.close() 
+            
+###############################################################################################################
+#  assigned_devices
+@app.route('/unassigned_devices')
+def unassigned_devices():
+    connection = None
+    try:
+        users_count, devices_count,dcdevicecount,unassignedcountdata = countdata()
+ 
+        connection = get_db_connection()  
+        with connection.cursor(buffered=True) as cursor:
+           
+         unassigned = """
+                SELECT * FROM dc_data WHERE Device_id NOT IN (
+                SELECT Device_id FROM clientdevices)
+            """
+         cursor.execute(unassigned)
+         unassigneddetails = cursor.fetchall()
+
+        return render_template('unassigneddevices.html',users_count=users_count,devices_count=devices_count,dcdevicecount=dcdevicecount,unassignedcountdata=unassignedcountdata,unassigneddetails=unassigneddetails)
+    
+    except Exception as e:
+        return str(e), 500
+
+    finally:
+        if connection:
+            connection.close() 
+                       
+###############################################################################################################
+def countdata():
+    connection = None
+    try:
+        connection = get_db_connection()
+        with connection.cursor(buffered=True) as cursor:
+            cursor.execute("SELECT COUNT(cd_id) FROM clientdetails;")
+            count_usersdata = cursor.fetchone()[0]
+
+            cursor.execute("SELECT COUNT(crm_id) FROM clientdevices;")
+            count_assigned_devices = cursor.fetchone()[0]
+            devicecount="""
+                    SELECT count(distinct(Device_id)) from dc_data;
+
+                """
+            cursor.execute(devicecount)
+            dcdevicecount=cursor.fetchone()[0]
+            unassignedcount = """
+                SELECT count(distinct(Device_id)) FROM dc_data WHERE Device_id NOT IN (
+                SELECT Device_id FROM clientdevices)
+            """
+            cursor.execute(unassignedcount)
+            unassignedcountdata = cursor.fetchone()[0]
+            return count_usersdata, count_assigned_devices,dcdevicecount,unassignedcountdata
+    except Exception as e:
+        return str(e), 500
+    finally:
+        if connection:
+            connection.close()
+
+###############################################################################################################
+
+#  assigned_devices
+@app.route('/users')
+def users():
+    connection = None
+    try:
+        # Avoid naming conflict
+        users_count, devices_count,dcdevicecount,unassignedcountdata = countdata()
+        
+        connection = get_db_connection()
+        with connection.cursor(buffered=True) as cursor:
+            cursor.execute("SELECT * FROM clientdetails")
+            user_details = cursor.fetchall()
+
+        return render_template(
+            'users.html',
+    
+            dcdevicecount=dcdevicecount,
+            users_count=users_count,
+            devices_count=devices_count,unassignedcountdata=unassignedcountdata,
+            user_details=user_details
+        )
+    except Exception as e:
+        return str(e), 500
+    finally:
+        if connection:
+            connection.close()
+
+   ############################################################################################################
+# Function for unassign delete robot
+@app.route('/devicedelete/<device_id>', methods=['POST'])
+def devicedelete(device_id):
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(buffered=True) as cursor:
+                # to unassign robot
+                delete_query = """
+                DELETE FROM clientdevices WHERE Device_id = %s
+                """
+                cursor.execute(delete_query, (device_id,))
+                connection.commit()
+                return jsonify({'message': 'Robot Unassigned successfully'}), 200
+
+    except mysql.connector.Error as db_err:
+        return jsonify({'message': 'Database error: ' + str(db_err)}), 500
+
+    except Exception as e:
+        return jsonify({'message': 'Error deleting data: ' + str(e)}), 500
+         
+###############################################################################################################
+
 @app.route('/create_new_user', methods=['POST'])
 def create_new_user():
     connection = None
@@ -888,6 +1118,52 @@ def summary(device):
     except Exception as e:
                  return str(e), 500
 ########################################################################################################
+
+@app.route("/download_excel")
+def download_excel():
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+
+    if not start_date or not end_date:
+        return "Start and end date required", 400
+
+    try:
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
+
+        # Connect to the database
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+            SELECT * FROM ac_data
+            WHERE timestamp BETWEEN %s AND %s
+        """
+        cursor.execute(query, (start, end))
+        data = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        if not data:
+            return "No data found for selected dates", 404
+
+        # Convert to DataFrame
+        df = pd.DataFrame(data)
+
+        # Save as Excel in memory
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Data')
+        output.seek(0)
+
+        filename = f"data_{start_date}_to_{end_date}.xlsx"
+        return send_file(output, download_name=filename, as_attachment=True)
+
+    except Exception as e:
+        return f"Error: {str(e)}", 500
+
+###########################################################################################################
 # Summary page
 @app.route('/client_summary/<device>')
 def client_summary(device):
