@@ -496,12 +496,17 @@ right: 0;
         <a href="{{ url_for('dash') }}" class="ex2 me-2">
           <img class="ms-" src="/static/logo.jpeg" height="50px" style="margin-left: -12px;" alt="">
         </a>
+           <a href="{{url_for('dash')}}">
+          <h3><i class="fa-solid fa-house"></i></h3>
+        </a>
         <a href="{{url_for('alldevices')}}">
           <h3><i class="bi bi-projector"></i></h3>
         </a>
-        <!-- <a href="{{ url_for('data_table') }}" class="ex2">
-          <h3><i class="fa-solid fa-table"></i></h3>
-        </a> -->
+         <a href="{{url_for('users')}}">
+          <h3><i class="fa-solid fa-user"></i> </h3>
+        </a>
+      
+       
         <a  onclick="logout()" href="#" id="logout-btn">
           <h3><i class="fa-solid fa-arrow-right-from-bracket"></i></h3>
         </a>
@@ -509,7 +514,9 @@ right: 0;
       <!-- next textdiv link navbar -->
       <div class="mt-2" style="font-size: 25px;">
         <h4 class="text-light mt-4">Analytics</h4>
-        <a href="{{url_for('alldevices')}}" class="ex2 mt-4">Devices</a>
+          <a href="{{ url_for('dash') }}" class="ex2 mt-4">Home</a>
+        <a href="{{url_for('alldevices')}}" class="ex2 mt-3">Devices</a>
+        <a href="{{url_for('users')}}" class="ex2 mt-3">Users</a>
         <!-- <a href="{{ url_for('data_table') }}" class="ex2 mt-3">Table</a> -->
         <a  onclick="logout()" href="#" id="logout-btn" class="ex2 mt-3">Log Out</a>
       </div>
@@ -1103,10 +1110,42 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
         </div>
       
       </div>
-        <!-- <Button onclick="download()" >Download</Button> -->
+        <!-- <Button onclick="download_Acdata()" >Download Ac Data</Button> -->
+                <Button onclick="" >Download Ac Data</Button>
+       
+
         </div>
-        <script>
-          function download(){
+   <!-- script -->
+<script>
+          function download_Acdata(){
+            const startDate=document.getElementById("start_date_excel").value
+            const endDate=document.getElementById("end_date_excel").value
+
+  if (!startDate || !endDate) {
+    alert("Both start and end dates are required");
+    return;
+  }
+
+  window.location.href = `/download_excel?start_date=${startDate}&end_date=${endDate}`;          }
+  </script>
+    <!-- kwh download -->
+<!-- <script>
+          function download_Ac_kwh_data(){
+        
+  // Trigger file download
+  window.location.href = `/download_excel2`;          }
+  </script> -->
+  <!-- dc kwh -->
+       <!-- kwh download -->
+<!-- <script>
+          function download_Dc_kwh_data(){
+        
+  // Trigger file download
+  window.location.href = `/download_excel3`;          }
+  </script> -->
+<!-- dcdata -->
+<!-- <script>
+          function download_Dcdata(){
             const startDate=document.getElementById("start_date_excel").value
             const endDate=document.getElementById("end_date_excel").value
 
@@ -1116,10 +1155,15 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
   }
 
   // Trigger file download
-  window.location.href = `/download_excel?start_date=${startDate}&end_date=${endDate}`;          }
+  window.location.href = `/download_excel1?start_date=${startDate}&end_date=${endDate}`;          }
         </script>
-      <br>
-   <!-- Footer -->
+     -->
+    
+    <br>
+    <!-- <Button onclick="download_Ac_kwh_data()" >Download Ac Kwh</Button>
+        <Button onclick="download_Dc_kwh_data()" >Download Dc Kwh</Button>
+        <Button onclick="download_Dcdata()" >Download Dc Data</Button> -->
+    <!-- Footer -->
  <br><br>
    <div class="footer">
     <p class="ms-5" style="margin-left: 35px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>

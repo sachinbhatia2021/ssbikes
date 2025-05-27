@@ -1,6 +1,5 @@
 from flask import render_template, Flask, redirect, request, url_for, jsonify,session,make_response,send_file
 import pandas as pd
-import pymysql
 from dotenv import load_dotenv
 import mysql.connector.pooling
 from mysql.connector import Error
@@ -13,7 +12,7 @@ import os
 import boto3
 
 load_dotenv()
-########################################################################################################z##
+##########################################################################################################
 # load the values
 Host = os.getenv("Host")
 user = os.getenv("User")
@@ -595,8 +594,8 @@ ORDER BY
             """
             cursor.execute(acconsumed)
             acconsumedunit=cursor.fetchall()
-            print(acconsumedunit)
-        return render_template('assigneddevices.html',users_count=users_count,devices_count=devices_count,dcdevicecount=dcdevicecount,unassignedcountdata=unassignedcountdata
+        return render_template('assigneddevices.html',users_count=users_count,devices_count=devices_count,dcdevicecount=dcdevicecount,
+        unassignedcountdata=unassignedcountdata,acconsumedunit=acconsumedunit
                                )
     
     except Exception as e:
@@ -618,7 +617,7 @@ def unassigned_devices():
         with connection.cursor(buffered=True) as cursor:
            
          unassigned = """
-                SELECT * FROM dc_data WHERE Device_id NOT IN (
+                SELECT distinct(Device_id) FROM dc_data WHERE Device_id NOT IN (
                 SELECT Device_id FROM clientdevices)
             """
          cursor.execute(unassigned)
@@ -632,7 +631,36 @@ def unassigned_devices():
     finally:
         if connection:
             connection.close() 
-                       
+###############################################################################################################
+# To assign the robot to client
+@app.route('/insertrobot', methods=['POST'])
+def insertrobot():
+    try:
+        data = request.json
+        with get_db_connection() as connection:
+            with connection.cursor(buffered=True) as cursor:
+                # Query to assign robot to client
+                insert_query = """
+                 insert into clientdevices (company_id,Device_id,install_date,location) values (%s, %s, %s, %s);
+                """
+                values = (
+                    data.get('company_id'),
+                    data.get('Device_id'),
+                    data.get('install_date'),
+                    data.get('location'),
+
+
+                )
+                cursor.execute(insert_query, values)
+                connection.commit()
+
+            return jsonify({'message': 'Assigned successfully'}), 200
+
+    except mysql.connector.Error as db_err:
+        return jsonify({'message': 'Database error: ' + str(db_err)}), 500
+
+    except Exception as e:
+        return jsonify({'message': 'Error inserting data: ' + str(e)}), 500                    
 ###############################################################################################################
 def countdata():
     connection = None
@@ -1136,7 +1164,7 @@ def download_excel():
         cursor = connection.cursor(dictionary=True)
 
         query = """
-            SELECT * FROM ac_data
+            SELECT Device_id,timestamp,Voltage,Current,Power,KWH_Consumed,Humidity,Temperature,IP_Address,mac_address FROM ac_data
             WHERE timestamp BETWEEN %s AND %s
         """
         cursor.execute(query, (start, end))
@@ -1162,6 +1190,124 @@ def download_excel():
 
     except Exception as e:
         return f"Error: {str(e)}", 500
+########################################################################################################
+
+@app.route("/download_excel1")
+def download_excel1():
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+
+    if not start_date or not end_date:
+        return "Start and end date required", 400
+
+    try:
+        start = datetime.strptime(start_date, "%Y-%m-%d")
+        end = datetime.strptime(end_date, "%Y-%m-%d")
+
+        # Connect to the database
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+            SELECT Device_id,timestamp,Panel_Power,Dc_Current,Dc_KWH,Dc_Power,Dc_Voltage,Temperature,panel_voltage,panel_current,IP_Address,mac_address FROM dc_data
+            WHERE timestamp BETWEEN %s AND %s
+        """
+        cursor.execute(query, (start, end))
+        data = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        if not data:
+            return "No data found for selected dates", 404
+
+        # Convert to DataFrame
+        df = pd.DataFrame(data)
+
+        # Save as Excel in memory
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Data')
+        output.seek(0)
+
+        filename = f"data_{start_date}_to_{end_date}.xlsx"
+        return send_file(output, download_name=filename, as_attachment=True)
+
+    except Exception as e:
+        return f"Error: {str(e)}", 500
+########################################################################################################
+@app.route("/download_excel2")
+def download_excel2():
+       
+    try:
+        # Connect to the database
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+            SELECT Device_id,start_hour,end_hour,avg_kWh,24_kwh FROM ac_kwh
+            
+        """
+        cursor.execute(query)
+        data = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        if not data:
+            return "No data found for selected dates", 404
+
+        # Convert to DataFrame
+        df = pd.DataFrame(data)
+
+        # Save as Excel in memory
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Data')
+        output.seek(0)
+
+        filename = f"Ac_kwh_data.xlsx"
+        return send_file(output, download_name=filename, as_attachment=True)
+
+    except Exception as e:
+        return f"Error: {str(e)}", 500
+########################################################################################################
+@app.route("/download_excel3")
+def download_excel3():
+       
+    try:
+        # Connect to the database
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+            SELECT Device_id,start_hour,end_hour,avg_kWh,24_kwh FROM dc_kwh
+            
+        """
+        cursor.execute(query)
+        data = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        if not data:
+            return "No data found for selected dates", 404
+
+        # Convert to DataFrame
+        df = pd.DataFrame(data)
+
+        # Save as Excel in memory
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Data')
+        output.seek(0)
+
+        filename = f"dc_kwh_data.xlsx"
+        return send_file(output, download_name=filename, as_attachment=True)
+
+    except Exception as e:
+        return f"Error: {str(e)}", 500
+
 
 ###########################################################################################################
 # Summary page
@@ -1184,45 +1330,12 @@ def client_summary(device):
                 ORDER BY start_hour DESC
                 LIMIT 1
                 """
-                # dc_total_kwh_query = """
-                # SELECT 
-                # CAST(AVG(Dc_KWH) AS DECIMAL(10, 5)) AS avg_kWh,
-                # DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS start_time,
-                # DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS end_time
-                # FROM dc_data 
-                # WHERE Device_id = %s
-                # AND timestamp >= DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') 
-                # AND timestamp < DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00')
-                # """
+              
                 cursor.execute(dc_total_kwh_query, (device,))
                 dc_kwh = cursor.fetchone()
 
                 today_date = date.today()
-                
-                #DC KWH 24-hours
-                # dc_total_kwh_query = """
-                # SELECT 
-                # CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
-                # FROM (
-                #     SELECT 
-                #         DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
-                #         AVG(Dc_KWH) AS avg_kWh
-                #     FROM dc_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
-                # ) AS hourly
-                # """
-                # cursor.execute(dc_total_kwh_query, (device,today_date))
-                # dc_total_kwh = cursor.fetchone()
-                # dc_total_kwh_value = dc_total_kwh[0] if dc_total_kwh and dc_total_kwh[0] is not None else 0
-
-                #DC Units
-                # dc_total_unit_query = """
-                # SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
-                # AVG(Dc_KWH) AS avg_kWh FROM dc_data WHERE Device_id = %s GROUP BY hour
-                # ) AS hourly """
-                # dc_total_unit_query = """
-                # SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                # FROM dc_kwh where device_id= %s"""
+          
                 dc_total_unit_query = """
                 SELECT SUM(avg_kWh) AS total_avg_kWh_24h
                 FROM dc_kwh where device_id= %s"""
@@ -1256,27 +1369,7 @@ def client_summary(device):
 
                 today_date = date.today()
                 
-                #AC KWH 24-hours
-                # total_kwh_query = """
-                # SELECT CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
-                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
-                # AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
-                # ) AS hourly
-                # """
-                # cursor.execute(total_kwh_query, (device,today_date))
-                # total_kwh = cursor.fetchone()
-
-                # total_kwh_value = total_kwh[0] if total_kwh and total_kwh[0] is not None else 0
-                
-                # AC Units Calculation
-                # total_unit_query = """
-                # SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
-                # AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s 
-                # GROUP BY hour) AS hourly """
-                # total_unit_query = """
-                # SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                # FROM ac_kwh where Device_id = %s """
+             
                 total_unit_query = """
                 SELECT SUM(avg_kWh) AS total_avg_kWh_24h
                 FROM ac_kwh where Device_id = %s """

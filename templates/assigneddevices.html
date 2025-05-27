@@ -99,7 +99,9 @@ right: 0;
          <a href="{{url_for('users')}}">
           <h3><i class="fa-solid fa-house"></i></h3>
         </a>
-
+       <a href="{{url_for('alldevices')}}">
+          <h3><i class="bi bi-projector"></i></h3>
+        </a>
         
         <a href="{{url_for('users')}}">
           <h3><i class="fa-solid fa-user"></i> </h3>
@@ -115,6 +117,8 @@ right: 0;
         <h4 class="text-light mt-4">Analytics</h4>
 
         <a href="{{ url_for('dash') }}" class="ex2 mt-4">Home</a>
+        <a href="{{url_for('alldevices')}}" class="ex2 mt-3">Devices</a>
+
         <a href="{{ url_for('users') }}" class="ex2 mt-3">Users</a>
 
         <a  onclick="logout()"  href="#" id="logout-btn" class="ex2 mt-3">Log Out</a>

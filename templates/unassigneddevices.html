@@ -101,7 +101,11 @@ right: 0;
         <a href="{{ url_for('dash') }}" class="ex2">
           <h3><i class="fa-solid fa-house"></i></h3>
         </a> 
-        
+         <a href="{{url_for('alldevices')}}">
+          <h3><i class="bi bi-projector"></i></h3>
+        </a>
+       
+          
         <a href="{{url_for('users')}}">
           <h3><i class="fa-solid fa-user"></i> </h3>
         </a>
@@ -114,8 +118,8 @@ right: 0;
       <!-- next txtdiv link -->
       <div class="mt-2" style="font-size: 25px;">
         <h4 class="text-light mt-4">Analytics</h4>
-
         <a href="{{ url_for('dash') }}" class="ex2 mt-4">Home</a>
+        <a href="{{url_for('alldevices')}}" class="ex2 mt-3">Devices</a>
         <a href="{{ url_for('users') }}" class="ex2 mt-3">Users</a>
 
         <a  onclick="logout()"  href="#" id="logout-btn" class="ex2 mt-3">Log Out</a>
@@ -148,7 +152,7 @@ right: 0;
           <div class="d-flex justify-content-center " style="margin-bottom: 13px">
           <a href="{{url_for('users')}}">
           <h4 ><i class="fa-solid fa-user"></i></h4> </a>
-          <a style="margin-left: 30px; margin-top:8px;" href="">Users</a>
+          <a style="margin-left: 30px; margin-top:8px;" href="{{url_for('users')}}">Users</a>
      
         </div>
       </div>
@@ -205,13 +209,13 @@ right: 0;
                 <tbody>
                   {% for detail_user in unassigneddetails%}
                   <tr class="text-center">
-                    <td>{{detail_user[1]}}</td>
+                    <td>{{detail_user[0]}}</td>
   
                   <td class="text-center">
-                      <!-- <button class="btn btn-outline-primary btn-xs " onclick="addRobotID('{{ detail_user[1] }}')"
+                      <!-- <button class="btn btn-outline-primary btn-xs " onclick="addRobotID('{{ detail_user[0] }}')"
                         data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Assign Device</button> -->
 
-                        <a class="btn btn-outline-primary" href="{{ url_for('summary', device=detail_user[1]) }}">Summary</a>
+                        <a class="btn btn-outline-primary" href="{{ url_for('summary', device=detail_user[0]) }}">Summary</a>
                     </td>
                 </tr>
                 
@@ -259,11 +263,12 @@ right: 0;
               </div>
               <div style="margin-left: 15px; width: 50%;">
                  <label for="company"><b>Plant:</b> <b class="text-danger">*</b></label>
-               <select name="" id="company_id" class="form-control" required style="border: 2px solid black;">
+                 <input type="text" id="company_id">
+               <!-- <select name=""  class="form-control" required style="border: 2px solid black;">
                 {% for detail_user in company_idsend %}
                 <option value="{{detail_user[0]}}">{{detail_user[1]}} {{detail_user[2]}}</option>
                 {% endfor %} 
-               </select>
+               </select> -->
               </div>
               <!-- <script>
                 document.getElementById('company').addEventListener('change', function () {
@@ -297,13 +302,46 @@ right: 0;
   <!-- scripts -->
     <!-- script for fetching device id -->
   <script>
-    let set_robot_id;
-    function addRobotID(robot_id) {
-      set_robot_id = robot_id;
-      document.getElementById("device_Id").value = set_robot_id;
+    let set_device_Id;
+    function addRobotID(device_Id) {
+      set_device_Id = device_Id;
+      document.getElementById("device_Id").value = set_device_Id;
     }
   </script>
+<script>
+    document.getElementById('robotForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var Device_id = document.getElementById("device_Id").value;
+      var install_date = document.getElementById("install_date").value;
+      var location = document.getElementById("location").value;
+      var company_id = document.getElementById("company_id").value;
 
+
+      var data = {
+        Device_id: Device_id,
+        install_date: install_date,
+        location: location,
+        company_id:company_id,
+        
+      };
+
+      fetch('/insertrobot', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message);
+          window.location.reload();
+        })
+        .catch(error => {
+          console.error('Error adding robot details:', error);
+        });
+    });
+  </script>
   <script>
     $(document).ready(function () {
       var table = $("#example2").DataTable({
