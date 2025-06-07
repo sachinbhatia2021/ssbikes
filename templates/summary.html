@@ -1110,8 +1110,34 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
         </div>
       
       </div>
-        <Button onclick="download_Acdata()" >Download Ac Data</Button>
-                     
+        
+<div class="dropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" id="downloadDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+    Download 
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="downloadDropdown">
+    <li>
+      <p class="dropdown-item text-white" style="background-color: rgb(98, 0, 255);" href="#" onclick="download_Acdata()">
+        <i class="fa-solid fa-download me-2"></i>Download AC Data
+      </p>
+    </li>
+    <li>
+      <p class="dropdown-item" href="#" onclick="download_Ac_kwh_data()">
+        <i class="fa-solid fa-download me-2"></i>Download AC kWh
+      </p>
+    </li>
+    <li>
+      <p class="dropdown-item" href="#" onclick="download_Dc_kwh_data()">
+        <i class="fa-solid fa-download me-2"></i>Download DC kWh
+      </p>
+    </li>
+    <li>
+      <p class="dropdown-item" href="#" onclick="download_Dcdata()">
+        <i class="fa-solid fa-download me-2"></i>Download DC Data
+      </p>
+    </li>
+  </ul>
+</div>
 
         </div>
    <!-- script -->
@@ -1127,23 +1153,23 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
 
   window.location.href = `/download_excel?start_date=${startDate}&end_date=${endDate}`;          }
   </script>
-    <!-- kwh download -->
-<!-- <script>
+<!-- kwh download -->
+<script>
           function download_Ac_kwh_data(){
         
   // Trigger file download
   window.location.href = `/download_excel2`;          }
-  </script> -->
+  </script> 
   <!-- dc kwh -->
        <!-- kwh download -->
-<!-- <script>
+<script>
           function download_Dc_kwh_data(){
         
   // Trigger file download
   window.location.href = `/download_excel3`;          }
-  </script> -->
+  </script> 
 <!-- dcdata -->
-<!-- <script>
+ <script>
           function download_Dcdata(){
             const startDate=document.getElementById("start_date_excel").value
             const endDate=document.getElementById("end_date_excel").value
@@ -1154,14 +1180,13 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
   }
 
   // Trigger file download
-  window.location.href = `/download_excel1?start_date=${startDate}&end_date=${endDate}`;          }
+  window.location.href = `/download_excel1?start_date=${startDate}&end_date=${endDate}`;
+          }
         </script>
-     -->
+  
     
     <br>
-    <!-- <Button onclick="download_Ac_kwh_data()" >Download Ac Kwh</Button>
-        <Button onclick="download_Dc_kwh_data()" >Download Dc Kwh</Button>
-        <Button onclick="download_Dcdata()" >Download Dc Data</Button> -->
+   
     <!-- Footer -->
  <br><br>
    <div class="footer">
