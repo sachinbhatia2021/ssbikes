@@ -594,6 +594,10 @@ ORDER BY
             """
             cursor.execute(acconsumed)
             acconsumedunit=cursor.fetchall()
+
+            
+       
+
         return render_template('assigneddevices.html',users_count=users_count,devices_count=devices_count,dcdevicecount=dcdevicecount,
         unassignedcountdata=unassignedcountdata,acconsumedunit=acconsumedunit
                                )
@@ -611,26 +615,46 @@ ORDER BY
 def unassigned_devices():
     connection = None
     try:
-        users_count, devices_count,dcdevicecount,unassignedcountdata = countdata()
- 
-        connection = get_db_connection()  
-        with connection.cursor(buffered=True) as cursor:
-           
-         unassigned = """
-                SELECT distinct(Device_id) FROM dc_data WHERE Device_id NOT IN (
-                SELECT Device_id FROM clientdevices)
-            """
-         cursor.execute(unassigned)
-         unassigneddetails = cursor.fetchall()
+        users_count, devices_count, dcdevicecount, unassignedcountdata = countdata()
 
-        return render_template('unassigneddevices.html',users_count=users_count,devices_count=devices_count,dcdevicecount=dcdevicecount,unassignedcountdata=unassignedcountdata,unassigneddetails=unassigneddetails)
-    
+        connection = get_db_connection()
+        with connection.cursor(buffered=True) as cursor:
+
+            # First query: Get unassigned devices
+            unassigned = """
+                SELECT DISTINCT(Device_id) FROM dc_data 
+                WHERE Device_id NOT IN (
+                    SELECT Device_id FROM clientdevices
+                )
+            """
+            cursor.execute(unassigned)
+            unassigneddetails = cursor.fetchall()
+
+            # Second query: Get plant details
+            plantDetailsQuery = """
+                SELECT company_id, full_name, state FROM clientdetails
+            """
+            cursor.execute(plantDetailsQuery)
+            plantDetails = cursor.fetchall()
+
+        # Render template with data
+        return render_template(
+            'unassigneddevices.html',
+            users_count=users_count,
+            devices_count=devices_count,
+            dcdevicecount=dcdevicecount,
+            unassignedcountdata=unassignedcountdata,
+            unassigneddetails=unassigneddetails,
+            plantDetails=plantDetails
+        )
+
     except Exception as e:
         return str(e), 500
 
     finally:
         if connection:
-            connection.close() 
+            connection.close()
+
 ###############################################################################################################
 # To assign the robot to client
 @app.route('/insertrobot', methods=['POST'])

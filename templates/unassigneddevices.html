@@ -263,12 +263,12 @@ right: 0;
               </div>
               <div style="margin-left: 15px; width: 50%;">
                  <label for="company"><b>Plant:</b> <b class="text-danger">*</b></label>
-                 <input type="text" id="company_id">
-               <!-- <select name=""  class="form-control" required style="border: 2px solid black;">
-                {% for detail_user in company_idsend %}
-                <option value="{{detail_user[0]}}">{{detail_user[1]}} {{detail_user[2]}}</option>
+                 <!-- <input type="text" id="company_id"> -->
+               <select name="" id="company_id"  class="form-control" required style="border: 2px solid black;">
+                {% for detail_user in plantDetails %}
+                <option value="{{detail_user[0]}}">{{detail_user[1]}}, {{detail_user[2]}}</option>
                 {% endfor %} 
-               </select> -->
+               </select>
               </div>
               <!-- <script>
                 document.getElementById('company').addEventListener('change', function () {
