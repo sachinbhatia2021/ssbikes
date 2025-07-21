@@ -218,7 +218,8 @@ right: 0;
                         {% endif %}
                       </td>
                       <td>
-                        <a class="btn btn-outline-primary" href="{{ url_for('summary', device=item[0]) }}">Manage</a>
+                        <a class="btn btn-outline-primary" href="{{ url_for('manage_data', device=item[0]) }}">Manage</a>
+                        <a class="btn btn-outline-primary" href="{{ url_for('summary', device=item[0]) }}">Summary</a>
 
                       </td>
                     </tr>

@@ -1170,6 +1170,24 @@ def summary(device):
     except Exception as e:
                  return str(e), 500
 ########################################################################################################
+# Table data
+@app.route('/manage_data/<device>')
+def manage_data(device):    
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(dictionary=True) as cursor:
+                
+                # Fetch AC data
+                # Acdata = "SELECT * FROM ac_data order by timestamp desc LIMIT 700"
+                # cursor.execute(Acdata)
+                # allAcdataprint = cursor.fetchall()
+
+
+             return render_template('manage.html',device=device)
+
+    except Exception as e:
+        return "An error occurred while retrieving the data. Please try again later.", 500
+########################################################################################################
 
 @app.route("/download_excel")
 def download_excel():
@@ -1497,6 +1515,7 @@ def data_table():
     except Exception as e:
         return "An error occurred while retrieving the data. Please try again later.", 500
 ########################################################################################################
+
 #DC DATA GRAPH
 @app.route('/livegraphdc/<string:id>')
 def livegraphdc(id):

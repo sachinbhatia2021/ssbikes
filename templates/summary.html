@@ -544,25 +544,31 @@ text-align: center;
 <div class="usersmainbox">
 <div class="userscss">
   <a href="{{ url_for('user_form') }}" class="hover-link">
-    <img class="company-logo mt-1" src="https://gcs.ac.in/admin/images/user_icon.png" height="50px" width="50px">
+ <h3>  <i class="fa-solid fa-user"></i></h3>
     <div class="hover-text">Create User</div>
   </a>
 </div>
 <div class="userscss">
-<a class="btn btn-outline-primary" href="{{ url_for('ota_page', device=deviceid) }}">OTA</a>
+  <div class="userscss">
+  <a href="{{ url_for('ota_page', device=deviceid) }}" class="hover-link">
+ <h3> <i class="fa-solid fa-file"></i></h3>
+    <div class="hover-text">Ota file</div>
+  </a>
+</div>
+  
 </div>
 </div>
 </div>
     <div class="con_small">
       <div class="half-width" style="text-align: center">
         <br />
-        <span style="font-size: 40px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
+        <span style="font-size: 30px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
           {{ value }}
           <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
         </span>
         <br />
         <div class="text-center" style="margin-bottom: 15px">
-          <b> Efficiency</b>
+          Efficiency
         </div>
       </div>
       <!--  -->
@@ -574,7 +580,7 @@ text-align: center;
         </span>
         <br />
         <div class="text-center" style="margin-bottom: 15px">
-          <b> Temperature</b>
+          Temperature
         </div>
       </div>
 
@@ -625,7 +631,7 @@ text-align: center;
         </span>
         <br />
         <div class="text-center" style="margin-bottom: 15px">
-          <b> Unit Generated</b>
+          Unit Generated
         </div>
       </div>
 
@@ -638,8 +644,8 @@ text-align: center;
         </span>
         <br />
         <div class="text-center" style="margin-bottom: 15px">
-          <b> Unit Consumed</b>
-        </div>
+           Unit Consumed
+                  </div>
       </div>
     </div>
 
@@ -655,25 +661,25 @@ text-align: center;
           <div class="title"><b>DC</b></div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h3>{{Dccurrent[4]}}
+              <h4>{{Dccurrent[4]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">V</span>
-              </h3>
+              </h4>
             </div>
             <div class="Voltage">Voltage </div>
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h3> {{Dccurrent[0]}}
+              <h4> {{Dccurrent[0]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">A</span>
-              </h3>
+              </h4>
             </div>
             <div class="Voltage">Current</div>
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h3>{{Dccurrent[2]}}
+              <h4>{{Dccurrent[2]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">W</span>
-              </h3>
+              </h4>
             </div>
             <div class="Voltage"> Power </div>
           </div>
@@ -688,27 +694,27 @@ text-align: center;
 
           <div class="dcbox1">
             <div class="voltageValues">
-              <h3>{{Accurrent[4]}}
+              <h4>{{Accurrent[4]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">V</span>
-              </h3>
+              </h4>
             </div>
             <div class="Voltage"> Voltage </div>
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h3> {{Accurrent[0]}}
+              <h4> {{Accurrent[0]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">
                   A
                 </span>
-              </h3>
+              </h4>
             </div>
             <div class="Voltage">Current</div>
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h3>{{Accurrent[2]}}
+              <h4>{{Accurrent[2]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">W</span>
-              </h3>
+              </h4>
             </div>
             <div class="Voltage"> Power </div>
           </div>
@@ -796,16 +802,16 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
             <br />
             <span style="font-size: 17px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
               <div class="voltageValues">
-                <h3>{{dc_kwh[5] if
+                <h4>{{dc_kwh[5] if
                   dc_kwh[5] is not none else 'N/A'}}
                   <span class="ms-2 mt-4" style="font-size: 15px">W</span>
-                </h3>
+                </h4>
               </div>
               <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
             </span>
             <br />
             <div class="text-center" style="margin-bottom: 15px">
-              <b> DC 24 hr KWH</b>
+              DC 24 hr KWH
             </div>
           </div>
 
@@ -813,15 +819,15 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
             <br />
             <span style="font-size: 17px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
               <div class="voltageValues">
-                <h3>{{ac_total_kwh[5] if
+                <h4>{{ac_total_kwh[5] if
                   ac_total_kwh[5] is not none else 'N/A'}}
                   <span class="ms-2 mt-4" style="font-size: 15px">W</span>
-                </h3>
+                </h4>
               </div>
             </span>
             <br />
             <div class="text-center" style="margin-bottom: 15px">
-              <b>AC 24 Hr kwh </b>
+              AC 24 Hr kwh
             </div>
           </div>
         </div>
@@ -1094,107 +1100,94 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
       </div>
   
       <br>
-  <div class="full-width44">
-      <!-- <label><b>Date Range For Analysis</b></label> -->
-      <div class="dates">Both dates are mandatory</div>
-      <div class="datess">
-        <div>
-          <label for="start_date"><b>Start Date
-              <span class="required-asterisk" style="color: red">*</span></b></label><br />
-          <input style="width: 250px" type="date" value="{{ today_date }}" id="start_date_excel" name="start_date_excel" />
-        </div>
-        <div>
-          <label for="end_date"><b>End Date
-              <span class="required-asterisk" style="color: red">*</span></b></label><br />
-          <input style="width: 250px" type="date" value="{{ today_date }}" id="end_date_excel" name="end_date_excel" />
-        </div>
-      
-      </div>
-        
-<div class="dropdown">
-  <button class="btn btn-primary dropdown-toggle" type="button" id="downloadDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-    Download 
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="downloadDropdown">
-    <li>
-      <p class="dropdown-item text-white" style="background-color: rgb(98, 0, 255);" href="#" onclick="download_Acdata()">
-        <i class="fa-solid fa-download me-2"></i>Download AC Data
-      </p>
-    </li>
-    <li>
-      <p class="dropdown-item" href="#" onclick="download_Ac_kwh_data()">
-        <i class="fa-solid fa-download me-2"></i>Download AC kWh
-      </p>
-    </li>
-    <li>
-      <p class="dropdown-item" href="#" onclick="download_Dc_kwh_data()">
-        <i class="fa-solid fa-download me-2"></i>Download DC kWh
-      </p>
-    </li>
-    <li>
-      <p class="dropdown-item" href="#" onclick="download_Dcdata()">
-        <i class="fa-solid fa-download me-2"></i>Download DC Data
-      </p>
-    </li>
-  </ul>
+ <div class="full-width44">
+  <div class="dates">Both dates are mandatory</div>
+
+  <div class="datess">
+    <!-- Start Date -->
+    <div>
+      <label for="start_date_excel"><b>Start Date
+          <span style="color: red">*</span></b></label><br />
+      <input style="width: 250px; cursor: pointer;" type="date" value="{{ today_date }}" id="start_date_excel" name="start_date_excel" />
+    </div>
+
+    <!-- End Date -->
+    <div>
+      <label for="end_date_excel"><b>End Date
+          <span style="color: red">*</span></b></label><br />
+      <input style="width: 250px;cursor: pointer;" type="date" value="{{ today_date }}" id="end_date_excel" name="end_date_excel" />
+    </div>
+
+   
+    <!-- Dropdown -->
+ 
+  <select id="selectedDownloadType" style="height: 30px; margin-top: 32px;cursor: pointer;" onchange="setDownloadType(this.value)">
+    <option value="">__Select File.</option>
+    <option value="dc_kwh">dc_kwh</option>
+    <option value="ac_data">ac_data</option>
+    <option value="ac_kwh">ac_kwh</option>
+    <option value="dc_data">dc_data</option>
+  </select>
+  <span style="background-color: green; margin-top: 32px; padding: 5px; border-radius: 3px; color: white; cursor: pointer;" onclick="performDownload()">
+  <i class="fa-solid fa-download"></i>  Download
+  </span>
 </div>
 
-        </div>
-   <!-- script -->
-<script>
-          function download_Acdata(){
-            const startDate=document.getElementById("start_date_excel").value
-            const endDate=document.getElementById("end_date_excel").value
+<!-- Final Download Button -->
+<!-- <button class="btn btn-success mt-3" onclick="performDownload()">
+  <i class="fa-solid fa-download"></i>
+</button> -->
 
-  if (!startDate || !endDate) {
-    alert("Both start and end dates are required");
-    return;
+<script>
+  function setDownloadType(type) {
+    // You don't need to set the value manually here anymore
+    alert("Selected: " + type.replace("_", " ").toUpperCase());
   }
 
-  window.location.href = `/download_excel?start_date=${startDate}&end_date=${endDate}`;          }
-  </script>
-<!-- kwh download -->
-<script>
-          function download_Ac_kwh_data(){
-        
-  // Trigger file download
-  window.location.href = `/download_excel2`;          }
-  </script> 
-  <!-- dc kwh -->
-       <!-- kwh download -->
-<script>
-          function download_Dc_kwh_data(){
-        
-  // Trigger file download
-  window.location.href = `/download_excel3`;          }
-  </script> 
-<!-- dcdata -->
- <script>
-          function download_Dcdata(){
-            const startDate=document.getElementById("start_date_excel").value
-            const endDate=document.getElementById("end_date_excel").value
+  function performDownload() {
+    const type = document.getElementById("selectedDownloadType").value;
+    const startDate = document.getElementById("start_date_excel")?.value;
+    const endDate = document.getElementById("end_date_excel")?.value;
 
-  if (!startDate || !endDate) {
-    alert("Both start and end dates are required");
-    return;
+    if (!type) {
+      alert("Please select a download file name.");
+      return;
+    }
+
+    if ((type === "ac_data" || type === "dc_data") && (!startDate || !endDate)) {
+      alert("Both start and end dates are required.");
+      return;
+    }
+
+    switch (type) {
+      case "ac_data":
+        window.location.href = `/download_excel?start_date=${startDate}&end_date=${endDate}`;
+        break;
+      case "ac_kwh":
+        window.location.href = `/download_excel2`;
+        break;
+      case "dc_kwh":
+        window.location.href = `/download_excel3`;
+        break;
+      case "dc_data":
+        window.location.href = `/download_excel1?start_date=${startDate}&end_date=${endDate}`;
+        break;
+      default:
+        alert("Invalid selection.");
+    }
   }
+</script>
 
-  // Trigger file download
-  window.location.href = `/download_excel1?start_date=${startDate}&end_date=${endDate}`;
-          }
-        </script>
-  
-    
-    <br>
+   
    
     <!-- Footer -->
- <br><br>
+ <br><br><br><br>
    <div class="footer">
     <p class="ms-5" style="margin-left: 35px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>
     <p style="margin-right: 20px;" class="version">Version 1.0.1</p>
   </div>
     <!--end div  -->
-  </div>
+
 
   <!--scripts for battery -->
   <script>
