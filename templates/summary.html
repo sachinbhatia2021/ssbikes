@@ -227,7 +227,7 @@
 
   .dcdiv {
     width: 50%;
-    height: 440px;
+    height: 640px;
     background-color: white;
     box-shadow: 8px 8px 18px 8px rgba(0, 0, 0, 0.1);
 
@@ -248,8 +248,8 @@
     margin-top: 15px;
     text-align: center;
     background-color: #d3d3d3;
-    height: 40px;
-    width: 60px;
+    height: 80px;
+    width: 100px;
     transform: rotate(270deg);
   }
 
@@ -559,7 +559,45 @@ text-align: center;
 </div>
 </div>
 </div>
-    <div class="con_small">
+<style>
+  .homediv{
+    display: flex;
+    justify-content: center;
+  }
+  .home{
+    height: 500px;
+    border-radius: 100%;
+  }
+</style>
+<div class="homediv" >
+     <div class="" >
+        <br />
+        <span 
+          class="text-center mt-2 sizebox">{{dc_total_unit[0]}}
+       
+        </span>
+        <br />
+        <div class="text-center" >
+          Unit Generated
+        </div>
+      </div>
+
+<img class="home" src="../static/home.png" alt=""> 
+
+ <div>
+        <br />
+        <span 
+          class="text-center mt-2 sizebox">{{total_unit[0]}}
+          <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
+        </span>
+        <br />
+        <div class="text-center" >
+          Unit Consumed
+        </div>
+      </div>
+
+</div>    
+<div class="con_small">
       <div class="half-width" style="text-align: center">
         <br />
         <span style="font-size: 30px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
@@ -658,7 +696,7 @@ text-align: center;
         <div class="mt-5 " style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="title"><b>DC</b></div>
+          <div class="title"><b>Battery charging</b></div>
           <div class="dcbox1">
             <div class="voltageValues">
               <h4>{{Dccurrent[4]}}
@@ -685,12 +723,47 @@ text-align: center;
           </div>
         </div>
         <br><br>
-        <!-- ac -->
+        <!-- inverter output -->
         <div class=""
         style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="title"><b>AC</b></div>
+          <div class="title"><b>Inverter Output </b></div>
+
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4>{{inverterdata[3]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">V</span>
+              </h4>
+            </div>
+            <div class="Voltage"> Voltage </div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4> {{inverterdata[0]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">
+                  A
+                </span>
+              </h4>
+            </div>
+            <div class="Voltage">Current</div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4>{{inverterdata[2]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">W</span>
+              </h4>
+            </div>
+            <div class="Voltage"> Power </div>
+          </div>
+        </div>
+<br><br>
+        <!-- Grid Input -->
+    <div class=""
+        style=" display: flex; justify-content: space-around; 
+        align-items: center; 
+        flex-wrap: wrap;">
+          <div class="title"><b>Ac Grid Input </b></div>
 
           <div class="dcbox1">
             <div class="voltageValues">
@@ -719,7 +792,6 @@ text-align: center;
             <div class="Voltage"> Power </div>
           </div>
         </div>
-
       </div>
       <!-- panel status -->
       <div class="acdiv">
@@ -836,8 +908,9 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
 
 
     </div>
+   <!-- end panel -->
    
-    <!-- date -->
+   <!-- date -->
     <div class="full-width4">
       <label><b>Date Range For Analysis</b></label>
       <div class="dates">Both dates are mandatory</div>
@@ -937,7 +1010,7 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
         <section class="col-lg-12 connectedSortable scroll">
           <div class="">
             <div class="card-header">
-              <h4 class="card-title"><i class='bx bxs-data'></i> DC Data</h4>
+              <h4 class="card-title"><i class='bx bxs-data'></i>Dc Battery Charging</h4>
             </div>
             <div class="row">
               <div class="card-body x">
@@ -978,6 +1051,50 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
         </section>
       </div>
       <br><br>
+      <!-- inverter Output -->
+    <div class="row1 Inverter1">
+        <section class="col-lg-12 connectedSortable scroll">
+          <div class="">
+            <div class="card-header">
+              <h4 class="card-title"><i class='bx bxs-data'></i>Inverter Output</h4>
+            </div>
+            <div class="row">
+              <div class="card-body x">
+                <div>
+  
+                  <table id="examplebtdc" class="table table-bordered table-striped" style="margin-top: 80px;">
+                    <thead>
+                      <tr>
+                        <th>Device ID</th>
+                        <th>Timestamp</th>
+                        <th>Battery discharging</th>
+                        <th>DC Current</th>
+                        <th>DC Voltage</th>
+                        <th>DC Power</th>
+                   </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in battery_discharging_data %}
+                      <tr>
+                        <td>{{ item[1] }}</td>
+                        <td>{{ item[2] }}</td>
+                        <td>{{ item[3] }}</td>
+                        <td>{{ item[5] }}</td>
+                        <td>{{ item[4] }}</td>
+                        <td>{{ item[6] }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+  
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <br><br>
+       <!--  -->
       <div class=" Inverter1">
         <section class="col-lg-12 connectedSortable scroll">
           <div class="">
@@ -1021,7 +1138,7 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
         <section class="col-lg-12 connectedSortable scroll">
           <div class="">
             <div class="card-header">
-              <h4 class="card-title"><i class='bx bxs-data'></i> AC Data</h4>
+              <h4 class="card-title"><i class='bx bxs-data'></i>Ac Grid Input</h4>
             </div>
             <div class="row">
               <div class="card-body x">
@@ -1893,7 +2010,67 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       });
     </script>
+
+  <!-- battery discharging -->
+ <script>
+      $(document).ready(function () {
+        var table = $('#examplebtdc').DataTable({
+          "pageLength": 10,
+          "order": [
+            [1, "desc"]
+          ],
+          "drawCallback": function (settings) {
+            $('#examplebtdc thead').css({
+              'background-color': '#045B62',
+              'color': 'white',
+              'border': '1px solid #F7F6F7',
+            });
+            $('#examplebtdc_paginate').css({
+              'text-align': 'center',
+              'cursor': 'pointer'
+            });
+            $('#examplebtdc_previous').css({
+              'padding': '4px 8px',
+              'border': '1px solid #e3e3e3',
+              'border-radius': '2px 0 0 2px',
+              'display': 'inline-block',
+              'color': '#007BFF',
+              'margin': '0'
+            });
+            $('#examplebtdc_next').css({
+              'padding': '4px 8px',
+              'border': '1px solid #e3e3e3',
+              'border-radius': '0 2px 2px 0',
+              'display': 'inline-block',
+              'color': '#007BFF',
+              'margin': '0'
+            });
+            $('.paginate_button').not('.previous, .next').css({
+              'padding': '4px 8px',
+              'border': '1px solid #e3e3e3',
+              'border-radius': '0',
+              'color': '#999699',
+              'display': 'inline-block',
+              'margin': '0 -0px 0 -0px'
+            });
   
+            $('.paginate_button.current').css({
+              'background-color': '#007BFF',
+              'color': 'white',
+              'border': '1px solid #007BFF'
+            });
+          }
+        });
+  
+        $('#examplebtdc_filter').css({ 'margin-left': '75%' });
+  
+        $('#searchInput').on('keyup', function () {
+          table.search($(this).val()).draw();
+        });
+      });
+    </script>
+  
+  <!--  -->
     <script>
       $(document).ready(function () {
         var table = $('#example4').DataTable({

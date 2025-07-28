@@ -1016,45 +1016,12 @@ def summary(device):
                 ORDER BY start_hour DESC
                 LIMIT 1
                 """
-                # dc_total_kwh_query = """
-                # SELECT 
-                # CAST(AVG(Dc_KWH) AS DECIMAL(10, 5)) AS avg_kWh,
-                # DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS start_time,
-                # DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') AS end_time
-                # FROM dc_data 
-                # WHERE Device_id = %s
-                # AND timestamp >= DATE_FORMAT(CONVERT_TZ(NOW() - INTERVAL 1 HOUR, 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00') 
-                # AND timestamp < DATE_FORMAT(CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata'), '%Y-%m-%d %H:00:00')
-                # """
+            
                 cursor.execute(dc_total_kwh_query, (device,))
                 dc_kwh = cursor.fetchone()
 
                 today_date = date.today()
-                
-                #DC KWH 24-hours
-                # dc_total_kwh_query = """
-                # SELECT 
-                # CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
-                # FROM (
-                #     SELECT 
-                #         DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
-                #         AVG(Dc_KWH) AS avg_kWh
-                #     FROM dc_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
-                # ) AS hourly
-                # """
-                # cursor.execute(dc_total_kwh_query, (device,today_date))
-                # dc_total_kwh = cursor.fetchone()
-                # dc_total_kwh_value = dc_total_kwh[0] if dc_total_kwh and dc_total_kwh[0] is not None else 0
-
-                #DC Units
-                # dc_total_unit_query = """
-                # SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
-                # AVG(Dc_KWH) AS avg_kWh FROM dc_data WHERE Device_id = %s GROUP BY hour
-                # ) AS hourly """
-                # dc_total_unit_query = """
-                # SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                # FROM dc_kwh where device_id= %s"""
+          
                 dc_total_unit_query = """
                 SELECT SUM(avg_kWh) AS total_avg_kWh_24h
                 FROM dc_kwh where device_id= %s"""
@@ -1075,8 +1042,15 @@ def summary(device):
                         value = "N/A"
                 except ZeroDivisionError:
                     value = "N/A"     
-
-                #AC KWH 1 hour
+                # inverter output
+ 
+                inverterdata_query = """
+                SELECT TRUNCATE(Inverter_current, 5) AS Current,timestamp,Power_usage,TRUNCATE(Inverter_voltage, 5) AS Voltage, 
+                Device_id FROM Inverter_data 
+                WHERE Device_id =%s ORDER BY timestamp DESC LIMIT 1"""
+                cursor.execute(inverterdata_query, (device,))
+                inverterdata = cursor.fetchone()
+               
                 ac_total_kwh_query = """
                 SELECT 
                     * FROM ac_kwh where Device_id = %s
@@ -1087,28 +1061,8 @@ def summary(device):
                 ac_total_kwh = cursor.fetchone()
 
                 today_date = date.today()
-                
-                #AC KWH 24-hours
-                # total_kwh_query = """
-                # SELECT CAST(SUM(hourly.avg_kWh) AS DECIMAL(10, 5)) AS total_avg_kWh_24h
-                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%D %H:00:00') AS hour,
-                # AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s AND timestamp >= %s GROUP BY hour
-                # ) AS hourly
-                # """
-                # cursor.execute(total_kwh_query, (device,today_date))
-                # total_kwh = cursor.fetchone()
-
-                # total_kwh_value = total_kwh[0] if total_kwh and total_kwh[0] is not None else 0
-                
-                # AC Units Calculation
-                # total_unit_query = """
-                # SELECT CAST(SUM(hourly.avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                # FROM (SELECT DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') AS hour,
-                # AVG(kWh_Consumed) AS avg_kWh FROM ac_data WHERE Device_id = %s 
-                # GROUP BY hour) AS hourly """
-                # total_unit_query = """
-                # SELECT CAST(SUM(avg_kWh) AS UNSIGNED) AS total_avg_kWh_24h
-                # FROM ac_kwh where Device_id = %s """
+              
+               
                 total_unit_query = """
                 SELECT SUM(avg_kWh) AS total_avg_kWh_24h
                 FROM ac_kwh where Device_id = %s """
@@ -1120,7 +1074,7 @@ def summary(device):
               """
                 cursor.execute(inst_date,(device,))
                 man_date=cursor.fetchone()
-   # Fetch DC data
+                # Fetch DC data
                 alldata = "SELECT * FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 700"
                 cursor.execute(alldata,(device,))
                 alldataprint = cursor.fetchall()
@@ -1128,6 +1082,10 @@ def summary(device):
                 Acdata = "SELECT * FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 700"
                 cursor.execute(Acdata,(device,))
                 allAcdataprint = cursor.fetchall()
+                   # Fetch AC data
+                battery_discharging = "SELECT * FROM Inverter_data WHERE Device_id = %s order by timestamp desc LIMIT 700"
+                cursor.execute(battery_discharging,(device,))
+                battery_discharging_data = cursor.fetchall()
                 # Fetch DC KWH data
                 dc_kwh_data = "select * from dc_kwh WHERE Device_id = %s order by start_hour desc LIMIT 700"
                 cursor.execute(dc_kwh_data,(device,))
@@ -1140,17 +1098,17 @@ def summary(device):
                 # Determine Device Type and Battery Voltage Range
                 device2 = int(device)
                 if 1000 <= device2 < 2000: #12V LEAD Battery
-                    battery_percentage = ((currentdata[4]-10.5)/(13.8-10.5))*100
+                    battery_percentage = ((currentdata[4]-10.5)/(14.4-10.5))*100
                 elif 2000 <= device2 < 3000: #24V LEAD Battery
-                    battery_percentage = ((currentdata[4]-21)/(27.6-21))*100
+                    battery_percentage = ((currentdata[4]-21)/(28.8-21))*100
                 elif 3000 <= device2 < 4000: #12V Lithium Battery
-                    battery_percentage = ((currentdata[4]-10.5)/(14.6-10.5))*100
+                    battery_percentage = ((currentdata[4]-10.5)/(16.8-10.5))*100
                 elif 4000 <= device2 < 5000: #24V Lithium Battery
-                    battery_percentage = math.trunc(((currentdata[4]-19.8)/(26-19.8))*100)
+                    battery_percentage = math.trunc(((currentdata[4]-21)/(29.4-21))*100)
                 elif 5000 <= device2 < 6000:  # 48V Lead Battery
-                    battery_percentage = math.trunc(((currentdata[4] - 42) / (58 - 42)) * 100)
+                    battery_percentage = math.trunc(((currentdata[4] - 42) / (57.6 - 42)) * 100)
                 else:  # 48V Lithium Battery
-                    battery_percentage = math.trunc(((currentdata[4] - 40) / (54.6 - 40)) * 100)
+                    battery_percentage = math.trunc(((currentdata[4] - 44) / (54.75 - 44)) * 100)
                 battery_percentage = max(0, min(100, battery_percentage))
 
 
@@ -1165,7 +1123,7 @@ def summary(device):
                     ac_total_kwh=ac_total_kwh,
                     total_unit=total_unit,today_date=today_date,man_date=man_date,value=value,
                     alldataprint=alldataprint,allAcdataprint=allAcdataprint,dc_kwh_dataprint=dc_kwh_dataprint,
-                    ac_kwh_dataprint=ac_kwh_dataprint,deviceid=device
+                    ac_kwh_dataprint=ac_kwh_dataprint,deviceid=device,battery_discharging_data=battery_discharging_data,inverterdata=inverterdata
                 )    
     except Exception as e:
                  return str(e), 500
