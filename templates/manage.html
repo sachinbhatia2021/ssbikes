@@ -319,6 +319,42 @@
 
    <div class="content">
 
+<style>
+  .usersmainbox{
+    display: flex;
+    justify-content: right;
+    gap: 20px;
+  }
+.userscss{
+height: 80px;
+width: 200px;
+background-color: white;
+box-shadow: 5px 5px 10px 8px rgba(12, 12, 12, 0.1);align-content: center;
+text-align: center;
+}
+.buttondatapacket{
+    display: flex;
+    justify-content: center;
+  }
+</style>
+<div class="usersmainbox">
+<div class="userscss">
+  <a href="{{ url_for('user_form') }}" class="hover-link">
+ <h3>  <i class="fa-solid fa-user"></i></h3>
+    <div class="hover-text">Create User</div>
+  </a>
+</div>
+<div class="userscss">
+  <div class="userscss">
+  <a href="{{ url_for('ota_page', device=device) }}" class="hover-link">
+ <h3> <i class="fa-solid fa-file"></i></h3>
+    <div class="hover-text">Ota file</div>
+  </a>
+</div>
+  
+</div>
+</div>
+
   <div class="buttondatapacket">
     <a class="btn btn-outline-primary" href="{{ url_for('summary',device = device) }}">Summary</a>
   </div>

@@ -223,6 +223,7 @@
   .acdcflexdiv {
     display: flex;
     justify-content: space-around;
+    gap: 20px;
   }
 
   .dcdiv {
@@ -341,13 +342,12 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    transform: rotate(270deg);
   }
 
   .battery {
     background-color: white;
-    width: 80px;
-    height: 90px;
+    width: 110px;
+    height: 50px;
   }
 
   .battery::before {
@@ -570,62 +570,56 @@ right: 0;
         <br />
 <span class="text-center mt-2 sizebox">
   <h4>
-  {{ inverterdata[2] }}
+ 
   <i class="fas fa-lightbulb" style="color: {% if inverterdata[2] > 0.1 %}green{% else %}red{% endif %}; margin-left: 10px;"></i>
 </h4>
 </span>
 
         <div class="text-center" >
-         <b> Inverter Power</b>
+
+         <h5> Solar Power</h5><br>
         </div>
       </div><br><br>
-         <div class="" >
-        <br />
-        <span class="text-center mt-2 sizebox"><h4>{{Accurrent[2]}}</h4></span>
+        <div class="" >
+        <br /><br><br>
+<span class="text-center mt-2 sizebox">
+  <h4 >
+ 
+  <i class="fas fa-lightbulb" style="color: {% if Accurrent[2] > 0.1 %}blue{% else %}black{% endif %}; margin-left: 10px;"></i>
+</h4>
+</span>
+
         <div class="text-center" >
-         <b> Grid Power</b>
+         <h5> Grid Power</h5>
         </div>
       </div>
 </div>
 <img class="home" src="../static/home.png" alt=""> 
 
  <div>
-        <br />
-        <span ><h4>3 kw</h4> </span>
-    
-        <div class="text-center" >
-         <b> Inverter Capacity</b>
-        </div>
-      </div>
+            
+<span class="text-center mt-2 sizebox"><br>
+  <h4>
+ 
+  <i class="fas fa-lightbulb" style="color: {% if inverterdata[2] > 0.1 %}red{% else %}black{% endif %}; margin-left: 10px;"></i>
+</h4>
+</span>
 
-</div>    
-<div class="con_small">
-      <div class="half-width" style="text-align: center">
-        <br />
-        <span style="font-size: 30px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
-          {{ value }}
-          <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
-        </span>
-        <br />
-        <div class="text-center" style="margin-bottom: 15px">
-          Efficiency
+  <div class="text-center" >
+         <h5> Load Status</h5>
         </div>
-      </div>
-      <!--  -->
-      <div class="half-width" style="text-align: center">
-        <br />
-        <span style="font-size: 30px; display: flex; justify-content: center "
-          class="text-center mt-2 sizebox">{{Dccurrent[3]}}
-          <span class="ms-2 mt-2" style="font-size: 18px"> °C</span>
-        </span>
-        <br />
-        <div class="text-center" style="margin-bottom: 15px">
-          Temperature
-        </div>
-      </div>
+<!--  -->
+        <br><br><br><br>
+<span class="d-flex justify-content-center"><br><br>
+  <h4>
+   <i class="fas fa-lightbulb" style="color: {% if Accurrent[2]  > 0.1 %}blue{% else %}black{% endif %}; margin-left: 10px;"></i>
+</h4>
+</span>
 
-      <!--  -->
-      <!-- battery -->
+  <div class="text-center" >
+         <h5> Battery Status</h5>
+        </div>
+   <!-- battery -->
 
       <div class="pt-5">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -661,31 +655,70 @@ right: 0;
           </div>
         </div>
       </div>
-
-      <!-- end battery -->
+      </div>
+</div>    
+<div class="con_small">
       <div class="half-width" style="text-align: center">
         <br />
-        <span style="font-size: 30px; display: flex; justify-content: center "
-          class="text-center mt-2 sizebox">{{dc_total_unit[0]}}
-          <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
-        </span>
-        <br />
-        <div class="text-center" style="margin-bottom: 15px">
-          Unit Generated
-        </div>
+        <span style="font-size: 30px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
+        Power Station Input Parameters
+        </span><br>
+     <Button class="btn btn-outline-primary">Details</Button>
       </div>
+      <!--  -->
+  
+      <!--  -->
+      <!-- battery -->
+
+      <div class="">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          style="display: none;">
+          <symbol id="wave">
+            <path
+              d="M420,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C514,6.5,518,4.7,528.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H420z">
+            </path>
+            <path
+              d="M420,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C326,6.5,322,4.7,311.5,2.7C304.3,1.4,293.6-0.1,280,0c0,0,0,0,0,0v20H420z">
+            </path>
+            <path
+              d="M140,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C234,6.5,238,4.7,248.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H140z">
+            </path>
+            <path
+              d="M140,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C46,6.5,42,4.7,31.5,2.7C24.3,1.4,13.6-0.1,0,0c0,0,0,0,0,0l0,20H140z">
+            </path>
+          </symbol>
+        </svg>
+        <!-- battery percentage animation -->
+        <!-- <div class="box">
+          <div class="percent">
+            <div class="percentNum" id="count">0</div>
+            <div class="percentB">%</div>
+          </div>
+          <div id="water" class="water">
+            <svg viewBox="0 0 560 20" class="water_wave water_wave_back">
+              <use xlink:href="#wave"></use>
+            </svg>
+            <svg viewBox="0 0 560 20" class="water_wave water_wave_front">
+              <use xlink:href="#wave"></use>
+            </svg>
+          </div>
+        </div> -->
+      </div>
+
+      <!-- end battery -->
+    
 
       <!--  -->
       <div class="half-width" style="text-align: center">
         <br />
         <span style="font-size: 30px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
-          {{total_unit[0]}}
-          <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
+                 Power Station Output Parameters
+
         </span>
+         <br>
+     <Button class="btn btn-outline-primary">Details</Button>
         <br />
-        <div class="text-center" style="margin-bottom: 15px">
-           Unit Consumed
-                  </div>
+     
       </div>
     </div>
 
@@ -693,19 +726,91 @@ right: 0;
     
     <div class="acdcflexdiv">
 
-      <div class="dcdiv">
-        <!-- dc -->
-        <div class="mt-5 " style=" display: flex; justify-content: space-around; 
+      <div class="dcdiv ">
+        <!-- grid input -->
+          <div class="mt-5"
+        style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="title"><b>Battery charging</b></div>
+          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 10px; height: 80px; width: 130px;"><br><b>AC Grid Input </b></div>
+
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{Dccurrent[4]}}
+              <h4>{{Accurrent[4]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">V</span>
               </h4>
             </div>
-            <div class="Voltage">Voltage </div>
+            <div class="Voltage"> Voltage </div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4> {{Accurrent[0]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">
+                  A
+                </span>
+              </h4>
+            </div>
+            <div class="Voltage">Current</div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4>{{Accurrent[2]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">W</span>
+              </h4>
+            </div>
+            <div class="Voltage"> Power </div>
+          </div>
+        </div>
+        
+        <br><br>
+        <!-- inverter output -->
+        <div class=""
+        style=" display: flex; justify-content: space-around; 
+        align-items: center; 
+        flex-wrap: wrap;">
+          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 10px; height: 80px; width: 130px;"><b>Solar Panel Input </b></div>
+
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4>{{Dccurrent[6]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">V</span>
+              </h4>
+            </div>
+            <div class="Voltage"> Voltage </div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4>{{Dccurrent[7]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">
+                  A
+                </span>
+              </h4>
+            </div>
+            <div class="Voltage">Current</div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4>{{Dccurrent[8]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">W</span>
+              </h4>
+            </div>
+            <div class="Voltage"> Power </div>
+          </div>
+        </div>
+<br><br>
+        <!-- battery charging -->
+   <!-- Battery -->
+        <div class="" style=" display: flex; justify-content: space-around; 
+        align-items: center; 
+        flex-wrap: wrap;">
+          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 5px; height: 80px; width: 130px;"><b>Battery Charging</b></div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4>00
+                <span class="ms-2 mt-4" style="font-size: 15px">Hr</span>
+              </h4>
+            </div>
+            <div class="Voltage">Time to charge </div>
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
@@ -713,24 +818,27 @@ right: 0;
                 <span class="ms-2 mt-4" style="font-size: 15px">A</span>
               </h4>
             </div>
-            <div class="Voltage">Current</div>
+            <div class="Voltage">Grid</div>
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
               <h4>{{Dccurrent[2]}}
-                <span class="ms-2 mt-4" style="font-size: 15px">W</span>
+                <span class="ms-2 mt-4" style="font-size: 15px">A</span>
               </h4>
             </div>
-            <div class="Voltage"> Power </div>
+            <div class="Voltage">Panel </div>
           </div>
         </div>
-        <br><br>
-        <!-- inverter output -->
-        <div class=""
+      </div>
+     
+
+      <div class="dcdiv">
+         <!-- inverter output -->
+        <div class="mt-5"
         style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="title"><b>Inverter Output </b></div>
+          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 10px; height: 80px; width: 130px;"><br><b>P S Output </b></div>
 
           <div class="dcbox1">
             <div class="voltageValues">
@@ -760,30 +868,62 @@ right: 0;
           </div>
         </div>
 <br><br>
-        <!-- Grid Input -->
-    <div class=""
-        style=" display: flex; justify-content: space-around; 
+        <!-- dc -->
+        <div class=" " style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="title"><b>Ac Grid Input </b></div>
-
+          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 10px; height: 80px; width: 130px;"><b>Battery Discharging</b></div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{Accurrent[4]}}
+              <h4>00
+                <span class="ms-2 mt-4" style="font-size: 15px">Hr</span>
+              </h4>
+            </div>
+            <div class="Voltage">Time to Discharge</div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4> {{Dccurrent[0]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">A</span>
+              </h4>
+            </div>
+            <div class="Voltage">Current</div>
+          </div>
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4>{{Dccurrent[4]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">V</span>
               </h4>
             </div>
             <div class="Voltage"> Voltage </div>
           </div>
+        </div>
+        <br><br>
+       
+        <!-- Grid Input -->
+    <div class=""
+        style=" display: flex; justify-content: space-around; 
+        align-items: center; 
+        flex-wrap: wrap;">
+          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 10px; height: 80px; width: 130px;"><b>Power <br> Consumed Today </b></div>
+
+          <div class="dcbox1">
+            <div class="voltageValues">
+              <h4>{{Accurrent[4]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">W</span>
+              </h4>
+            </div>
+            <div class="Voltage"> Grid </div>
+          </div>
           <div class="dcbox1">
             <div class="voltageValues">
               <h4> {{Accurrent[0]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">
-                  A
+                  W
                 </span>
               </h4>
             </div>
-            <div class="Voltage">Current</div>
+            <div class="Voltage">Solar Panel</div>
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
@@ -791,124 +931,11 @@ right: 0;
                 <span class="ms-2 mt-4" style="font-size: 15px">W</span>
               </h4>
             </div>
-            <div class="Voltage"> Power </div>
+            <div class="Voltage"> Total Power </div>
           </div>
         </div>
       </div>
-      <!-- panel status -->
-      <div class="acdiv">
-        <div class="panelimg p-3 text-center" style="background-color: white;">
-          <div class="container1" style="background-color: white;">
-            
-            <div class="row ">
-              
-              <div class="">
-                <div class="">
-                <div class="status "  id="status">Panel: Not Connected</div>
-              </div>
-                <img src="../static/solar.jpg" height="120px"  alt="">
-                 </div>
-              <div class="wire mt-5"></div>
-              <div class="battery mt-5">
-                <div class="charge" id="charge">
-                  
-                  0%
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <script>
-            checkConnection()
-            function checkConnection() {
-              const currentInput = '{{Dccurrent[7]}}'
-              const status = document.getElementById('status');
-              const wire = document.querySelector('.wire');
-              const charge = document.getElementById('charge');
-              const currentDate = new Date();
-              const dcCurrentDate = new Date('{{Dccurrent[1]}}');  
-            const currentEpoch = currentDate.getTime();
-const dcCurrentEpoch = dcCurrentDate.getTime();
-const timeDifference = currentEpoch - dcCurrentEpoch;
-            if (currentInput > 1 && timeDifference  < 3600000) {
-                 // Connected state
-                status.textContent = "Panel: Connected";
-                status.style.color = "green";
-                wire.classList.add('active');
-                charge.style.width = "{{ battery_chargefull }}%"; 
-                charge.textContent = "{{ battery_chargefull }}%";
-                animateCharge(charge); 
-              } else {
-                // Not connected state
-                status.textContent = "Panel: Not Connected";
-                status.style.color = "red";
-                wire.classList.remove('active');
-                wire.style.backgroundColor = "gray";
-                charge.style.width = "{{ battery_chargefull }}%";
-                charge.textContent = "{{ battery_chargefull }}%";
-              }
-            }
-
-            function animateCharge(charge) {
-              let chargeLevel = 0;
-              const interval = setInterval(() => {
-                if (chargeLevel >= "{{ battery_chargefull }}") {
-                  clearInterval(interval); 
-                } else {
-                  chargeLevel++;
-                  charge.style.width = chargeLevel + "%";
-                  charge.textContent = chargeLevel + "%"; 
-                }
-              }, 100);
-            }
-          </script>
-        </div>
-       
-        <div class="paneldata">
-          <div class="boxpanel" >{{Dccurrent[6]}} <span  style="font-weight: 700;">V</span></div>
-          <div class="boxpanel" >{{Dccurrent[7]}} <span  style="font-weight: 700;">A</span></div>
-          <div class="boxpanel">{{Dccurrent[8]}} <span  style="font-weight: 700;">W</span></div>
-
-        </div>
-
-        <div class="d-flex justify-content-between mt-2">
-          <div class="half-width" style="text-align: center">
-            <br />
-            <span style="font-size: 17px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
-              <div class="voltageValues">
-                <h4>{{dc_kwh[5] if
-                  dc_kwh[5] is not none else 'N/A'}}
-                  <span class="ms-2 mt-4" style="font-size: 15px">W</span>
-                </h4>
-              </div>
-              <!-- <span class="ms-2 mt-4" style="font-size: 18px">A</span> -->
-            </span>
-            <br />
-            <div class="text-center" style="margin-bottom: 15px">
-              DC 24 hr KWH
-            </div>
-          </div>
-
-          <div class="half-width" style="text-align: center">
-            <br />
-            <span style="font-size: 17px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
-              <div class="voltageValues">
-                <h4>{{ac_total_kwh[5] if
-                  ac_total_kwh[5] is not none else 'N/A'}}
-                  <span class="ms-2 mt-4" style="font-size: 15px">W</span>
-                </h4>
-              </div>
-            </span>
-            <br />
-            <div class="text-center" style="margin-bottom: 15px">
-              AC 24 Hr kwh
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-
+     
     </div>
    <!-- end panel -->
    
@@ -929,43 +956,34 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
         </div>
       </div>
       <br>
-      <!-- ac dc d- flex -->
-      <div class="flexgraph">
-        <div class="acdcgraph">
-          <div class="chart2">
-            <h4 class="headinggraph" style="text-align: center">
-              DC Kwh hour intervals
-            </h4>
-            <canvas id="myChart1" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
-
-          </div>
-        </div>
-        <div class="acdcgraph"> 
-          <div class="chart2">
-            <h4 class="headinggraph" style="text-align: center">
-              AC Kwh hour intervals
-            </h4>
-            <canvas id="myChart2" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
-
-          </div>
-          
-        </div>
-        
-      </div>
-
-
+   
       <!-- Graphs -->
+   <!-- Inverter parameters -->
       <div class="chart1">
-        <h4 class="headinggraph" style="text-align: center">
-          DC Current, Dc Voltage & Power vs. Time
-        </h4>
+        <h3 class="" >  Inverter Output Parameters </h3>
+       
         <canvas id="live1" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
         </canvas>
       </div>
+      <!-- panel graph -->
+        <div class="chart1">
+        <h3 class="" > Solar Panel Parameters</h3>
+       
+        <canvas id="live1" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
+        </canvas>
+      </div>
+      
+      <!--battery  -->
+          <div class="chart1">
+        <h3 class="" > Battery Parameters</h3>
+       
+        <canvas id="live1" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
+        </canvas>
+      </div>
+      <!-- grid  -->
       <div class="chart1">
-        <h4 class="headinggraph" style="text-align: center">
-          AC Current, Ac Voltage & Power vs. Time
-        </h4>
+        <h3>Grid Parameters</h3>
+       
         <canvas id="live2" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
         </canvas>
       </div> 
@@ -1371,7 +1389,7 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
               labels: labels,
               datasets: [
                 {
-                  label: "DC Voltage (V)",
+                  label: "Voltage (V)",
                   data: voltageValues,
                   borderColor: "#21b1ff",
                   backgroundColor: "rgba(0, 0, 0, 0)",
@@ -1381,7 +1399,7 @@ const timeDifference = currentEpoch - dcCurrentEpoch;
                   yAxisID: "y1",
                 },
                 {
-                  label: "DC Current (A)",
+                  label: "Current (A)",
                   data: currentValues,
                   borderColor: "#ff218c",
                   backgroundColor: "rgba(0, 0, 0, 0)",

@@ -1114,7 +1114,7 @@ def summary(device):
 
                 
                 return render_template(
-                    'summary.html',
+                    'summary copy.html',
                     battery_chargefull=int(battery_percentage),
                     Dccurrent=currentdata,
                     Accurrent=Accurrentdata,
