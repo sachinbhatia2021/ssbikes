@@ -182,7 +182,18 @@
     transition: transform 0.7s ease;
     overflow: hidden;
   }
+  .powerstationparameters{
+            font-size: 30px;
+            display: flex;
+            justify-content:center ;
 
+          }
+          .parameters{
+  background-color:  rgb(212, 208, 208);
+  padding: 10px;
+  height: 80px;
+  width: 130px;
+}
 
   @media(max-width:576px) {
     .datess {
@@ -191,7 +202,18 @@
       gap: 100px;
       /* margin-left: -50px; */
     }
+    .parameters{
+  background-color:  rgb(212, 208, 208);
+  padding: 10px;
+  height: 80px;
+  width: 100px;
+}
+  .powerstationparameters{
+            font-size: 20px;
+            display: flex;
+            justify-content:center ;
 
+          }
     .full-width4 {
       padding-left: 10px;
       border-radius: 8px;
@@ -228,16 +250,16 @@
 
   .dcdiv {
     width: 50%;
-    height: 640px;
+    height: auto;
     background-color: white;
     box-shadow: 8px 8px 18px 8px rgba(0, 0, 0, 0.1);
 
   }
 
   .dcbox1 {
-    padding-top: 60px;
-    height: 150px;
-    width: 160px;
+    padding-top: 55px;
+    height: 140px;
+    width: 22%;
     background-color: white;
     text-align: center;
 
@@ -277,20 +299,67 @@
           margin-top: 20px;
           margin-left: -1%;
         }
-    
+    /* home */
+    .homediv{
+    display: flex;
+    justify-content: center;
+  }
+  .home{
+    height: 400px;
+    border-radius: 100%;
+    width: 70%;
+  }
+  /*  */
+.blub {
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  margin-left: 10px;
+  box-shadow: 0 0 8px rgba(0, 255, 0, 0.7); /* default green glow */
+  animation: pulse 1s infinite ease-in-out;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+{% if inverterdata[2] <= 0.1 %}
+.blub {
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.7); /* red glow if inactive */
+}
+{% endif %}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
 /*   */
   @media(max-width:576px) {
     .acdcflexdiv {
       display: block;
 
     }
-
+   .homediv{
+    display: block;
+    justify-content: center;
+  }
+   .home{
+    height: 500px;
+    border-radius: 100%;
+    width: 100%;
+  }
+/*  */
     .dcdiv {
       width: 100%;
       padding-top: 10px;
       padding-bottom: 10px;
       height: auto;
+      background-color: rgb(190, 188, 188);
     }
+    h4{
+      font-size: 20px;
+    }
+
     .acdiv {
     width: 99%;
     background-color: white;
@@ -529,41 +598,6 @@ right: 0;
 
 </div>
 
-<style>
-  .homediv{
-    display: flex;
-    justify-content: center;
-  }
-  .home{
-    height: 400px;
-    border-radius: 100%;
-    width: 70%;
-  }
-  /*  */
-.blub {
-  display: inline-block;
-  height: 12px;
-  width: 12px;
-  border-radius: 50%;
-  margin-left: 10px;
-  box-shadow: 0 0 8px rgba(0, 255, 0, 0.7); /* default green glow */
-  animation: pulse 1s infinite ease-in-out;
-  transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-{% if inverterdata[2] <= 0.1 %}
-.blub {
-  box-shadow: 0 0 8px rgba(255, 0, 0, 0.7); /* red glow if inactive */
-}
-{% endif %}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-</style>
 <div class="homediv" >
   <div class="">
      <div class="" >
@@ -571,7 +605,7 @@ right: 0;
 <span class="text-center mt-2 sizebox">
   <h4>
  
-  <i class="fas fa-lightbulb" style="color: {% if inverterdata[2] > 0.1 %}green{% else %}red{% endif %}; margin-left: 10px;"></i>
+  <i class="fas fa-lightbulb" style="color: {% if inverterdata[2] > 0.1 %}green{% else %}black{% endif %}; margin-left: 10px;"></i>
 </h4>
 </span>
 
@@ -612,7 +646,17 @@ right: 0;
         <br><br><br><br>
 <span class="d-flex justify-content-center"><br><br>
   <h4>
-   <i class="fas fa-lightbulb" style="color: {% if Accurrent[2]  > 0.1 %}blue{% else %}black{% endif %}; margin-left: 10px;"></i>
+   <i class="fas fa-lightbulb"  style="color: 
+     {% if Dccurrent[0] > 0.1 %}
+       {% if Accurrent[0] > 0.1 %}
+         blue
+       {% else %}
+         green
+       {% endif %}
+     {% else %}
+       black
+     {% endif %}; 
+     margin-left: 10px;"></i>
 </h4>
 </span>
 
@@ -660,10 +704,12 @@ right: 0;
 <div class="con_small">
       <div class="half-width" style="text-align: center">
         <br />
-        <span style="font-size: 30px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
+       
+        <span  class="text-center mt-2 sizebox powerstationparameters">
         Power Station Input Parameters
         </span><br>
-     <Button class="btn btn-outline-primary">Details</Button>
+    <a class="btn btn-outline-primary" href="{{ url_for('tables', device=deviceid) }}">Details</a>
+
       </div>
       <!--  -->
   
@@ -711,12 +757,12 @@ right: 0;
       <!--  -->
       <div class="half-width" style="text-align: center">
         <br />
-        <span style="font-size: 30px; display: flex; justify-content: center " class="text-center mt-2 sizebox">
+        <span  class="text-center mt-2 sizebox powerstationparameters">
                  Power Station Output Parameters
 
         </span>
          <br>
-     <Button class="btn btn-outline-primary">Details</Button>
+    <a class="btn btn-outline-primary" href="{{ url_for('tables', device=deviceid) }}">Details</a>
         <br />
      
       </div>
@@ -732,7 +778,7 @@ right: 0;
         style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 10px; height: 80px; width: 130px;"><br><b>AC Grid Input </b></div>
+          <div class="text-center parameters"><br><p>AC Grid Input </p></div>
 
           <div class="dcbox1">
             <div class="voltageValues">
@@ -768,7 +814,7 @@ right: 0;
         style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 10px; height: 80px; width: 130px;"><b>Solar Panel Input </b></div>
+          <div class="text-center parameters"><p>Solar Panel Input </p></div>
 
           <div class="dcbox1">
             <div class="voltageValues">
@@ -803,14 +849,14 @@ right: 0;
         <div class="" style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 5px; height: 80px; width: 130px;"><b>Battery Charging</b></div>
+          <div class="text-center parameters"><p>Battery Charging</p></div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>00
-                <span class="ms-2 mt-4" style="font-size: 15px">Hr</span>
+              <h4>{{Dccurrent[4]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">V</span>
               </h4>
             </div>
-            <div class="Voltage">Time to charge </div>
+            <div class="Voltage">Voltage</div>
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
@@ -818,19 +864,20 @@ right: 0;
                 <span class="ms-2 mt-4" style="font-size: 15px">A</span>
               </h4>
             </div>
-            <div class="Voltage">Grid</div>
+            <div class="Voltage">Current</div>
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
               <h4>{{Dccurrent[2]}}
-                <span class="ms-2 mt-4" style="font-size: 15px">A</span>
+                <span class="ms-2 mt-4" style="font-size: 15px">W</span>
               </h4>
             </div>
-            <div class="Voltage">Panel </div>
+            <div class="Voltage">Power </div>
           </div>
         </div>
+             <br><br>
       </div>
-     
+
 
       <div class="dcdiv">
          <!-- inverter output -->
@@ -838,7 +885,7 @@ right: 0;
         style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 10px; height: 80px; width: 130px;"><br><b>P S Output </b></div>
+          <div class="text-center parameters"><br><p>P S Output </p></div>
 
           <div class="dcbox1">
             <div class="voltageValues">
@@ -872,18 +919,18 @@ right: 0;
         <div class=" " style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 10px; height: 80px; width: 130px;"><b>Battery Discharging</b></div>
+          <div class="text-center parameters"><p>Battery Discharging</p></div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>00
-                <span class="ms-2 mt-4" style="font-size: 15px">Hr</span>
+              <h4>{{Dccurrent[4]}}
+                <span class="ms-2 mt-4" style="font-size: 15px">V</span>
               </h4>
             </div>
-            <div class="Voltage">Time to Discharge</div>
+            <div class="Voltage">Voltage</div>
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4> {{Dccurrent[0]}}
+              <h4> {{battery_discharging_current[0]}}
                 <span class="ms-2 mt-4" style="font-size: 15px">A</span>
               </h4>
             </div>
@@ -891,11 +938,12 @@ right: 0;
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{Dccurrent[4]}}
-                <span class="ms-2 mt-4" style="font-size: 15px">V</span>
+              <h4>{{ (Dccurrent[4] * battery_discharging_current[0]) | round(2) }}
+
+                <span class="ms-2 mt-4" style="font-size: 15px">W</span>
               </h4>
             </div>
-            <div class="Voltage"> Voltage </div>
+            <div class="Voltage"> Power </div>
           </div>
         </div>
         <br><br>
@@ -905,11 +953,11 @@ right: 0;
         style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="text-center" style="background-color: rgb(190, 186, 186); padding: 10px; height: 80px; width: 130px;"><b>Power <br> Consumed Today </b></div>
+          <div class="text-center parameters"><p>Power <br> Consumed Today </p></div>
 
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{Accurrent[4]}}
+              <h4>0.0
                 <span class="ms-2 mt-4" style="font-size: 15px">W</span>
               </h4>
             </div>
@@ -917,7 +965,7 @@ right: 0;
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4> {{Accurrent[0]}}
+              <h4>0.0
                 <span class="ms-2 mt-4" style="font-size: 15px">
                   W
                 </span>
@@ -927,7 +975,7 @@ right: 0;
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{Accurrent[2]}}
+              <h4>0.0
                 <span class="ms-2 mt-4" style="font-size: 15px">W</span>
               </h4>
             </div>
@@ -987,337 +1035,12 @@ right: 0;
         <canvas id="live2" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
         </canvas>
       </div> 
-    <br><br>
-      <div class="row1 Inverter1">
-        <section class="col-lg-12 connectedSortable scroll">
-          <div class="">
-            <div class="card-header">
-              <h4 class="card-title"><i class='bx bxs-data'></i> Panel Data</h4>
-            </div>
-            <div class="row">
-              <div class="card-body x">
-                <div>
-  
-                  <table id="example21" class="table table-bordered table-striped" style="margin-top: 80px;">
-                    <thead>
-                      <tr>
-                        <th>Device ID</th>
-                        <th>Timestamp</th>
-                        <th>Current</th>
-                        <th>Voltage</th>
-                        <th>Power</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for item in alldataprint %}
-                      <tr>
-                        <td>{{ item[1] }}</td>
-                        <td>{{ item[2] }}</td>
-                        <td>{{ item[10] }}</td>
-                        <td>{{ item[9] }}</td>
-                        <td>{{ item[3] }}</td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-        </section>
-      </div>
-      
-      <br><br>
-      <div class="row1 Inverter1">
-        <section class="col-lg-12 connectedSortable scroll">
-          <div class="">
-            <div class="card-header">
-              <h4 class="card-title"><i class='bx bxs-data'></i>Dc Battery Charging</h4>
-            </div>
-            <div class="row">
-              <div class="card-body x">
-                <div>
-  
-                  <table id="example2" class="table table-bordered table-striped" style="margin-top: 80px;">
-                    <thead>
-                      <tr>
-                        <th>Device ID</th>
-                        <th>Timestamp</th>
-                        <th>DC Current</th>
-                        <th>DC Voltage</th>
-                        <th>DC Power</th>
-                        <th>DC KWh</th>
-                        <th>Temperature</th>
-  
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for item in alldataprint %}
-                      <tr>
-                        <td>{{ item[1] }}</td>
-                        <td>{{ item[2] }}</td>
-                        <td>{{ item[4] }}</td>
-                        <td>{{ item[7] }}</td>
-                        <td>{{ item[6] }}</td>
-                        <td>{{ item[5] }}</td>
-                        <td>{{ item[8] }}</td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-  
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-      <br><br>
-      <!-- inverter Output -->
-    <div class="row1 Inverter1">
-        <section class="col-lg-12 connectedSortable scroll">
-          <div class="">
-            <div class="card-header">
-              <h4 class="card-title"><i class='bx bxs-data'></i>Inverter Output</h4>
-            </div>
-            <div class="row">
-              <div class="card-body x">
-                <div>
-  
-                  <table id="examplebtdc" class="table table-bordered table-striped" style="margin-top: 80px;">
-                    <thead>
-                      <tr>
-                        <th>Device ID</th>
-                        <th>Timestamp</th>
-                        <th>Dc Battery discharging</th>
-                        <th> Current</th>
-                        <th> Voltage</th>
-                        <th> Power</th>
-                   </tr>
-                    </thead>
-                    <tbody>
-                      {% for item in battery_discharging_data %}
-                      <tr>
-                        <td>{{ item[1] }}</td>
-                        <td>{{ item[2] }}</td>
-                        <td>{{ item[3] }}</td>
-                        <td>{{ item[5] }}</td>
-                        <td>{{ item[4] }}</td>
-                        <td>{{ item[6] }}</td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-  
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-      <br><br>
-       <!--  -->
-      <div class=" Inverter1">
-        <section class="col-lg-12 connectedSortable scroll">
-          <div class="">
-            <div class="card-header">
-              <h4 class="card-title"><i class='bx bxs-data'></i> DC KWH Data</h4>
-            </div>
-            <div class="row">
-              <div class="card-body x">
-                <div>
-  
-                  <table id="example4" class="table table-bordered table-striped" style="margin-top: 80px;">
-                    <thead>
-                      <tr>
-                        <th>Device ID</th>
-                        <th>Start Hour</th>
-                        <th>End Hour</th>
-                        <th>KWH per hour</th>
-                        <th>KWH 24-Hour</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for item in dc_kwh_dataprint %}
-                      <tr>
-                        <td>{{ item[1] }}</td>
-                        <td>{{ item[2] }}</td>
-                        <td>{{ item[3] }}</td>
-                        <td>{{ item[4] }}</td>
-                        <td>{{ item[5] }}</td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-        </section>
-      </div>
-  
-      <br><br>
-      <div class="row1 Inverter1">
-        <section class="col-lg-12 connectedSortable scroll">
-          <div class="">
-            <div class="card-header">
-              <h4 class="card-title"><i class='bx bxs-data'></i>Ac Grid Input</h4>
-            </div>
-            <div class="row">
-              <div class="card-body x">
-                <div>
-  
-                  <table id="example3" class="table table-bordered table-striped" style="margin-top: 80px;">
-                    <thead>
-                      <tr>
-                        <th>Device ID</th>
-                        <th>Timestamp</th>
-                        <th>Temperature</th>
-                        <th>Ac Voltage</th>
-                        <th>Ac Current</th>
-                        <th>Ac Power</th>
-                        <th>Ac KWH</th>
-                        <!-- <th>Frequency</th> -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for item in allAcdataprint %}
-                      <tr>
-                        <td>{{ item[1] }}</td>
-                        <td>{{ item[2] }}</td>
-                        <td>{{ item[8] }}</td>
-                        <td>{{ item[3] }}</td>
-                        <td>{{ item[4] }}</td>
-                        <td>{{ item[5] }}</td>
-                        <td>{{ item[6] }}</td>
-                        <!-- <td>{{ item[] }}</td> -->
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-        </section>
-      </div>
-      <br> <br>
-      <div class="row1 Inverter1">
-        <section class="col-lg-12 connectedSortable scroll">
-          <div class="">
-            <div class="card-header">
-              <h4 class="card-title"><i class='bx bxs-data'></i> AC KWH Data</h4>
-            </div>
-            <div class="row">
-              <div class="card-body x">
-                <div>
-  
-                  <table id="example5" class="table table-bordered table-striped" style="margin-top: 80px;">
-                    <thead>
-                      <tr>
-                        <th>Device ID</th>
-                        <th>Start Hour</th>
-                        <th>End Hour</th>
-                        <th>KWH per hour</th>
-                        <th>KWH 24-Hour</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for item in ac_kwh_dataprint %}
-                      <tr>
-                        <td>{{ item[1] }}</td>
-                        <td>{{ item[2] }}</td>
-                        <td>{{ item[3] }}</td>
-                        <td>{{ item[4] }}</td>
-                        <td>{{ item[5] }}</td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-        </section>
-      </div>
-  
+    
+    
+   
       <br>
- <div class="full-width44">
-  <div class="dates">Both dates are mandatory</div>
 
-  <div class="datess">
-    <!-- Start Date -->
-    <div>
-      <label for="start_date_excel"><b>Start Date
-          <span style="color: red">*</span></b></label><br />
-      <input style="width: 250px; cursor: pointer;" type="date" value="{{ today_date }}" id="start_date_excel" name="start_date_excel" />
-    </div>
-
-    <!-- End Date -->
-    <div>
-      <label for="end_date_excel"><b>End Date
-          <span style="color: red">*</span></b></label><br />
-      <input style="width: 250px;cursor: pointer;" type="date" value="{{ today_date }}" id="end_date_excel" name="end_date_excel" />
-    </div>
-
-   
-    <!-- Dropdown -->
- 
-  <select id="selectedDownloadType" style="height: 30px; margin-top: 32px;cursor: pointer;" onchange="setDownloadType(this.value)">
-    <option value="">__Select File.</option>
-    <option value="dc_kwh">dc_kwh</option>
-    <option value="ac_data">ac_data</option>
-    <option value="ac_kwh">ac_kwh</option>
-    <option value="dc_data">dc_data</option>
-  </select>
-  <span style="background-color: green; margin-top: 32px; padding: 5px; border-radius: 3px; color: white; cursor: pointer;" onclick="performDownload()">
-  <i class="fa-solid fa-download"></i>  Download
-  </span>
-</div>
-
-<!-- Final Download Button -->
-<!-- <button class="btn btn-success mt-3" onclick="performDownload()">
-  <i class="fa-solid fa-download"></i>
-</button> -->
-
-<script>
-  function setDownloadType(type) {
-    // You don't need to set the value manually here anymore
-    alert("Selected: " + type.replace("_", " ").toUpperCase());
-  }
-
-  function performDownload() {
-    const type = document.getElementById("selectedDownloadType").value;
-    const startDate = document.getElementById("start_date_excel")?.value;
-    const endDate = document.getElementById("end_date_excel")?.value;
-
-    if (!type) {
-      alert("Please select a download file name.");
-      return;
-    }
-
-    if ((type === "ac_data" || type === "dc_data") && (!startDate || !endDate)) {
-      alert("Both start and end dates are required.");
-      return;
-    }
-
-    switch (type) {
-      case "ac_data":
-        window.location.href = `/download_excel?start_date=${startDate}&end_date=${endDate}`;
-        break;
-      case "ac_kwh":
-        window.location.href = `/download_excel2`;
-        break;
-      case "dc_kwh":
-        window.location.href = `/download_excel3`;
-        break;
-      case "dc_data":
-        window.location.href = `/download_excel1?start_date=${startDate}&end_date=${endDate}`;
-        break;
-      default:
-        alert("Invalid selection.");
-    }
-  }
-</script>
-
-   
-   
-    <!-- Footer -->
+  <!-- Footer -->
  <br><br><br><br>
    <div class="footer">
     <p class="ms-5" style="margin-left: 35px;"> Copyright © 2024 <a href="" target="_blank" class="linnk">Skilancer Solar</a> . All rights reserved.</p>

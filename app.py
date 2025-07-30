@@ -1082,7 +1082,19 @@ def summary(device):
                 Acdata = "SELECT * FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 700"
                 cursor.execute(Acdata,(device,))
                 allAcdataprint = cursor.fetchall()
-                   # Fetch AC data
+                   # Fetch battery discharging current
+                battery_discharging_ct = """
+                        SELECT Battery_discharge 
+                        FROM Inverter_data 
+                        WHERE Device_id = %s 
+                        ORDER BY timestamp DESC 
+                        LIMIT 1
+                    """
+                cursor.execute(battery_discharging_ct, (device,))
+                battery_discharging_current = cursor.fetchone()
+
+                print(battery_discharging_current,"hh")
+                   #fetch inverter output battery discharging
                 battery_discharging = "SELECT * FROM Inverter_data WHERE Device_id = %s order by timestamp desc LIMIT 700"
                 cursor.execute(battery_discharging,(device,))
                 battery_discharging_data = cursor.fetchall()
@@ -1123,24 +1135,63 @@ def summary(device):
                     ac_total_kwh=ac_total_kwh,
                     total_unit=total_unit,today_date=today_date,man_date=man_date,value=value,
                     alldataprint=alldataprint,allAcdataprint=allAcdataprint,dc_kwh_dataprint=dc_kwh_dataprint,
-                    ac_kwh_dataprint=ac_kwh_dataprint,deviceid=device,battery_discharging_data=battery_discharging_data,inverterdata=inverterdata
-                )    
+                    ac_kwh_dataprint=ac_kwh_dataprint,deviceid=device,battery_discharging_data=battery_discharging_data,inverterdata=inverterdata,battery_discharging_current=battery_discharging_current )    
     except Exception as e:
                  return str(e), 500
 ########################################################################################################
+########################################################################################################
+# Summary page
+@app.route('/tables/<device>')
+def tables(device):
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(buffered=True) as cursor:
+                
+         
+                alldata = "SELECT * FROM dc_data WHERE Device_id = %s ORDER BY timestamp DESC LIMIT 700"
+                cursor.execute(alldata,(device,))
+                alldataprint = cursor.fetchall()
+
+                # Fetch AC data
+                Acdata = "SELECT * FROM ac_data WHERE Device_id = %s order by timestamp desc LIMIT 700"
+                cursor.execute(Acdata,(device,))
+                allAcdataprint = cursor.fetchall()
+                         
+                #fetch inverter output battery discharging
+                battery_discharging = "SELECT * FROM Inverter_data WHERE Device_id = %s order by timestamp desc LIMIT 700"
+                cursor.execute(battery_discharging,(device,))
+                battery_discharging_data = cursor.fetchall()
+
+                # Fetch DC KWH data
+                dc_kwh_data = "select * from dc_kwh WHERE Device_id = %s order by start_hour desc LIMIT 700"
+                cursor.execute(dc_kwh_data,(device,))
+                dc_kwh_dataprint = cursor.fetchall()
+
+                # Fetch AC KWH data
+                ac_kwh_data = "SELECT * FROM ac_kwh WHERE Device_id = %s order by start_hour desc LIMIT 700"
+                cursor.execute(ac_kwh_data,(device,))
+                ac_kwh_dataprint = cursor.fetchall()
+
+       
+
+
+                
+                return render_template(
+                    'tablesdata.html',
+                    alldataprint=alldataprint,allAcdataprint=allAcdataprint,dc_kwh_dataprint=dc_kwh_dataprint,
+                    ac_kwh_dataprint=ac_kwh_dataprint,deviceid=device,
+                    battery_discharging_data=battery_discharging_data)    
+    except Exception as e:
+                 return str(e), 500
+########################################################################################################
+
 # Table data
 @app.route('/manage_data/<device>')
 def manage_data(device):    
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
-                
-                # Fetch AC data
-                # Acdata = "SELECT * FROM ac_data order by timestamp desc LIMIT 700"
-                # cursor.execute(Acdata)
-                # allAcdataprint = cursor.fetchall()
-
-
+            
              return render_template('manage.html',device=device)
 
     except Exception as e:
