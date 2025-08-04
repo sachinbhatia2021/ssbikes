@@ -190,9 +190,12 @@
           }
           .parameters{
   background-color:  rgb(212, 208, 208);
-  padding: 10px;
+  padding: 8px;
   height: 80px;
-  width: 130px;
+  width: 120px;
+  font-weight: 600;
+      box-shadow: 5px 5px 10px 8px rgba(12, 12, 12, 0.1);
+
 }
 
   @media(max-width:576px) {
@@ -215,17 +218,19 @@
 
           }
     .full-width4 {
-      padding-left: 10px;
       border-radius: 8px;
       margin-top: 40px;
+      margin-left: 2px;
       background-color: #eeeef2;
       padding-top: 40px;
-      width: calc(100% - 40px);
-      height: 230px;
+      width: 100%;
+      height: 250px;
       margin-bottom: 10px;
       border-left: 6px solid #460abf;
     }
-
+    .half-width{
+      margin-left: 23px;
+    }
     .chart1 {
       height: auto;
 
@@ -257,8 +262,8 @@
   }
 
   .dcbox1 {
-    padding-top: 55px;
-    height: 140px;
+    padding-top: 50px;
+    height: 130px;
     width: 22%;
     background-color: white;
     text-align: center;
@@ -310,29 +315,6 @@
     width: 70%;
   }
   /*  */
-.blub {
-  display: inline-block;
-  height: 12px;
-  width: 12px;
-  border-radius: 50%;
-  margin-left: 10px;
-  box-shadow: 0 0 8px rgba(0, 255, 0, 0.7); /* default green glow */
-  animation: pulse 1s infinite ease-in-out;
-  transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-{% if inverterdata[2] <= 0.1 %}
-.blub {
-  box-shadow: 0 0 8px rgba(255, 0, 0, 0.7); /* red glow if inactive */
-}
-{% endif %}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
 /*   */
   @media(max-width:576px) {
     .acdcflexdiv {
@@ -354,7 +336,7 @@
       padding-top: 10px;
       padding-bottom: 10px;
       height: auto;
-      background-color: rgb(190, 188, 188);
+      background-color: rgb(125, 158, 248);
     }
     h4{
       font-size: 20px;
@@ -365,7 +347,7 @@
     background-color: white;
   }
   .dcbox1 {
-    padding-top: 20px;
+    padding-top: 60px;
     height: 150px;
     width: 140px;
     margin-top: 10px;
@@ -782,7 +764,7 @@ right: 0;
 
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{Accurrent[4]}}
+              <h4>{{Accurrent[4] | round(2) }}
                 <span class="ms-2 mt-4" style="font-size: 15px">V</span>
               </h4>
             </div>
@@ -790,7 +772,7 @@ right: 0;
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4> {{Accurrent[0]}}
+              <h4> {{Accurrent[0] | round(2) }}
                 <span class="ms-2 mt-4" style="font-size: 15px">
                   A
                 </span>
@@ -818,7 +800,7 @@ right: 0;
 
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{Dccurrent[6]}}
+              <h4>{{Dccurrent[6] | round(2) }}
                 <span class="ms-2 mt-4" style="font-size: 15px">V</span>
               </h4>
             </div>
@@ -826,7 +808,7 @@ right: 0;
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{Dccurrent[7]}}
+              <h4>{{Dccurrent[7] | round(2) }}
                 <span class="ms-2 mt-4" style="font-size: 15px">
                   A
                 </span>
@@ -852,7 +834,7 @@ right: 0;
           <div class="text-center parameters"><p>Battery Charging</p></div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{Dccurrent[4]}}
+              <h4>{{Dccurrent[4] | round(2) }}
                 <span class="ms-2 mt-4" style="font-size: 15px">V</span>
               </h4>
             </div>
@@ -860,7 +842,7 @@ right: 0;
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4> {{Dccurrent[0]}}
+              <h4> {{Dccurrent[0] | round(2) }}
                 <span class="ms-2 mt-4" style="font-size: 15px">A</span>
               </h4>
             </div>
@@ -868,7 +850,7 @@ right: 0;
           </div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{Dccurrent[2]}}
+              <h4>{{Dccurrent[2] | round(2) }}
                 <span class="ms-2 mt-4" style="font-size: 15px">W</span>
               </h4>
             </div>
@@ -889,7 +871,7 @@ right: 0;
 
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{inverterdata[3]}}
+              <h4>{{inverterdata[3] | round(2) }}
                 <span class="ms-2 mt-4" style="font-size: 15px">V</span>
               </h4>
             </div>
@@ -922,7 +904,7 @@ right: 0;
           <div class="text-center parameters"><p>Battery Discharging</p></div>
           <div class="dcbox1">
             <div class="voltageValues">
-              <h4>{{Dccurrent[4]}}
+              <h4>{{Dccurrent[4] | round(2) }}
                 <span class="ms-2 mt-4" style="font-size: 15px">V</span>
               </h4>
             </div>
@@ -953,7 +935,7 @@ right: 0;
         style=" display: flex; justify-content: space-around; 
         align-items: center; 
         flex-wrap: wrap;">
-          <div class="text-center parameters"><p>Power <br> Consumed Today </p></div>
+          <div class="text-center parameters"><p class="mb-2"> Power <br> Consumed Today </p></div>
 
           <div class="dcbox1">
             <div class="voltageValues">
@@ -1016,16 +998,18 @@ right: 0;
       <!-- panel graph -->
         <div class="chart1">
         <h3 class="" > Solar Panel Parameters</h3>
-       
         <canvas id="live1" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
+        
+        <!-- <canvas id="live3" style="height: 340px; width: 100%; padding-right: 30px;"></canvas> -->
         </canvas>
       </div>
       
       <!--battery  -->
           <div class="chart1">
         <h3 class="" > Battery Parameters</h3>
-       
         <canvas id="live1" style="height: 340px; width: 100%; padding-right: 30px;"></canvas>
+      
+        <!-- <canvas id="live4" style="height: 340px; width: 100%; padding-right: 30px;"></canvas> -->
         </canvas>
       </div>
       <!-- grid  -->
@@ -1070,17 +1054,20 @@ right: 0;
   <!-- script for graphs -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-
-  <!--Graph for DC Data -->
+ 
+<!-- graph or inverter output -->
+ 
   <script>
-    const id = "{{Dccurrent[5]}}";
-    let chart4 = null;
+    // Ensure this is output as a valid string/number by Jinja2
+    const id = {{ Dccurrent[5] | tojson }};
+    let chart = null;
 
-    function livegraphDc(startDate, endDate) {
-      const url =
-        startDate && endDate
-          ? `/livegraphdc/${id}?start_date=${startDate}&end_date=${endDate}`
-          : `/livegraphdc/${id}`;
+    function livegraphAc(startDate, endDate) {
+      const url = startDate && endDate
+        ? `/livegraphdc/${id}?start_date=${startDate}&end_date=${endDate}`
+        : `/livegraphdc/${id}`;
+
+      console.log("Fetching URL:", url);
 
       fetch(url)
         .then((response) => {
@@ -1090,31 +1077,30 @@ right: 0;
           return response.json();
         })
         .then((data) => {
+          console.log("Fetched data:", data);
           if (!Array.isArray(data)) {
             throw new Error("Data is not an array.");
           }
 
           const labels = data.map((item) => new Date(item.timestamp));
-          const voltageValues = data.map((item) => item.Dc_Voltage);
-          const currentValues = data.map((item) => item.Dc_Current);
-          const powerValues = data.map(
-            (item) => item.Dc_Voltage * item.Dc_Current
-          );
+          const voltageValues = data.map((item) => item.Inverter_voltage);
+          const currentValues = data.map((item) => item.Inverter_current);
+          const powerValues = data.map((item) => item.Inverter_voltage * item.Inverter_current);
 
-          if (chart4) {
-            chart4.destroy();
+          if (chart) {
+            chart.destroy();
           }
 
           const ctx = document.getElementById("live1").getContext("2d");
-          chart4 = new Chart(ctx, {
+          chart = new Chart(ctx, {
             type: "line",
             data: {
               labels: labels,
               datasets: [
                 {
-                  label: "Voltage (V)",
+                  label: "AC Voltage (V)",
                   data: voltageValues,
-                  borderColor: "#21b1ff",
+                  borderColor: "#207bff",
                   backgroundColor: "rgba(0, 0, 0, 0)",
                   borderWidth: 2,
                   fill: false,
@@ -1122,9 +1108,9 @@ right: 0;
                   yAxisID: "y1",
                 },
                 {
-                  label: "Current (A)",
+                  label: "AC Current (A)",
                   data: currentValues,
-                  borderColor: "#ff218c",
+                  borderColor: "#db2b39",
                   backgroundColor: "rgba(0, 0, 0, 0)",
                   borderWidth: 2,
                   fill: false,
@@ -1134,7 +1120,7 @@ right: 0;
                 {
                   label: "Power (W)",
                   data: powerValues,
-                  borderColor: "#ffd800",
+                  borderColor: "#f3a712",
                   backgroundColor: "rgba(0, 0, 0, 0)",
                   borderWidth: 2,
                   fill: false,
@@ -1144,12 +1130,17 @@ right: 0;
               ],
             },
             options: {
+              responsive: true,
               scales: {
                 x: {
                   type: "time",
                   time: {
-                    unit: "minute",
+                    unit: "hour",
                     tooltipFormat: "MMM d, h:mm a",
+                  },
+                  title: {
+                    display: true,
+                    text: "Time",
                   },
                   grid: {
                     display: false,
@@ -1184,27 +1175,277 @@ right: 0;
           console.error("Error fetching graph data:", error);
         });
     }
-    livegraphDc();
-    document
-      .getElementById("start_date")
-      .addEventListener("change", updateGraph);
-    document
-      .getElementById("end_date")
-      .addEventListener("change", updateGraph);
+
+    // Initial graph load
+    livegraphAc();
+
+    // Update graph on date change
+    document.getElementById("start_date").addEventListener("change", updateGraph);
+    document.getElementById("end_date").addEventListener("change", updateGraph);
 
     function updateGraph() {
       const startDate = document.getElementById("start_date").value;
       const endDate = document.getElementById("end_date").value;
-      livegraphDc(startDate, endDate);
+      livegraphAc(startDate, endDate);
+    }
+  </script>
+<!-- graph panel output dc -->
+
+  <!-- <script>
+    const id_panel = "{{ Dccurrent[5]}}";
+    let chart1 = null;
+
+    function livegraphAc(startDate, endDate) {
+      const url = startDate && endDate
+        ? `/livegraphpanel/${id_panel}?start_date=${startDate}&end_date=${endDate}`
+        : `/livegraphpanel/${id_panel}`;
+
+      console.log("Fetching URL:", url);
+
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Fetched data:", data);
+          if (!Array.isArray(data)) {
+            throw new Error("Data is not an array.");
+          }
+
+          const labels = data.map((item) => new Date(item.timestamp));
+          const voltageValues = data.map((item) => item.panel_voltage);
+          const currentValues = data.map((item) => item.panel_current);
+          const powerValues = data.map((item) => item.Panel_Power);
+
+          if (chart1) {
+            chart1.destroy();
+          }
+
+          const ctx = document.getElementById("live3").getContext("2d");
+          chart = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "Panel Voltage (V)",
+                  data: voltageValues,
+                  borderColor: "#207bff",
+                  backgroundColor: "rgba(0, 0, 0, 0)",
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.3,
+                  yAxisID: "y1",
+                },
+                {
+                  label: "Panel Current (A)",
+                  data: currentValues,
+                  borderColor: "#db2b39",
+                  backgroundColor: "rgba(0, 0, 0, 0)",
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.3,
+                  yAxisID: "y2",
+                },
+                {
+                  label: "Power (W)",
+                  data: powerValues,
+                  borderColor: "#f3a712",
+                  backgroundColor: "rgba(0, 0, 0, 0)",
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.3,
+                  yAxisID: "y1",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              scales: {
+                x: {
+                  type: "time",
+                  time: {
+                    unit: "hour",
+                    tooltipFormat: "MMM d, h:mm a",
+                  },
+                  title: {
+                    display: true,
+                    text: "Time",
+                  },
+                  grid: {
+                    display: false,
+                  },
+                },
+                y1: {
+                  beginAtZero: true,
+                  grid: {
+                    display: false,
+                  },
+                  title: {
+                    display: true,
+                    text: "Voltage & Power (V/W)",
+                  },
+                },
+                y2: {
+                  beginAtZero: true,
+                  position: "right",
+                  grid: {
+                    drawOnChartArea: true,
+                  },
+                  title: {
+                    display: true,
+                    text: "Current (A)",
+                  },
+                },
+              },
+            },
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching graph data:", error);
+        });
     }
 
-    // Alternatively, use setInterval to keep calling it every second
-    // setInterval(() => {
-    //   livegraphDc();
-    // }, 1000);
-  </script>
+    // Initial graph load
+    livegraphAc();
 
-  <!--Graph for AC Data -->
+    // Update graph on date change
+    document.getElementById("start_date").addEventListener("change", updateGraph);
+    document.getElementById("end_date").addEventListener("change", updateGraph);
+
+    function updateGraph() {
+      const startDate = document.getElementById("start_date").value;
+      const endDate = document.getElementById("end_date").value;
+      livegraphAc(startDate, endDate);
+    }
+  </script> -->
+<!-- battery out put -->
+<!-- <script>
+  const id_battery = "{{ Dccurrent[5] }}";
+  let chart2 = null;
+
+  function livegraphAc(startDate, endDate) {
+    const url = startDate && endDate
+      ? `/livegraphbattery/${id_battery}?start_date=${startDate}&end_date=${endDate}`
+      : `/livegraphbattery/${id_battery}`;
+
+    console.log("Fetching URL:", url);
+
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Fetched data:", data);
+        if (!Array.isArray(data)) {
+          throw new Error("Data is not an array.");
+        }
+
+        const labels = data.map((item) => new Date(item.timestamp));
+        const voltageValues = data.map((item) => item.Dc_Voltage);
+        const currentValues = data.map((item) => item.Dc_Current);
+
+        if (chart2) {
+          chart2.destroy();
+        }
+
+        const ctx = document.getElementById("live4").getContext("2d");
+        chart2 = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Battery Voltage (V)",
+                data: voltageValues,
+                borderColor: "#207bff",
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                borderWidth: 2,
+                fill: false,
+                tension: 0.3,
+                yAxisID: "y1",
+              },
+              {
+                label: "Battery Current (A)",
+                data: currentValues,
+                borderColor: "#db2b39",
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                borderWidth: 2,
+                fill: false,
+                tension: 0.3,
+                yAxisID: "y2",
+              }
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                type: "time",
+                time: {
+                  unit: "hour",
+                  tooltipFormat: "MMM d, h:mm a",
+                },
+                title: {
+                  display: true,
+                  text: "Time",
+                },
+                grid: {
+                  display: false,
+                },
+              },
+              y1: {
+                beginAtZero: true,
+                grid: {
+                  display: false,
+                },
+                title: {
+                  display: true,
+                  text: "Voltage (V)",
+                },
+              },
+              y2: {
+                beginAtZero: true,
+                position: "right",
+                grid: {
+                  drawOnChartArea: true,
+                },
+                title: {
+                  display: true,
+                  text: "Current (A)",
+                },
+              },
+            },
+          },
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching graph data:", error);
+      });
+  }
+
+  // Initial graph load
+  livegraphAc();
+
+  // Update graph on date change
+  document.getElementById("start_date").addEventListener("change", updateGraph);
+  document.getElementById("end_date").addEventListener("change", updateGraph);
+
+  function updateGraph() {
+    const startDate = document.getElementById("start_date").value;
+    const endDate = document.getElementById("end_date").value;
+    livegraphAc(startDate, endDate);
+  }
+</script> -->
+
+
+  <!--Graph for grid AC Data -->
   <script>
     const id1 = "{{Accurrent[5]}}";
     let chart5 = null;

@@ -1122,9 +1122,7 @@ def summary(device):
                 else:  # 48V Lithium Battery
                     battery_percentage = math.trunc(((currentdata[4] - 44) / (54.75 - 44)) * 100)
                 battery_percentage = max(0, min(100, battery_percentage))
-
-
-                
+     
                 return render_template(
                     'summary copy.html',
                     battery_chargefull=int(battery_percentage),
@@ -1172,10 +1170,6 @@ def tables(device):
                 cursor.execute(ac_kwh_data,(device,))
                 ac_kwh_dataprint = cursor.fetchall()
 
-       
-
-
-                
                 return render_template(
                     'tablesdata.html',
                     alldataprint=alldataprint,allAcdataprint=allAcdataprint,dc_kwh_dataprint=dc_kwh_dataprint,
@@ -1535,8 +1529,8 @@ def livegraphdc(id):
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
                 query = """
-                    SELECT timestamp, Dc_Current, Dc_Voltage 
-                    FROM dc_data WHERE Device_id = %s 
+                    SELECT timestamp, Inverter_current, Inverter_voltage 
+                    FROM Inverter_data WHERE Device_id = %s 
                 """
                 params = [id]
 
@@ -1592,6 +1586,72 @@ def livegraphac(id):
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while fetching graph data."}), 500
 ########################################################################################################
+@app.route('/livegraphpanel/<string:id>')
+def livegraphpanel(id):
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(dictionary=True) as cursor:
+                query = """
+                    SELECT timestamp, panel_voltage, panel_current, Panel_Power 
+                    FROM dc_data 
+                    WHERE device_id = %s
+                """
+                params = [id]
+
+                if start_date and end_date:
+                    query += " AND timestamp BETWEEN %s AND %s"
+                    params.append(start_date)
+                    params.append(end_date)
+                else:
+                    query += " AND timestamp >= NOW() - INTERVAL 4 HOUR"
+
+                cursor.execute(query, params)
+                livepanel_graph_data = cursor.fetchall()
+
+                for item in livepanel_graph_data:
+                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
+
+        return jsonify(livepanel_graph_data)
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while fetching graph data."})
+########################################################################################################
+@app.route('/livegraphbattery/<string:id>')
+def livegraphbattery(id):
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+    try:
+        with get_db_connection() as connection:
+            with connection.cursor(dictionary=True) as cursor:
+                query = """
+                    SELECT timestamp,Dc_Voltage,Dc_Current
+                    FROM dc_data WHERE Device_id = %s
+                """
+                params = [id]
+
+                if start_date and end_date:
+                    query += " AND timestamp BETWEEN %s AND %s"
+                    params.append(start_date)
+                    params.append(end_date)
+                else:
+                    query += " AND timestamp >= NOW() - INTERVAL 4 HOUR"
+
+                cursor.execute(query, params)
+                livegraphbattery = cursor.fetchall()
+
+                for item in livegraphbattery:
+                    item['timestamp'] = item['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
+
+        return jsonify(livegraphbattery)
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while fetching graph data."})
+
+
 # Function for logout and clear it sessions
 @app.route('/logout', methods=['POST'])
 def logout():

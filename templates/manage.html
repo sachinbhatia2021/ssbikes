@@ -355,12 +355,12 @@ text-align: center;
 </div>
 </div>
 
-  <div class="buttondatapacket">
+  <div class="buttondatapacket mt-3">
     <a class="btn btn-outline-primary" href="{{ url_for('summary',device = device) }}">Summary</a>
   </div>
 
   <div class="container1">
-    <div class="flexbox pt-3">
+    <div class="flexbox pt-2">
 
       <div class="fetchdrivespeed ">
         <div class="text-center">
@@ -373,7 +373,7 @@ text-align: center;
           <h5><b>Battery Type:</b></h5><br>
           <h5><b>Panel VOC:</b></h5><br>
           <h5><b>Battery Capacity:</b></h5><br>
-          <h5><b>Battery max Voltage:</b></h5>
+          <h5><b>Battery max Voltage:</b></h5><br>
           <h5><b>Battery max Voltage:</b></h5>
 
         </div>
@@ -403,7 +403,7 @@ text-align: center;
             <div class="">
               <div class=""> <input type="number" value="{{device}}" disabled id="Device_id" placeholder="Device ID" /></div><br>
               <div class=""> <input type="number" id="Inverter_capacity" placeholder="Inverter capacity" /></div><br>
-               <div class=""> 
+               <div class="mt-1"> 
               <select name="" id="battery_Type">
                 <option disabled selected>Select__battery_type </option>
                  <option value="lead_acid">lead acid battery </option>
@@ -412,16 +412,16 @@ text-align: center;
 
               </select>
               </div><br>
-              <div class=""> <input type="number" id="min_voltage" placeholder="Battery min Voltage" /></div><br>
+              <div class="mt-1"> <input type="number" id="min_voltage" placeholder="Battery min Voltage" /></div><br>
               <div class=""> <input type="number" id="max_voltage" placeholder="Battery max Voltage" /></div><br>
 
-              <div class=""> <input type="number" id="Panel VOC" placeholder="Panel VOC" /></div><br>
-              <div class=""> <input type="number" id="Battery Capacity" placeholder="Battery Capacity" /></div>
+              <div class="mt-2"> <input type="number" id="Panel VOC" placeholder="Panel VOC" /></div><br>
+              <div class="mt-2"> <input type="number" id="Battery Capacity" placeholder="Battery Capacity" /></div>
 
             </div>
           </div>
       
-          <div class="text-center">
+          <div class="text-center mt-2">
             <button class="btn btn-outline-primary" onclick="updateSpeed()">
               Update
             </button>
