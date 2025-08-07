@@ -47,16 +47,16 @@
   </thead>
 
   <tbody>
+    {% for item in alldataprint %}
     <tr>
-      <td>10033</td>
-      <td>IgnitionOFF</td>
-      <td>41 33 01 7C</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-
+      <td>{{item[0]}}</td>
+      <td>{{item[1]}}</td>
+      <td>{{item[2]}}</td>
+      <td>{{item[3]}}</td>
+      <td>{{item[4]}}</td>
+      <td>{{item[5]}}</td>
     </tr>
-   
+   {% endfor %}
   </tbody>
 </table>
 </body>

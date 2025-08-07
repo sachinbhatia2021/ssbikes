@@ -134,11 +134,11 @@ def data_table():
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
-                alldata = "SELECT * FROM dc_data ORDER BY timestamp DESC LIMIT 700"
+                alldata = "select * from ssb_locations;"
                 cursor.execute(alldata)
                 alldataprint = cursor.fetchall()
 
-        return render_template('tabledata.html', alldataprint="alldataprint")
+        return render_template('tabledata.html', alldataprint=alldataprint)
 
     except Exception as e:
         print(f"Error in /data_table: {e}")
