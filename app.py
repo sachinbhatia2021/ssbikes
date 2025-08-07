@@ -1,156 +1,89 @@
-from flask import render_template, Flask, redirect, url_for,session,make_response
+from flask import Flask, render_template, redirect, url_for, session, make_response, request
+from flask_cors import CORS
 from dotenv import load_dotenv
 import mysql.connector.pooling
-from mysql.connector import Error
-from flask import session
-from datetime import datetime,date,timedelta
-from flask_cors import CORS
-import os
+from datetime import datetime, timedelta
 import boto3
+import os
 
+# Load environment variables from .env file
 load_dotenv()
-##########################################################################################################
-# load the values
+
+# MySQL config
 Host = os.getenv("Host")
 user = os.getenv("User")
 db_password = os.getenv("db_password")
-db_name = os.getenv("db_name") 
+db_name = os.getenv("db_name")
 
-aws_acess = os.getenv("aws_access_key_id")
+# AWS S3 config (optional)
+aws_access = os.getenv("aws_access_key_id")
 aws_secret = os.getenv("aws_secret")
 region_name = os.getenv("region_name")
-bucket_name = os.getenv("BUCKET_NAME")
 
-# Bucket details
-BUCKET_NAME = bucket_name
-region_name = region_name
-########################################################################################################
+# Initialize Flask app
 app = Flask(__name__)
-########################################################################################################
+app.secret_key = 'neeraj'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
-########################################################################################################
-# Database connection pool for AWS database
+CORS(app)
+
+# MySQL connection pool
 dbconfig = {
     "host": Host,
     "user": user,
     "password": db_password,
     "database": db_name
 }
-########################################################################################################
-# connection Pool
-mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool",
-                                                        pool_size=5,
-                                                        **dbconfig)
-########################################################################################################
-# secret key for session
-app.secret_key='neeraj'
-########################################################################################################
-# database connection
+
+mydb_pool = mysql.connector.pooling.MySQLConnectionPool(
+    pool_name="mypool",
+    pool_size=5,
+    **dbconfig
+)
+
 def get_db_connection():
     return mydb_pool.get_connection()
-CORS(app)
 
+# AWS S3 client (optional)
 s3_client = boto3.client(
     's3',
-    aws_access_key_id=aws_acess,
+    aws_access_key_id=aws_access,
     aws_secret_access_key=aws_secret,
     region_name=region_name
 )
+
+# IST datetime setup
 utc_now = datetime.utcnow()
 india_time = utc_now + timedelta(hours=5, minutes=30)
-timestamp = india_time.strftime("%Y-%m-%d %H:%M:%S") 
+timestamp = india_time.strftime("%Y-%m-%d %H:%M:%S")
 start_of_day = india_time.replace(hour=0, minute=0, second=0, microsecond=0)
 hour_end = india_time.replace(minute=0, second=0, microsecond=0)
 hour_start = hour_end - timedelta(hours=1)
 last_day = start_of_day - timedelta(days=1)
 
-########################################################################################################
-def user(u_email,u_password):
-    connection =None
-    user_data =None
-    try:
-        connection =get_db_connection()
-        with connection.cursor(buffered=True) as cursor:
-            query_user = "SELECT * FROM sa_users WHERE u_email = %s AND u_password = %s "
-            cursor.execute(query_user, (u_email, u_password))
+# ===================== ROUTES =========================
 
-            user_data = cursor.fetchone()
-            if user_data:
-                return user_data
-            else:
-                return "Invalid credentials or account is inactive."
-    except Exception as e:
-        print(f"Error fetching user data: {e}")
-        user_data = None
-    finally:
-        if connection:
-            connection.close()
-
-    return user_data
-########################################################################################################
-# login / index page
-# @app.route('/', methods=['POST', 'GET'])
-# def index():
-    connection = None
-    error = ""
-
-    if request.method == 'POST':
-        try:
-            u_email = request.form['username']
-            u_password = request.form['password']
-            print(u_email,u_password,"DHD")
-            session['u_email'] = u_email
-            session['u_password'] = u_password
-
-            user_data = user(u_email, u_password)
-            user_type = user_data[5]
-
-            if u_email and u_password =='test':
-                return redirect(url_for('data_table'))
-           
-            else:
-                error = "Invalid Email or password"
-        except Exception as e:
-            print(f"Error during login process: {e}")
-            return "An error occurred during login. Please try again later.", 500
-        finally:
-            if connection:
-                connection.close()
-    
-    return render_template('index.html', error=error)
-########################################################################################################
-#############################################################################################################
-# data table 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
-   
-    return render_template('tablesdata.html')
-########################################################################################################
-@app.route('/data_table')
-def data_table():    
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
-                alldata = "select * from ssb_locations;"
-                cursor.execute(alldata)
-                alldataprint = cursor.fetchall()
+                # query = "SELECT * FROM ssb_locations;"  # Ensure this table exists
+                # cursor.execute(query)
+                # alldataprint = cursor.fetchall()
 
-        return render_template('tabledata.html', alldataprint=alldataprint)
+             return render_template('tablesdata.html')
 
     except Exception as e:
-        print(f"Error in /data_table: {e}")
-        return "An error occurred while retrieving the data. Please try again later.", 500
+        return f"<h2 style='color:red;'>Error in / route: {e}</h2>", 500
 
-########################################################################################################
 
-# Function for logout and clear it sessions
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    
-    session.clear() 
-    response = make_response(redirect(url_for('index')))  # Redirect to index
+    session.clear()
+    response = make_response(redirect(url_for('index')))
     response.set_cookie('sessionID', expires=0)
 
+    # Cache control headers
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
@@ -160,11 +93,7 @@ def logout():
 
     return response
 
-# Optionally, you may want to allow GET to log out as well for general safety.
-@app.route('/logout', methods=['GET'])
-def logout_get_redirect():
-    return redirect(url_for('index'))
-########################################################################################################
+# ===================== RUN =========================
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-########################################################################################################
