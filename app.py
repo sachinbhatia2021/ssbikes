@@ -1,12 +1,9 @@
-from flask import render_template, Flask, redirect, request, url_for, jsonify,session,make_response,send_file
-import pandas as pd
+from flask import render_template, Flask, redirect, url_for,session,make_response
 from dotenv import load_dotenv
 import mysql.connector.pooling
 from mysql.connector import Error
 from flask import session
 from datetime import datetime,date,timedelta
-from io import BytesIO
-import math
 from flask_cors import CORS
 import os
 import boto3
