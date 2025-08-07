@@ -67,11 +67,11 @@ def index():
     try:
         with get_db_connection() as connection:
             with connection.cursor(dictionary=True) as cursor:
-                # query = "SELECT * FROM ssb_locations;"  # Ensure this table exists
-                # cursor.execute(query)
-                # alldataprint = cursor.fetchall()
+                query = "SELECT * FROM ssb_locations;" 
+                cursor.execute(query)
+                alldataprint = cursor.fetchall()
 
-             return render_template('tablesdata.html')
+            return render_template('tablesdata.html',alldataprint=alldataprint)
 
     except Exception as e:
         return f"<h2 style='color:red;'>Error in / route: {e}</h2>", 500
