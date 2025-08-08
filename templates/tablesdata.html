@@ -42,6 +42,8 @@
           <th>Latitude</th>
           <th>Longitude</th>
           <th>Satellites</th>
+          <th>Timestamp</th>
+
         </tr>
       </thead>
       <tbody>
@@ -53,6 +55,7 @@
           <td>{{ item['Latitude'] }}</td>
           <td>{{ item['Longitude'] }}</td>
           <td>{{ item['Satellites'] }}</td>
+          <td>{{item['received_at']}}</td>
         </tr>
         {% endfor %}
       </tbody>
