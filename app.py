@@ -72,7 +72,7 @@ def user(u_email, u_password):
     except Exception as e:
         print(f"Error fetching user data: {e}")
 
-    return user_data if user_data else "Invalid credentials or account is inactive."
+    return user_data 
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -88,18 +88,21 @@ def index():
             user_data = user(u_email, u_password)
           
             if user_data:
-               return redirect(url_for('dashboard'))
+                return redirect(url_for('dashboard'))
             else:
-                    error = "Invalid Email or password"
+                error = "Invalid Email or Password"
 
         except Exception as e:
             return f"<h2 style='color:red;'>Error in / route: {e}</h2>", 500
 
     return render_template('index.html', error=error)
+
 #####################################################################################################
 @app.route('/dashboard', methods=['GET','POST'])
 def dashboard():
     connection = None
+    if 'u_email' not in session:
+        return redirect(url_for('index'))
     try:
         connection = get_db_connection()
         with connection.cursor(buffered=True) as cursor:
@@ -119,6 +122,8 @@ def dashboard():
 @app.route('/ssbikedata/<device_id>', methods=['GET'])
 def ssbikedata(device_id):
     connection = None
+    if 'u_email' not in session:
+        return redirect(url_for('index'))
     try:
         connection = get_db_connection()
         with connection.cursor(buffered=True) as cursor:
