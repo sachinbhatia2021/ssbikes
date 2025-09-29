@@ -1,452 +1,124 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+  <title>Solset - Login</title>
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" 
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" 
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
+
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="./html.css">
   <link rel="icon" type="image/x-icon" href="../static/logo.jpeg">
-  <title> Inverter Analytics</title>
+
+  <style>
+    /* ===== General Styles ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+    body { background: #f0f0f0; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+
+    /* ===== Container ===== */
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(117, 110, 110, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    /* ===== Form Section ===== */
+    .forms-container { flex: 1; padding: 40px; display: flex; align-items: center; justify-content: center; }
+
+    form { width: 100%; max-width: 350px; display: flex; flex-direction: column; }
+    .title { font-size: 2rem; font-weight: 600; margin-bottom: 1rem; text-align: center; color: #333; }
+
+    .input-field {
+      background: #f0f0f0;
+      margin: 10px 0;
+      height: 50px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+    }
+    .input-field i { color: #aaa; margin-right: 10px; font-size: 1.1rem; cursor: pointer; }
+    .input-field input { border: none; outline: none; background: none; width: 100%; font-size: 1rem; }
+
+    .btn {
+      margin-top: 15px;
+      background: #aa28d5;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      height: 45px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn:hover { background: #5408bf; }
+
+    /* ===== Panels ===== */
+    .panels-container { flex: 1; position: relative; background: linear-gradient(135deg, #8d4fd8, #501bff); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; color: #fff; }
+    .panels-container img { max-width: 250px; margin-bottom: 20px; border-radius: 10px; }
+    .panels-container h1 { font-size: 2rem; margin-bottom: 10px; }
+    .panels-container p { font-size: 1rem; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) {
+      .container { flex-direction: column; }
+      .panels-container { order: -1; width: 100%; padding: 30px; text-align: center; }
+    }
+  </style>
 </head>
 
 <body>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    body,
-    input {
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    .container {
-      position: relative;
-      width: 100%;
-      background-color: #fff;
-      min-height: 100vh;
-      overflow: hidden;
-    }
-
-    .forms-container {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-    }
-
-    .signin-signup {
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      left: 75%;
-      width: 50%;
-      transition: 2s 0.7s ease-in-out;
-      display: grid;
-      grid-template-columns: 1fr;
-      z-index: 5;
-    }
-
-    form {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      padding: 0rem 5rem;
-      transition: all 0.2s 0.7s;
-      overflow: hidden;
-      grid-column: 1 / 2;
-      grid-row: 1 / 2;
-    }
-
-    form.sign-up-form {
-      opacity: 0;
-      z-index: 1;
-    }
-
-    form.sign-in-form {
-      z-index: 2;
-    }
-
-    .title {
-      font-size: 2.2rem;
-      color: #444;
-      margin-bottom: 10px;
-    }
-
-    .input-field {
-      max-width: 380px;
-      width: 100%;
-      background-color: #f0f0f0;
-      margin: 10px 0;
-      height: 55px;
-      border-radius: 5px;
-      display: grid;
-      grid-template-columns: 15% 85%;
-      padding: 0 0.4rem;
-      position: relative;
-    }
-
-    .input-field i {
-      text-align: center;
-      line-height: 55px;
-      color: #acacac;
-      transition: 0.5s;
-      font-size: 1.1rem;
-    }
-
-    .input-field input {
-      background: none;
-      outline: none;
-      border: none;
-      line-height: 1;
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: #333;
-    }
-
-    .input-field input::placeholder {
-      color: #aaa;
-      font-weight: 500;
-    }
-
-    .btn {
-      width: 150px;
-      background-color: #aa28d5;
-      border: none;
-      outline: none;
-      height: 49px;
-      border-radius: 4px;
-      color: #fff;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin: 10px 0;
-      cursor: pointer;
-      transition: 0.5s;
-    }
-
-    .btn:hover {
-      background-color: #5408bf;
-    }
-
-    .panels-container {
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      top: 0;
-      left: 0;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .container:before {
-      content: "";
-      position: absolute;
-      height: 2000px;
-      width: 2000px;
-      top: -10%;
-      right: 48%;
-      transform: translateY(-50%);
-      background-image: linear-gradient(-45deg, #8d4fd8 100%, #501bff 0%);
-      transition: 1.8s ease-in-out;
-      border-radius: 50%;
-      z-index: 6;
-    }
-
-    .image {
-      width: 100%;
-      transition: transform 1.1s ease-in-out;
-      transition-delay: 0.4s;
-    }
-
-    .panel {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      justify-content: space-around;
-      text-align: center;
-      z-index: 6;
-    }
-
-    .left-panel {
-      pointer-events: all;
-      padding: 3rem 17% 2rem 12%;
-    }
-
-    .right-panel {
-      pointer-events: none;
-      padding: 3rem 12% 2rem 17%;
-    }
-
-    .panel .content {
-      color: #fff;
-      transition: transform 0.9s ease-in-out;
-      transition-delay: 0.6s;
-    }
-
-    .panel h3 {
-      font-weight: 600;
-      line-height: 1;
-      font-size: 1.5rem;
-    }
-
-    .panel p {
-      font-size: 0.95rem;
-      padding: 0.7rem 0;
-    }
-
-    .btn.transparent {
-      margin: 0;
-      background: none;
-      border: 2px solid #fff;
-      width: 130px;
-      height: 41px;
-      font-weight: 600;
-      font-size: 0.8rem;
-    }
-
-    .right-panel .image,
-    .right-panel .content {
-      transform: translateX(800px);
-    }
-
-    .container.sign-up-mode:before {
-      transform: translate(100%, -50%);
-      right: 52%;
-    }
-
-    .container.sign-up-mode .left-panel .image,
-    .container.sign-up-mode .left-panel .content {
-      transform: translateX(-800px);
-    }
-
-    .container.sign-up-mode .signin-signup {
-      left: 25%;
-    }
-
-    .container.sign-up-mode form.sign-up-form {
-      opacity: 1;
-      z-index: 2;
-    }
-
-    .container.sign-up-mode form.sign-in-form {
-      opacity: 0;
-      z-index: 1;
-    }
-
-    .container.sign-up-mode .right-panel .image,
-    .container.sign-up-mode .right-panel .content {
-      transform: translateX(0%);
-    }
-
-    .container.sign-up-mode .left-panel {
-      pointer-events: none;
-    }
-
-    .container.sign-up-mode .right-panel {
-      pointer-events: all;
-    }
-
-    @media (max-width: 870px) {
-      .container {
-        min-height: 800px;
-        height: 100vh;
-      }
-
-      .signin-signup {
-        width: 100%;
-        top: 95%;
-        transform: translate(-50%, -100%);
-        transition: 1s 0.8s ease-in-out;
-      }
-
-      .signin-signup,
-      .container.sign-up-mode .signin-signup {
-        left: 50%;
-      }
-
-      .panels-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 2fr 1fr;
-      }
-
-      .panel {
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        padding: 2.5rem 8%;
-        grid-column: 1 / 2;
-      }
-
-      .right-panel {
-        grid-row: 3 / 4;
-      }
-
-      .left-panel {
-        grid-row: 1 / 2;
-      }
-
-      .image {
-        width: 200px;
-        transition: transform 0.9s ease-in-out;
-        transition-delay: 0.6s;
-      }
-
-      .panel .content {
-        padding-right: 15%;
-        transition: transform 0.9s ease-in-out;
-        transition-delay: 0.8s;
-      }
-
-      .panel h3 {
-        font-size: 1.2rem;
-      }
-
-      .panel p {
-        font-size: 0.7rem;
-        padding: 0.5rem 0;
-      }
-
-      .btn.transparent {
-        width: 110px;
-        height: 35px;
-        font-size: 0.7rem;
-      }
-
-      .container:before {
-        width: 1500px;
-        height: 1500px;
-        transform: translateX(-50%);
-        left: 30%;
-        bottom: 68%;
-        right: initial;
-        top: initial;
-        transition: 2s ease-in-out;
-      }
-
-      .container.sign-up-mode:before {
-        transform: translate(-50%, 100%);
-        bottom: 32%;
-        right: initial;
-      }
-
-      .container.sign-up-mode .left-panel .image,
-      .container.sign-up-mode .left-panel .content {
-        transform: translateY(-300px);
-      }
-
-      .container.sign-up-mode .right-panel .image,
-      .container.sign-up-mode .right-panel .content {
-        transform: translateY(0px);
-      }
-
-      .right-panel .image,
-      .right-panel .content {
-        transform: translateY(300px);
-      }
-
-      .container.sign-up-mode .signin-signup {
-        top: 5%;
-        transform: translate(-50%, 0);
-      }
-    }
-
-    @media (max-width: 570px) {
-      form {
-        padding: 0 1.5rem;
-      }
-
-      .image {
-        display: none;
-      }
-
-      .panel .content {
-        padding: 0.5rem 1rem;
-      }
-
-      .container {
-        padding: 1.5rem;
-      }
-
-      .container:before {
-        bottom: 72%;
-        left: 50%;
-      }
-
-      .container.sign-up-mode:before {
-        bottom: 28%;
-        left: 50%;
-      }
-    }
-  </style>
-  <!-- Login Page -->
   <div class="container">
+    <!-- ===== Login Form ===== -->
     <div class="forms-container">
-      <div class="signin-signup">
-        <form action="{{ url_for('index')}}" class="sign-in-form" method="POST">
-          <h2 class="title">Login</h2>
-          {% if error %}
-          <p style="color: red">{{ error }}</p>
-          {% endif %} {% if message %}
-          <p style="color: blue">{{ message }}</p>
-          {% endif %}
-          <div class="input-field">
-            <i class="fa-solid fa-user"></i>
-            <input type="text" name="username" placeholder="Username" required>
-          </div>
-          <div class="input-field">
-            <i class="fas fa-lock" style="cursor: pointer;" id="togglePassword"></i>
-            <input type="password" placeholder="Password" name="password" id="password" required>
-          </div>
-          <button type="submit" class="btn">Login</button>
-        </form>
-      </div>
-    </div>
+      <form action="{{ url_for('index') }}" method="POST">
+        <h2 class="title">Login</h2>
+        {% if error %}<p style="color:red;text-align:center;">{{ error }}</p>{% endif %}
+        {% if message %}<p style="color:blue;text-align:center;">{{ message }}</p>{% endif %}
 
-    <div class="panels-container">
-      <div class="panel left-panel">
-        <div class="content">
-          <div class="logo" style="line-height: 0.3px;">    <span>  <img src="../static/logo.jpeg" height="150" alt="">
-                 <h1>  Solset</h1>
-            </span>
-          </div>
-          <img src="https://i.ibb.co/6HXL6q1/Privacy-policy-rafiki.png" class="image" alt="" />
+        <div class="input-field">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" name="username" placeholder="Username" required>
         </div>
-      </div>
+
+        <div class="input-field">
+          <i class="fas fa-lock" id="togglePassword"></i>
+          <input type="password" name="password" id="password" placeholder="Password" required>
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+      </form>
     </div>
 
-    <!-- script for password show -->
-    <script>
-      const password = document.getElementById('password');
-      const togglePassword = document.getElementById('togglePassword');
+    <!-- ===== Panel Section ===== -->
+    <div class="panels-container">
+      <img src="../static/logossbike.png" alt="Logo">
+      <h1>Welcome to SS Bikes</h1>
+    </div>
+  </div>
 
-      togglePassword.addEventListener('click', function () {
-        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-        password.setAttribute('type', type);
-        this.classList.toggle('fa-lock-open');
-        this.classList.toggle('fa-lock');
-      });
-    </script>
-    <script>
-  function preventBack(){
-    window.history.forward()
-  }
-  setTimeout(preventBack())
-  window.onunload=function (){null};
-</script>
+  <!-- ===== Scripts ===== -->
+  <script>
+    const password = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+    togglePassword.addEventListener('click', () => {
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      togglePassword.classList.toggle('fa-lock');
+      togglePassword.classList.toggle('fa-lock-open');
+    });
+  </script>
 </body>
 </html>

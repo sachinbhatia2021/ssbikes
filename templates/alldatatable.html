@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Ss Bikes</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+
+  <!-- Fonts and Icons -->
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='logo.jpeg') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <!-- jQuery and DataTables -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      color: black;
+    }
+/* footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  width: 101%;
+      background-image: linear-gradient(to bottom, rgb(18, 22, 22), rgb(107, 107, 107));
+  padding: 10px;
+  bottom: 0;
+margin-left: -20px;
+right: 0;
+color: black;
+}
+@media(max-width:576px) {
+  .footer {
+  display: flex;
+  justify-content: space-between;
+  width: 127%;
+  background-color: rgb(234, 238, 245);
+  padding: 10px;
+  bottom: 0;
+}
+
+
+}
+
+    .dashboard {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    /* Hero Card */
+    .hero {
+  background-image: linear-gradient(to bottom, rgb(167, 173, 173), rgb(240, 238, 238));
+
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: 50px;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 24px;
+      color: #807d7d;
+    }
+
+    .hero img {
+      max-width: 220px;
+      height: auto;
+    }
+
+    /* Stats Cards Grid */
+    .grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* always 4 per row */
+  gap: 15px;
+}
+
+    .card {
+  /* background-image: linear-gradient(to bottom, rgb(1, 2, 2), rgb(107, 107, 107)); */
+  background-color: rgb(53, 49, 49);
+
+      color: #333;
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+
+    
+    .progress-bar {
+      height: 8px;
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 10px;
+    }
+
+    .progress-active {
+      background: #3cc9b0;
+      width: 68%;
+    }
+
+    .progress-inactive {
+      background: #0a6150;
+      width: 32%;
+    }
+h2{
+    color: white;
+}
+p{
+    color: white;
+}
+    /* Statistics Section */
+    .statistics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      background: #fff;
+      color: #333;
+      border-radius: 15px;
+      padding: 20px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stats-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stats-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot.active { background: #3cc9b0; }
+    .dot.inactive { background: #0a6150; }
+    .dot.total { background: #ddd; }
+
+    /* Circle Progress */
+    .circle {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(#3cc9b0 0% 68%, #0a6150 68% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .circle::before {
+      content: "";
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      background: #fff;
+      border-radius: 50%;
+    }
+
+    .circle span {
+      position: absolute;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+    .herodiv{
+        width: 50%;
+    }
+    .grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+.navbar{
+      background-image: linear-gradient(to bottom, rgb(18, 22, 22), rgb(107, 107, 107));
+      height: 80px;
+      color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.Logo{
+    padding: 10px;
+}
+.data_table{
+    color: white;
+    text-decoration: none;
+}
+.data_table:hover{
+text-decoration: underline;
+}
+.logout{
+        text-decoration: none;
+    color: white;
+
+}
+.logout:hover{
+color: red;
+text-decoration: underline;
+}
+a{
+  color: white;
+}
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+   <nav class="navbar">
+
+<div class="">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT7V_glHHIKUvWwAXni6zB-2Gy3h8aKsIDAg&s" height="70px" alt="Logo" class="Logo">
+</div>
+<div class="d-flex">
+    <div class="" style="margin-right: 40px;"><a  class="data_table"  href="{{url_for('dashboard')}}">Home</a></div>
+<div class="" style="margin-right: 40px;"> <a  class="logout" href="{{url_for('logout')}}">Log out</a></div>
+
+</div>
+</nav> 
+
+  <!-- Content -->
+  <div class="container mt-5 mb-5">
+    <h1 class="text-center mb-4">SS Bikes - Location Data</h1>
+
+    <table id="data-table" class="table table-striped table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>Device ID</th>
+          <th>Ignition</th>
+          <th>UID</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th>Satellites</th>
+          <th>Speed (km/h)</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in alldataprint %}
+        <tr>
+          <td>{{ item['Device_id'] }}</td>
+          <td>{{ item['Ignition'] }}</td>
+          <td>{{ item['UID'] }}</td>
+          <td>{{ item['Latitude'] }}</td>
+          <td>{{ item['Longitude'] }}</td>
+          <td>{{ item['Satellites'] }}</td>
+          <td>{{ item['speed_kmph'] }}</td>
+          <td>{{ item['received_at'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Copyright © 2024 <a href="https://ssbikes.in" target="_blank" style="color:white;">ssbikes.in</a>. All rights
+      reserved.</p>
+    <p class="version">Version 1.0.1</p>
+  </div>
+
+  <!-- DataTables Init -->
+  <script>
+    $(document).ready(function () {
+      $('#data-table').DataTable();
+    });
+  </script>
+</body>
+
+</html>
